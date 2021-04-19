@@ -1,0 +1,209 @@
+{% extends 'cedal/index.html' %}
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Alta Compra{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Nueva Compra</h1>
+    <!-- <div class="card shadow mb-4"></div>
+        <div class="card-body">
+          
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-12 col-md-6 offset-md-3">
+                      {{ form|crispy}}
+                    
+                    
+
+                <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" type="submit">Añadir</button>
+            </div>
+                </div>
+            </form>
+            {{mensaje}}
+        </div>
+    </div> -->
+    <div class="row">
+        
+    <div class="col-6">
+    <div class="card border-dark mb-3">
+        <div class="card-header">Seleccion de Productos</div>
+        <div class="card-body text-primary">
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-6 col-md-6 ">
+                        Nombre
+                        <input type="text" name="nombreProducto" id="nombreProducto" class="form-control">
+                    
+                    </div>
+                   
+                    <div class="col-6 col-md-6 ">
+                        Código
+                        <input type="text" name="" id="codigo" class="form-control">
+                      
+                      </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-6 col-md-6 ">
+                        Precio Compra
+                        <input type="text" name="" id="precio" class="form-control">
+                    
+                    </div>
+
+                    <div class="col-6 col-md-6 ">
+                        Stock Actual
+                        <input type="text" name="" id="stock" class="form-control" disabled>
+                      
+                      </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-6 col-md-6 ">
+                        Cantidad
+                      <input type="text" name="Cantidad" id="cantidad" class="form-control">
+                    
+                    </div>
+
+                </div>
+
+                <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" type="button">Añadir</button>
+            </div>
+                
+            </form>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="card border-dark mb-3 ml-4" >
+        <div class="card-header">Total de la compra</div>
+        <div class="card-body text-primary">
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-12 ">
+                        Total
+                        <input type="text" name="total" id="total" class="form-control bg-info" disabled>
+                    
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-6 col-md-6 ">
+                        Iva
+                      <input type="text" name="iva" id="iva" class="form-control bg-info" disabled>
+                      
+                      </div>
+                
+
+                
+                    <div class="col-6 col-md-6 ">
+                        Sub.Total
+                        <input type="text" name="subTotal" id="subTotal" class="form-control bg-info" disabled>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-6 col-md-6 ">
+                        {{ formCompra.fecha|as_crispy_field }}
+                      
+                      </div>
+
+                      <div class="col-6 col-md-6 ">
+                        {{ formCompra.comprobante|as_crispy_field }}
+                      
+                      </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12 ">
+                        Razon Social
+                        <input type="text" name="Cantidad" id="nombreProveedor" class="form-control">
+                      
+                      </div>
+                </div>
+                <br>
+                <div class="row">
+                      <div class="col-6 col-md-6 ">
+                        {{ formProveedor.cuit|as_crispy_field }}
+                      
+                      </div>
+                      
+                      <div class="col-6 col-md-6 mt-2 ">
+                        Condicion
+                        <input type="text" name="Cantidad" id="condicion" class="form-control" disabled>
+                      
+                      </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-primary" type="submit">Confirmar Compra</button>
+                </div>
+                    
+                
+            </form>
+          
+        </div>
+      </div>
+    </div>
+    </div>
+    {{mensaje}}
+</div>
+{% endblock %}
+
+<script>
+    
+    $(function() {
+    
+        $("#nombreProducto").autocomplete({
+            source:  "{% url 'productoAutocomplete' %}"
+            
+        
+        });
+      });
+    </script>
+
+{% block js %}
+<script>
+    
+$(function() {
+
+    $("#nombreProducto").autocomplete({
+        source:  "{% url 'productoAutocomplete' %}",
+        select: function(event, ui){
+
+            $("#stock").val(ui.item.stock); 
+            $("#codigo").val(ui.item.codigo);
+            $("#precio").val(ui.item.precio);
+    
+
+}
+// }).data('ui-autocomplete')._renderItem = function(ul, item) {
+        
+    
+//                 return $("<li>").append(item.label).appendTo(ul);
+                
+//             };
+  
+    
+    });
+  });
+</script>
+<!-- Page level custom scripts -->
+
+<script src="{% static 'cedal/js/prueb.js' %}"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  
+{% endblock %}
