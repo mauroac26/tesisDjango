@@ -11,28 +11,10 @@
 
     <!-- Page Heading -->
     <h1 class="h3 mb-2 text-gray-800">Nueva Compra</h1>
-    <!-- <div class="card shadow mb-4"></div>
-        <div class="card-body">
-          
-            <form action="" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-12 col-md-6 offset-md-3">
-                      {{ form|crispy}}
-                    
-                    
-
-                <div class="d-flex justify-content-end">
-                <button class="btn btn-primary" type="submit">Añadir</button>
-            </div>
-                </div>
-            </form>
-            {{mensaje}}
-        </div>
-    </div> -->
+    
     <div class="row">
         
-    <div class="col-6">
+    <div class="col-5">
     <div class="card border-dark mb-3">
         <div class="card-header">Seleccion de Productos</div>
         <div class="card-body text-primary">
@@ -42,13 +24,13 @@
                     <div class="col-6 col-md-6 ">
                         Nombre
                         <input type="text" name="nombreProducto" id="nombreProducto" class="form-control">
-                    
+                        <!-- {{form.nombre|as_crispy_field}} -->
                     </div>
                    
                     <div class="col-6 col-md-6 ">
                         Código
-                        <input type="text" name="" id="codigo" class="form-control">
-                      
+                        <input type="text" name="" id="codigo" class="form-control" disabled>
+                        <!-- {{form.codigo|as_crispy_field}} -->
                       </div>
                 </div>
                 <br>
@@ -56,93 +38,113 @@
                     <div class="col-6 col-md-6 ">
                         Precio Compra
                         <input type="text" name="" id="precio" class="form-control">
-                    
+                        <!-- {{form.precio_compra|as_crispy_field}} -->
                     </div>
 
                     <div class="col-6 col-md-6 ">
                         Stock Actual
                         <input type="text" name="" id="stock" class="form-control" disabled>
-                      
+                        <!-- {{form.stock|as_crispy_field}} -->
                       </div>
                 </div>
                 <br>
                 <div class="row">
                     <div class="col-6 col-md-6 ">
                         Cantidad
-                      <input type="text" name="Cantidad" id="cantidad" class="form-control">
+                      <input type="text" name="cantidad" id="cantidad" class="form-control">
                     
                     </div>
 
                 </div>
 
                 <div class="d-flex justify-content-end">
-                <button class="btn btn-primary" type="button">Añadir</button>
+                <button onclick="cargarTabla();" class="btn btn-primary" type="button">Añadir</button>
+                <!-- <a href="" class="btn btn-primary" type="button">Añadir</a> -->
+                 <!-- <button  class="btn btn-primary" type="submit">Añadir</button>  -->
             </div>
-                
+            {{mensaje}}
             </form>
           
         </div>
       </div>
     </div>
 
-    <div class="col-6">
+    <div class="col-7">
       <div class="card border-dark mb-3 ml-4" >
         <div class="card-header">Total de la compra</div>
         <div class="card-body text-primary">
-            <form action="" method="post" enctype="multipart/form-data">
+            <form action="{% url 'cargarCompra' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-12 ">
-                        Total
-                        <input type="text" name="total" id="total" class="form-control bg-info" disabled>
+                        <!-- Total -->
+                        
+                            {{ formCompra.total|as_crispy_field }}
+                        <!-- <input type="text" name="total" id="total" value="0.00" class="form-control bg-info text-center font-weight-bold text-white"> -->
+                          
+                        
                     
                     </div>
                 </div>
-                <br>
+            
                 <div class="row">
                     <div class="col-6 col-md-6 ">
-                        Iva
-                      <input type="text" name="iva" id="iva" class="form-control bg-info" disabled>
+                        
+                            {{ formCompra.iva|as_crispy_field }}
+                            <!-- <input type="text" name="iva" id="iva" value="0.00" class="form-control bg-info font-weight-bold text-center text-white" > -->
+                          
+                        
+                      
                       
                       </div>
                 
 
                 
                     <div class="col-6 col-md-6 ">
-                        Sub.Total
-                        <input type="text" name="subTotal" id="subTotal" class="form-control bg-info" disabled>
+                        
+                            {{ formCompra.subTotal|as_crispy_field }}
+                            <!-- <input type="text" name="subTotal" id="subTotal" value="0.00" class="form-control bg-info font-weight-bold text-center text-white" > -->
+                          
+                        
+                       
                     </div>
                 </div>
-                <br>
+              
                 <div class="row">
-                    <div class="col-6 col-md-6 ">
+                    <div class="col-4 col-md-4 ">
+                
                         {{ formCompra.fecha|as_crispy_field }}
-                      
+                        <!-- <input type="data" name="fecha" id="fecha"  class="form-control  font-weight-bold text-center " > -->
                       </div>
 
-                      <div class="col-6 col-md-6 ">
+                      <div class="col-4 col-md-4">
+                       
                         {{ formCompra.comprobante|as_crispy_field }}
-                      
+                        <!-- <input type="data" name="comprobante" id="comprobante"  class="form-control  font-weight-bold text-center " > -->
                       </div>
+
+                      <div class="col-4 col-md-4 ">
+                    
+                      {{ formCompra.tipoComprobante|as_crispy_field }}
+                      <!-- <input type="data" name="comprobante" id="comprobante"  class="form-control  font-weight-bold text-center " > -->
+                    </div>
                 </div>
                 
                 <div class="row">
-                    <div class="col-12 ">
+                    <div class="col-4 col-md-4 mt-2">
                         Razon Social
-                        <input type="text" name="Cantidad" id="nombreProveedor" class="form-control">
+                        <input type="text" name="nombreProveedor" id="nombreProveedor" class="form-control">
                       
                       </div>
-                </div>
-                <br>
-                <div class="row">
-                      <div class="col-6 col-md-6 ">
-                        {{ formProveedor.cuit|as_crispy_field }}
+               
+                      <div class="col-4 col-md-4 ">
+                        {{ formCompra.cuit|as_crispy_field }}
                       
                       </div>
                       
-                      <div class="col-6 col-md-6 mt-2 ">
+                      <div class="col-4 col-md-4 mt-2 ">
                         Condicion
-                        <input type="text" name="Cantidad" id="condicion" class="form-control" disabled>
+                        <input type="text" name="condicion" id="condicion" class="form-control" disabled>
                       
                       </div>
                 </div>
@@ -158,21 +160,34 @@
       </div>
     </div>
     </div>
-    {{mensaje}}
+
+    <div class="row">
+        <div class="col-12 pt-3">
+            <div class="table-responsive" style="height: 160px;">
+                <table class="table table-hover table-bordered table-sm table-striped text-white" id="tablaAltaCompra">
+                    <thead class="bg-dark">
+                        
+                        <th>Codigo</th>
+                        <th>Nombre</th>
+                        <th>cantidad</th>
+                        <th>P.Unitario</th>
+                        <th>Iva</th>
+                        <th>sub total neto</th>
+                        <th>sub total</th>
+                        <th>Accion</th>
+                    </thead>
+                    <tbody style="overflow-y: scroll;">
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
 </div>
 {% endblock %}
 
-<script>
-    
-    $(function() {
-    
-        $("#nombreProducto").autocomplete({
-            source:  "{% url 'productoAutocomplete' %}"
-            
-        
-        });
-      });
-    </script>
+
 
 {% block js %}
 <script>
@@ -186,23 +201,123 @@ $(function() {
             $("#stock").val(ui.item.stock); 
             $("#codigo").val(ui.item.codigo);
             $("#precio").val(ui.item.precio);
-    
-
+            $("#nombreProducto").val(ui.item.value); 
+            
+            idProducto = ui.item.id
+            
 }
-// }).data('ui-autocomplete')._renderItem = function(ul, item) {
+}).data('ui-autocomplete')._renderItem = function(ul, item) {
         
     
-//                 return $("<li>").append(item.label).appendTo(ul);
+                return $("<li>").append(item.label).appendTo(ul);
                 
-//             };
+            };
   
     
     });
-  });
+  
+ 
+</script>
+
+<script>
+    function cargarTabla(){
+        i = 0;
+        cantidad = $('#cantidad').val();
+        nombre = $('#nombreProducto').val();
+        precio = $('#precio').val();
+        codigo = $('#codigo').val();
+        
+        total = cantidad * precio;
+        neto = total / 1.21;
+        iva = neto.toFixed(2) * 0.21;
+        
+        i += 1;
+
+        fila = '<tr id=fila' + i +' class="text-dark"><td data-producto =' + idProducto +' style="text-align: right;">' + codigo + '</td><td>' + nombre + 
+                '<td>' + cantidad +'</td>'+
+                '</td><td style="text-align: right;">' + precio + '</td>'+
+                '<td>' + iva.toFixed(2) + '</td><td>' + neto.toFixed(2) + '</td>'+'<td>' + total + '</td>'+
+                '<td><div><button  class="btn btn-danger btn-sm" style="padding:1px;" type="button"  id="btn_del'+i+'" onclick="eliminarFC('+i+', '+total+', '+neto+', '+iva+', )">Eliminar</button></div></td>'+
+                '</tr>';
+
+                $('#tablaAltaCompra').append(fila);
+
+                suma(neto, iva, total);       
+
+        }
+
+
 </script>
 <!-- Page level custom scripts -->
+<script>
+    let totalNeto = 0;
+        let totaliva = 0;
+        let totalFinal = 0;
+</script>
+<script>
+    function eliminarFC(id, total, neto, iva){
+    
+        
+        totalNeto = totalNeto - neto ;
+        totaliva = totaliva - iva ;
+        totalFinal = totalFinal - total;
+        
+     
+       
+        document.getElementById("total").value = totalFinal.toFixed(2);
+        document.getElementById("iva").value = totaliva.toFixed(2);
+        document.getElementById("subTotal").value = totalNeto.toFixed(2);
 
-<script src="{% static 'cedal/js/prueb.js' %}"></script>
+        $('#fila' + id).remove();
+        
+    }
+</script>
+
+<script>
+    function suma(neto, iva, total){
+        
+        
+        
+        totalNeto = totalNeto + neto;
+        totaliva = totaliva + iva;
+        totalFinal = total + totalFinal;
+        
+     
+       
+        document.getElementById("total").value = totalFinal.toFixed(2);
+        document.getElementById("iva").value = totaliva.toFixed(2);
+        document.getElementById("subTotal").value = totalNeto.toFixed(2);
+    }
+</script>
+
+<script>
+
+$(function() {
+    let condicion;
+
+    $("#nombreProveedor").autocomplete({
+        source:  "{% url 'proveedorAutocomplete' %}",
+        select: function(event, ui){
+
+            $("#cuit").val(ui.item.cuit);
+
+            if (ui.item.condicion == 0){
+               condicion = "Consumidor Final";
+            }else{
+                condicion = "Responsable Inscripto";
+            }
+            $("#condicion").val(condicion); 
+            
+        
+}
+
+  
+    
+    });
+});
+</script>
+
+
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   

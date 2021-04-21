@@ -17,6 +17,6 @@ class proveedorCompraForm(forms.ModelForm):
         
 
         widgets = {
-            'cuit': forms.TextInput(attrs={'disabled': True})
+            'cuit': forms.TextInput(attrs={'disabled': True, 'id': 'cuit'})
         }
         
