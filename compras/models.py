@@ -19,7 +19,7 @@ class Compras(models.Model):
 
 
 def __str__(self):
-    return self.comprobante
+    return self.id
 
 
 class detalleCompra(models.Model):

@@ -1,6 +1,6 @@
 from django import forms
 from datetime import date
-from .models import Compras
+from .models import Compras, detalleCompra
 
 tipo_Comprobante = [
     [0, "Factura"],
@@ -16,12 +16,18 @@ class comprasForm(forms.ModelForm):
 
         widgets = {
             'comprobante': forms.TextInput(attrs={'id': 'comprobante'}),
-            'fecha' : forms.DateInput(attrs={"type": "date", "value": date.today()}),
+            'fecha' : forms.DateInput(attrs={"type": "date", "value": date.today(), 'id': 'fecha'}),
             'cuit' : forms.TextInput(attrs={'id': 'cuit'}),
             'iva' : forms.TextInput(attrs={'id': 'iva'}),
             'total' : forms.TextInput(attrs={'id': 'total'}),
             'subTotal' : forms.TextInput(attrs={'id': 'subTotal'}),
-            'tipoComprobante': forms.Select(choices=tipo_Comprobante)
+            'tipoComprobante': forms.Select(choices=tipo_Comprobante, attrs={'id': 'tipoComprobante'} )
         }
-    
+
+
+class detalleComprasForm(forms.ModelForm):
+
+    class Meta:
+        model = detalleCompra
+        fields = '__all__'
 

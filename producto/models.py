@@ -25,5 +25,5 @@ class Producto(models.Model):
     categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT)
     marca = models.ForeignKey(Marca, on_delete=models.PROTECT)
 
-    def __str__(self):
-        return self.nombre
+    def __int__(self):
+        return self.id

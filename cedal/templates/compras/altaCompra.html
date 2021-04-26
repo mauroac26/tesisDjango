@@ -73,7 +73,7 @@
       <div class="card border-dark mb-3 ml-4" >
         <div class="card-header">Total de la compra</div>
         <div class="card-body text-primary">
-            <form action="{% url 'cargarCompra' %}" method="post" enctype="multipart/form-data">
+            <form id="friend-form" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-12 ">
@@ -190,6 +190,8 @@
 
 
 {% block js %}
+
+
 <script>
     
 $(function() {
@@ -220,8 +222,12 @@ $(function() {
 </script>
 
 <script>
+    // var arr = [];
+    // var objProducto = {}
+    var i = 0;
     function cargarTabla(){
-        i = 0;
+        
+        
         cantidad = $('#cantidad').val();
         nombre = $('#nombreProducto').val();
         precio = $('#precio').val();
@@ -239,27 +245,87 @@ $(function() {
                 '<td>' + iva.toFixed(2) + '</td><td>' + neto.toFixed(2) + '</td>'+'<td>' + total + '</td>'+
                 '<td><div><button  class="btn btn-danger btn-sm" style="padding:1px;" type="button"  id="btn_del'+i+'" onclick="eliminarFC('+i+', '+total+', '+neto+', '+iva+', )">Eliminar</button></div></td>'+
                 '</tr>';
-
+             
                 $('#tablaAltaCompra').append(fila);
+                
+    //             objProducto = {
+    //                'id_producto': idProducto,
+    //                'cantidad': cantidad
+    //    }; 
 
+    //            arr.push(objProducto);
                 suma(neto, iva, total);       
 
         }
 
+//  var objProducto = {}
+         function cargarDetalleCompra(){
+           
+//             let filaTablaAC = $('#tablaAltaCompra tr').length;
+               
+//                for (f = 1; f <= filaTablaAC; f++) {
 
+//                 var cantidadTabla = document.getElementById('tablaAltaCompra').rows[f].cells[2].innerText;            
+//                 var idp = $('#tablaAltaCompra tr:eq('+f+')').find("td:first-child").data('producto');   
+                
+                
+              
+//                 objProducto = {
+//                     'id_producto': idp,
+//                     'cantidad': cantidadTabla
+//                 };
+               
+            
+                //var obj = JSON.stringify(objProducto);
+               
+                var tipoComprobante = $('#tipoComprobante').val();
+                var comprobante = $('#comprobante').val();
+                var fecha = $('#fecha').val();
+                var cuit = $('#cuit').val();
+                var iva = $('#iva').val();
+                var total = $('#total').val();
+                var subTotal = $('#subTotal').val();
+
+                $.ajax({
+                  type: "post",
+                   url: "{% url 'cargarCompra' %}",
+                  data: {tipoComprobante: tipoComprobante,
+                         comprobante: '' + comprobante + '',
+                         iva: iva,
+                         fecha:  '' + fecha + '',
+                         cuit: '' + cuit + '',
+                         total: total,
+                         subTotal: subTotal
+                          },
+                success: function(result) {
+                          alert('Data Has been saved')
+     }
+      
+              
+    
+   });
+              
+//}         
+      
+   }
+</script>
+
+<script>
+    
 </script>
 <!-- Page level custom scripts -->
 <script>
-    let totalNeto = 0;
-        let totaliva = 0;
-        let totalFinal = 0;
+    var totalNeto = 0;
+        var totaliva = 0;
+        var totalFinal = 0;
 </script>
 <script>
     function eliminarFC(id, total, neto, iva){
     
-        
-        totalNeto = totalNeto - neto ;
-        totaliva = totaliva - iva ;
+        //arr.pop();
+
+        totalNeto = totalNeto - neto;
+        totaliva = totaliva - iva;
         totalFinal = totalFinal - total;
         
      
@@ -317,6 +383,59 @@ $(function() {
 });
 </script>
 
+<script>
+    /*
+        On submiting the form, send the POST ajax
+        request to server and after successfull submission
+        display the object.
+    */
+    $("#friend-form").submit(function (e) {
+        // preventing from page reload and default actions
+        e.preventDefault();
+        // serialize the data for sending the form data.
+        var serializedData = $(this).serialize();
+        // make POST ajax call
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'prueba' %}",
+            data: serializedData,
+            success: function (response) {
+                let filaTablaAC = $('#tablaAltaCompra tr').length;
+               
+               for (f = 1; f <= filaTablaAC; f++) {
+
+                var cantidadTabla = document.getElementById('tablaAltaCompra').rows[f].cells[2].innerText;            
+                var idp = $('#tablaAltaCompra tr:eq('+f+')').find("td:first-child").data('producto');   
+                
+                
+              
+                objProducto = {
+                    'id_producto': idp,
+                    'cantidad': cantidadTabla
+                };
+                $.ajax({
+            type: 'get',
+            url: "{% url 'cargarDetalleCompra' %}",
+            data: {'id_producto': idp,
+                   'cantidad': cantidadTabla
+        },
+            success: function (response) {
+                alert(response);
+            },
+            error: function (response) {
+                // alert the error if any error occured
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+    }
+            },
+            error: function (response) {
+                // alert the error if any error occured
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+    })
+</script>
 
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
