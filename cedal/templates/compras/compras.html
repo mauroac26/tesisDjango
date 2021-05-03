@@ -27,26 +27,20 @@
                             <th>Fecha de compra</th>
                             <th>Proveedor</th>
                             <th>total($)</th>
-                            
+                            <th>Accion</th>
                         </tr>
                     </thead>
-                    <!-- <tbody>
-                       {% for p in proveedores %}
+                    <tbody>
+                       {% for c in compras %}
                        <tr>
-                        <td>{{p.nombre}}</td>
-                        <td>{{p.direccion}}</td>
-                        <td>{{p.mail}}</td>
-                        <td>{{p.cuit}}</td>
-                        <td>
-                            {% if p.condicion == 0 %}
-                            Consumidor Final
-                            {% else %}
-                            Responsable Inscripto
-                            {% endif %}
-                        </td>
+                        <td>{{c.comprobante}}</td>
+                        <td>{{c.fecha}}</td>
+                        <td >{{c.cuit.nombre}}</td>
+                        <td>{{c.total}}</td>
+                        <td class="text-center"><a href="{% url 'detallesCompra' c.id %}" class="btn btn-primary btn-sm ">Detalle</a></td>
                     </tr>
                        {% endfor %}
-                    </tbody> -->
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -73,8 +67,10 @@
 
 <script>
     $(document).ready(function() {
-    table("tablaProveedores");
+    table("tablaCompra");
     });
 </script>
+
+
 {% endblock %}
 

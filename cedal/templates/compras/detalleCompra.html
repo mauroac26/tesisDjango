@@ -1,0 +1,102 @@
+{% extends 'cedal/index.html' %}
+{% load static %}
+
+{% block title %}Detalle de la Compra{% endblock %}
+
+{% block content %}
+
+
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Detalle de la Compra</h1>
+    
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            Compra Realizada
+        </div>
+        <div class="card body">
+            
+            {% for c in datos %}
+            
+            <div class="row ml-2 "> <label for="" class="" > Comprobante: <b>{{c.comprobante}}</b></label></div>
+            <div class="row ml-2 "><label for="" class=" ">Tipo de comprobante: <b>{{c.tipoComprobante}}</b></label></div>
+            <div class="row ml-2 "><label for="" class=" ">Proveedor: <b>{{c.cuit.nombre}}</b></label></div>
+            <div class="row ml-2 "><label for="" class=""> CUIT: <b>{{c.cuit}}</b></label></div>
+            <div class="row ml-2 "><label for="" class=""> Fecha: <b>{{c.fecha}}</b></label></div>
+            
+          
+        </div>
+        <br>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover table-sm" id="" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Cantidad</th>
+                            <th>Producto</th>
+                            <th>Codigo</th>
+                            <th>Precio Unitario($)</th>
+                            <th>Precio Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in detalles %}
+                       <tr>
+                        <td>{{d.cantidad}}</td>
+                        <td>{{d.id_producto.nombre}}</td>
+                        <td >{{d.id_producto.codigo}}</td>
+                        <td>{{d.id_producto.precio_compra}}</td>
+                        <td>{{d.total}}</td>
+                    </tr>
+                    {% endfor %}
+                
+                    </tbody>
+                </table>
+                
+            </div>
+            <div class="row col-12 offset-md-10">
+               <small> sub-Total: <b>${{c.subTotal}}</b></small>
+              
+            </div>
+            <div class="row col-12 offset-md-10">
+               <small> iva 21.00%: <b>${{c.iva}}</b></small>
+            </div>
+            <div class="row col-12 offset-md-10">
+                <small> Total: <b>${{c.total}}</b></small>
+             </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+
+
+<!-- Scroll to Top Button-->
+<!-- <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a> -->
+
+{% endblock %}
+
+{% block js %}
+<!-- Page level plugins -->
+<script src="{% static 'cedal/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'cedal/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+<!-- Page level custom scripts -->
+<script src="{% static 'cedal/js/demo/datatables-demo.js' %}"></script>
+
+<script>
+    $(document).ready(function() {
+    table("tablaDetalleCompra");
+    });
+</script>
+
+
+{% endblock %}
+

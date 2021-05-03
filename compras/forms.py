@@ -17,10 +17,10 @@ class comprasForm(forms.ModelForm):
         widgets = {
             'comprobante': forms.TextInput(attrs={'id': 'comprobante'}),
             'fecha' : forms.DateInput(attrs={"type": "date", "value": date.today(), 'id': 'fecha'}),
-            'cuit' : forms.TextInput(attrs={'id': 'cuit'}),
-            'iva' : forms.TextInput(attrs={'id': 'iva'}),
-            'total' : forms.TextInput(attrs={'id': 'total'}),
-            'subTotal' : forms.TextInput(attrs={'id': 'subTotal'}),
+            'cuit' : forms.TextInput(attrs={'id': 'cuit', 'readonly': True}),
+            'iva' : forms.TextInput(attrs={'id': 'iva', 'readonly': True, 'class': 'text-center font-weight-bold text-white bg-info'}),
+            'total' : forms.TextInput(attrs={'id': 'total', 'readonly': True, 'class': 'text-center font-weight-bold text-white bg-info'}),
+            'subTotal' : forms.TextInput(attrs={'id': 'subTotal', 'readonly': True, 'class': 'text-center font-weight-bold text-white bg-info'}),
             'tipoComprobante': forms.Select(choices=tipo_Comprobante, attrs={'id': 'tipoComprobante'} )
         }
 

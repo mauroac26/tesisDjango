@@ -8,9 +8,20 @@ from django.http import JsonResponse
 from proveedores.models import proveedores
 from django.http import HttpResponse
 from django.core.cache import cache
+from cedal.models import formaPago
+from cedal.form import formPago
+from caja.forms import cajaForm
+from caja.models import Caja
+from datetime import datetime
+
 # Create your views here.
 def index(request):
-    return render(request, 'compras/compras.html')
+
+    compra = Compras.objects.all().select_related('cuit')
+    data = {
+        "compras": compra
+    }
+    return render(request, 'compras/compras.html', data)
 
 
 def altaCompra(request):
@@ -20,6 +31,8 @@ def altaCompra(request):
     }
 
     data["formCompra"] = comprasForm()
+
+    data["formPago"] = formPago()
 
     
     # if request.method == "POST":
@@ -60,7 +73,7 @@ def productoAutocomplete(request):
             nombre.append(signer_json)
         return JsonResponse(nombre, safe=False)
     
-    return render(request, 'compras/altaCompra.html')
+    #return render(request, 'compras/altaCompra.html')
 
 import json
 def cargarCompra(request):
@@ -83,7 +96,7 @@ def cargarCompra(request):
         data['tipoComprobante'] = request.POST.get('tipoComprobante')
         data['fecha'] = request.POST.get('fecha')
         
-        print(data)
+        
         # compra = comprasForm(data)
 
         # if compra.is_valid(): 
@@ -164,84 +177,12 @@ def proveedorAutocomplete(request):
 
 
 
-# def prueba(request):
-  
-#     if request.is_ajax():
-    
-    
-#         data = {}
-
-#         ultima_compra = Compras.objects.order_by('id', 'fecha').last()
-            
-#         data['id_compra'] = ultima_compra
-#         data['cantidad'] = request.GET['cantidad']
-#         data['id_producto'] = request.GET['id_producto']
-
-        
-#         #data={}
-        
-#         # data['id_compra'] = request.GET['id_compra']
-#         # data['id_producto'] = request.GET['id_producto']
-#         # data['cantidad'] = request.GET['cantidad']
-        
-
-        
-        
-#             # data['id_compra'] = request.GET['id_compra']
-#             # data['id_producto'] = request.GET['id_producto']
-#             # data['cantidad'] = request.GET['cantidad']
-        
-#         formulario = detalleComprasForm(data)
-        
-#         if formulario.is_valid():
-#             formulario.save()
-#             return redirect(to='compras')
-#         else:
-#             return redirect(to='productos')
-#     # if request.is_ajax():
-        
-#     #     id_compra = request.POST.get('id_compra')
-#     #     id_producto = request.POST.get('id_producto')
-#     #     cantidad = request.POST.get('cantidad')
-        
-#     #     lista = list()
-
-#     #     data = {}
-
-#     #     data['id_compra'] = id_compra
-#     #     data['id_prducto'] = id_producto
-#     #     data['cantidad'] = cantidad
-        
-#     #     form = lista.append(data)
-#     #     formulario = detalleComprasForm(form)
-#     #     if formulario.is_valid():
-#     #         formulario.save()
-#     #         return redirect(to='compras')
-#     #     else:
-#     #         return redirect(to='productos')
-#         # lista = []
-
-#         # data = {}
-#         # data['id'] = "mauro"
-#         # data['num'] = 1
-
-#         #lista.append(data)
-
-#         # datalista = json.dumps(form)
-        
-#         # return HttpResponse(datalista, 'compras/prueba.html')
-     
-#         # data={
-#         #     "form": form
-#         # }
-#         # return render(request, 'compras/prueba.html', data)
-#     else:
-#         return render(request, 'compras/altaCompra.html')
-    
    
 def prueba(request):
+   
     # request should be ajax and method should be POST.
     if request.is_ajax and request.method == "POST":
+        
         # get the form data
         form = comprasForm(request.POST)
         # save the data and after fetch the object in instance
@@ -252,7 +193,7 @@ def prueba(request):
             
 
     # some error occured
-    return JsonResponse({"error": ""}, status=400)
+    return JsonResponse({"error": "ingresar compribante valido"}, status=400)
 
 
 def cargarDetalleCompra(request):
@@ -263,15 +204,85 @@ def cargarDetalleCompra(request):
         ultima_compra = Compras.objects.order_by('id', 'fecha').last()
         id_producto = request.GET['id_producto']
         cantidad = request.GET['cantidad']
-        
+        total = request.GET['total']
 
         data['id_compra'] = ultima_compra
         data['id_producto'] = id_producto
         data['cantidad'] = cantidad
+        data['total'] = total
         
         formulario = detalleComprasForm(data)
         if formulario.is_valid():
             
             formulario.save()
             return HttpResponse(True)
-    return JsonResponse({"error": ""}, status=400)
+            
+    return JsonResponse({"error": "Error"}, status=400)
+
+
+def detallesCompra(request, id):
+    
+    compras = Compras.objects.filter(id=id).select_related('cuit')
+    
+    detalle = detalleCompra.objects.filter(id_compra=id).select_related('id_producto')
+
+    data = {
+        "datos": compras
+    }
+    
+    data["detalles"] = detalle
+
+    return render(request, 'compras/detalleCompra.html', data)
+
+
+
+def cargarFormaPago(request):
+    
+    if request.is_ajax():
+        data = {}
+
+        ultima_compra = Compras.objects.order_by('id', 'fecha').last()
+        efectivo = request.GET['efectivo']
+        credito = request.GET['credito']
+        debito = request.GET['debito']
+        cuotas = request.GET['cuotas']
+        tipoCredito = request.GET['tipoCredito']
+        tipoDebito = request.GET['tipoDebito']
+  
+        data['id_compra'] = ultima_compra
+        data['efectivo'] = efectivo
+        data['credito'] = credito
+        data['debito'] = debito
+        data['cuotas'] = cuotas
+        data['tipoCredito'] = tipoCredito
+        data['tipoDebito'] = tipoDebito
+        
+        formulario = formPago(data)
+        if formulario.is_valid():
+            
+            formulario.save()
+        
+        
+        if efectivo > "":
+            
+            ultimo_saldo = Caja.objects.latest('fecha').saldo
+            
+            #fecha = Compras.objects.latest('fecha').fecha
+           
+            saldo = float(ultimo_saldo) - float(efectivo)
+            
+            caja = {} 
+            
+            caja['fecha'] = datetime.now()
+            caja['descripcion'] = "Compra comprobante N°"
+            caja['operacion'] = 1
+            caja['monto'] = efectivo 
+            caja['saldo'] = saldo
+
+            formulario = cajaForm(caja)
+            
+            if formulario.is_valid():
+            
+                formulario.save()
+            
+    return JsonResponse({"error": "Error"}, status=400)
