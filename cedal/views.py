@@ -25,8 +25,9 @@ def graficoCompras(request):
         #     'datos': compra
         # }
         
-        
+
         return JsonResponse({"data": list(compra)})
+        
 
     return render(request, 'cedal/index.html')
     
