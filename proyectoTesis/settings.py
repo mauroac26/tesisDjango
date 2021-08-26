@@ -25,7 +25,9 @@ SECRET_KEY = 'u0$#(mu5%374!dd9p#!nr!3&9_+9@73x$0$aldx5wb16^)b8ab'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
+MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
@@ -33,6 +35,7 @@ LOGOUT_REDIRECT_URL = '/'
 # Application definition
 
 INSTALLED_APPS = [
+    'admin_interface',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,7 +49,10 @@ INSTALLED_APPS = [
     'caja',
     'compras',
     'crispy_forms',
+    'colorfield',
 ]
+
+X_FRAME_OPTIONS='SAMEORIGIN'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

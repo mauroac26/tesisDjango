@@ -77,8 +77,8 @@
                 <div class="col-12 ">
                     <!-- Total -->
                     
-                        {{ formCompra.total|as_crispy_field }}
-                    <!-- <input type="text" name="total" id="total" value="0.00" class="form-control bg-info text-center font-weight-bold text-white"> -->
+                      
+                    <input type="text" name="total" id="total" value="0.00" class="form-control bg-info text-center font-weight-bold text-white"> 
                       
                     
                 
@@ -88,8 +88,8 @@
             <div class="row">
                 <div class="col-6 col-md-6 ">
                     
-                        {{ formCompra.iva|as_crispy_field }}
-                        <!-- <input type="text" name="iva" id="iva" value="0.00" class="form-control bg-info font-weight-bold text-center text-white" > -->
+                      
+                        <input type="text" name="iva" id="iva" value="0.00" class="form-control bg-info font-weight-bold text-center text-white" > 
                       
                     
                   
@@ -100,10 +100,10 @@
             
                 <div class="col-6 col-md-6 ">
                     
-                        {{ formCompra.subTotal|as_crispy_field }}
+                     
                       
                       
-                        <!-- <input type="text" name="subTotal" id="subTotal" value="0.00" class="form-control bg-info font-weight-bold text-center text-white" > -->
+                 <input type="text" name="subTotal" id="subTotal" value="0.00" class="form-control bg-info font-weight-bold text-center text-white" > 
                    
                     </div>
             </div>
@@ -149,10 +149,8 @@
                       
                       </div>
                 </div>
-                <div class="row justify-content-between">
-                <div class="col-4 ">
-                    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modalformaPago">Formas de pago</button>
-                </div>
+                <div class="row justify-content-end">
+               
                 <div class="col-4">
                     <button class="btn btn-primary" type="submit">Confirmar Compra</button>
                 </div>
@@ -188,198 +186,9 @@
         </div>
     </div>
     
-</div>
+  </div>
 
-         <!-- Modal -->
-         <div class="modal fade" id="modalformaPago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Formas de pago</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                    <!-- <div>
-                        Elige las siguientes opciones:<br>
-                    <div class="form-check form-check-inline justify-content-center">
-                        <input class="form-check-input>" type="checkbox" id="chEfectivo" value="1">
-                        <label class="form-check-label" for="chEfectivo">Efectivo</label>
-                      </div>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="chCredito" value="2">
-                        <label class="form-check-label" for="chCredito">Crédito</label>
-                      </div>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="chDebito" value="3">
-                        <label class="form-check-label" for="chDebito">Débito</label>
-                      </div>
-                    </div> -->
-                     <div>
-                        <button type="button" id="btnEfectivo" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#modalEfectivo">Efectivo</button>
-                        <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="">Tarjeta de credito</button>
-                        <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="">Tarjeta de debito</button>
-                    </div>
-                          
-                            <!-- <form action="" method="post" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <div class="row mt-3 " id="divEfectivo" >
-                                    <div class="col-4 col-md-4 " >
-                                
-                                        {{ formPago.efectivo|as_crispy_field }}
-                                        
-                                      </div>
-                                </div>
-
-                                      <div class="row mt-3 " id="divCredito">
-                                      <div class="col-4 ">
-                                       
-                                        {{ formPago.credito|as_crispy_field }}
-                                       
-                                      </div>
-                
-                                      <div class="col-4 " >
-                                    
-                                      {{ formPago.tipoCredito|as_crispy_field }}
-                                     
-                                    </div>
-                                </div>
-
-                                <div class="row mt-3 " id="divDebito">
-                                    <div class="col-4 col-md-4">
-                                     
-                                      {{ formPago.debito|as_crispy_field }}
-                                     
-                                    </div>
-              
-                                    <div class="col-4 col-md-4 ">
-                                  
-                                    {{ formPago.tipoDebito|as_crispy_field }}
-                                   
-                                  </div>
-                              </div>
-                              <div class="row mt-3" id="divCuotas">
-                                <div class="col-4 col-md-4 ">
-                            
-                                    {{ formPago.cuotas|as_crispy_field }}
-                                    
-                                  </div>
-                            </div>
-                            
-                        
-                </div>
-                
-            </form> -->
-            <!-- <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <div class="d-flex justify-content-end">
-                  <button class="btn btn-primary" type="button" data-dismiss="modal" onclick="datosFormaPago();">confirmar</button>
-              </div>
-            </div> -->
-            {{mensaje}}
-            </div>
-          </div>   
-           </div>  
-
-<div id="cardFP" class="d-none">
-    <div class="card">
-        <div class="card-header">
-          
-        </div>
-        <div class="card-body">
-          <div class="row">
-              <div class="col-4">
-                  Formas de pago
-                  <input type="text" name="" id="tipoFormaPago" disabled>
-              </div>
-          </div>
-          
-          <div class="row">
-            <div class="col-4">
-                Pago Efectivo
-                <input type="text" name="" id="detalleEfectivo" disabled>
-            </div>
-            <div class="col-4">
-                Pago Efectivo
-                <input type="text" name="" id="detalleCredito" disabled>
-            </div>
-            <div class="col-4">
-                Pago Efectivo
-                <input type="text" name="" id="detalleDebito" disabled>
-            </div>
-        </div>
-        </div>
-      </div>
-</div>
-
-<!-- MODAL PAGO EN EFECTIVO -->
-<div class="modal fade" id="modalEfectivo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Pago en efectivo</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <div class="row mt-3 " id="divEfectivo" >
-                <div class="col-4 col-md-4 " >
-            
-                    {{ formPago.efectivo|as_crispy_field }}
-                    
-                  </div>
-            </div>
-        </div>
-                
-    
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <div class="d-flex justify-content-end">
-          <button class="btn btn-primary" type="button" data-dismiss="modal" >confirmar</button>
-      </div> 
-    </div>
-    </div>
-    </div>
-</div>
-
-<!-- MODAL PAGO EN EFECTIVO -->
-<div class="modal fade" id="modalCredito" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Pago con Tarjeta de Credito</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <div class="row mt-3 " id="divCredito">
-                <div class="col-4 ">
-                 
-                  {{ formPago.credito|as_crispy_field }}
-                 
-                </div>
-
-                <div class="col-4 " >
-              
-                {{ formPago.tipoCredito|as_crispy_field }}
-               
-              </div>
-          </div>
-        </div>
-                
-    
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <div class="d-flex justify-content-end">
-          <button class="btn btn-primary" type="button" data-dismiss="modal" >confirmar</button>
-      </div> 
-    </div>
-    </div>
-    </div>
-</div>
+{{mensaje}}
 {% endblock %}
 
 
@@ -596,24 +405,24 @@ $(function() {
             data: serializedData,
             success: function (response) {
                  //carga forma de pago
-    let efectivo= $('#efectivo').val();
-    let credito= $('#credito').val();
-    let debito= $('#debito').val();
-    let cuotas= $('#cuotas').val();
-    let tipoCredito= $('#tipoCredito').val();
-    let tipoDebito= $('#tipoDebito').val();
+    // let efectivo= $('#efectivo').val();
+    // let credito= $('#credito').val();
+    // let debito= $('#debito').val();
+    // let cuotas= $('#cuotas').val();
+    // let tipoCredito= $('#tipoCredito').val();
+    // let tipoDebito= $('#tipoDebito').val();
 
-    $.ajax({
-            type: 'get',
-            url: "{% url 'cargarFormaPago' %}",
-            data: {'efectivo': efectivo,
-                   'credito': credito,
-                   'debito': debito,
-                   'cuotas': cuotas,
-                   'tipoCredito': tipoCredito,
-                   'tipoDebito': tipoDebito,
-        }
-        })
+    // $.ajax({
+    //         type: 'get',
+    //         url: "{% url 'cargarFormaPago' %}",
+    //         data: {'efectivo': efectivo,
+    //                'credito': credito,
+    //                'debito': debito,
+    //                'cuotas': cuotas,
+    //                'tipoCredito': tipoCredito,
+    //                'tipoDebito': tipoDebito,
+    //     }
+    //     })
 
                 let filaTablaAC = $('#tablaAltaCompra tr').length;
                
@@ -621,15 +430,14 @@ $(function() {
 
                 var cantidadTabla = document.getElementById('tablaAltaCompra').rows[f].cells[2].innerText;            
                 var idp = $('#tablaAltaCompra tr:eq('+f+')').find("td:first-child").data('producto');   
-                var total = document.getElementById('tablaAltaCompra').rows[f].cells[6].innerText; 
+                //var total = document.getElementById('tablaAltaCompra').rows[f].cells[6].innerText; 
                 
             // carga detalle de la compra
                 $.ajax({
             type: 'get',
             url: "{% url 'cargarDetalleCompra' %}",
             data: {'id_producto': idp,
-                   'cantidad': cantidadTabla,
-                   'total': total,
+                   'cantidad': cantidadTabla
         },
             success: function (response) {
                 window.location = "{% url 'compras' %}";
@@ -658,7 +466,7 @@ $(function() {
     
     totalPago = $('#total').val();
 
-    alert(totalPago);
+    //alert(totalPago);
     $( '#btnEfectivo').on( 'click', function() {
         totalPago =  $('#total').val();
     document.getElementById('efectivo').value = totalPago; 
@@ -721,7 +529,19 @@ $( '#btnCredito').on( 'click', function() {
 
 
 </script>
+{% if messages %}
+        {% for m in messages %}
+<script>
+  
+  Swal.fire({
+    "title":"Felicitaciones",
+      "text": "{{m}}",
+        "icon": "success"
 
+  })
+</script>
+     {% endfor %}
+{% endif %}
 
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>

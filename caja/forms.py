@@ -5,4 +5,4 @@ class cajaForm(forms.ModelForm):
 
     class Meta:
         model = Caja
-        fields = ["fecha", "descripcion", "operacion", "monto", "saldo"]
+        fields = ["descripcion", "operacion", "monto"]

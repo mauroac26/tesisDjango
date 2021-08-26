@@ -27,12 +27,65 @@ function number_format(number, decimals, dec_point, thousands_sep) {
   return s.join(dec);
 }
 
+var paramFecha = [];
+var paramPrecio = [];
+// let mes;
+// $.ajax({
+//   type: "post",
+//    url: "{% url '/cedal/graficoCompras' %}",
+// success: function(response) {
+//           alert(response);
+// }
+
+
+
+// });
+
+// 	$.post("{% url 'index' %}",
+							
+//  function(data){
+// alert(data);
+				// var pe = JSON.parse(data);
+				 //$.each(pe, function(i, item){
+						 
+			                
+							// paramCompra.push(item.fecha + ' ' +item.year);
+							// paramPrecio.push(parseFloat(item.total).toFixed(2));                    
+				
+				
+				
+				 //});
+
 // Area Chart Example
+
+$.ajax({
+  type: "get",
+  dataType: 'json',
+   url:  "graficoCompras",
+success: function(response) {
+  
+    var pe = response.data;
+    //alert(pe);
+                 $.each(pe, function(i, item){
+                  //const shortMonthName = moment(item.id_compra__fecha).format('MMM');
+                 paramFecha.push(item.id_compra__fecha__month);
+              
+                 paramPrecio.push(parseFloat(item.total__sum).toFixed(2)); 
+                                        
+            
+                
+                 });
+
+
+
+
+
 var ctx = document.getElementById("myAreaChart");
+
 var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    labels: paramFecha,
     datasets: [{
       label: "Earnings",
       lineTension: 0.3,
@@ -46,7 +99,7 @@ var myLineChart = new Chart(ctx, {
       pointHoverBorderColor: "rgba(78, 115, 223, 1)",
       pointHitRadius: 10,
       pointBorderWidth: 2,
-      data: [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],
+      data: paramPrecio,
     }],
   },
   options: {
@@ -115,4 +168,6 @@ var myLineChart = new Chart(ctx, {
       }
     }
   }
+});
+}
 });

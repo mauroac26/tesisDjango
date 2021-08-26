@@ -1,6 +1,7 @@
 from django import forms
 from datetime import date
 from .models import Compras, detalleCompra
+from django.forms import ValidationError
 
 tipo_Comprobante = [
     [0, "Factura"],
@@ -9,18 +10,25 @@ tipo_Comprobante = [
 ]
 
 class comprasForm(forms.ModelForm):
+    
+    # def clean_comprobante(self):
+    #     comprobante = self.cleaned_data["comprobante"]
+        
+    #     existe = Compras.objects.filter(comprobante__iexact=comprobante).exists()
+        
+    #     if existe:
+    #         raise ValidationError("El numero de comprobante ya existe")
+        
+    #     return comprobante
 
     class Meta:
         model = Compras
-        fields = ['comprobante', 'fecha', 'cuit', 'iva', 'total', 'subTotal', 'tipoComprobante']
+        fields = ['comprobante', 'fecha', 'cuit', 'tipoComprobante']
 
         widgets = {
-            'comprobante': forms.TextInput(attrs={'id': 'comprobante'}),
+            'comprobante': forms.TextInput(attrs={'id': 'comprobante', 'required': True}),
             'fecha' : forms.DateInput(attrs={"type": "date", "value": date.today(), 'id': 'fecha'}),
             'cuit' : forms.TextInput(attrs={'id': 'cuit', 'readonly': True}),
-            'iva' : forms.TextInput(attrs={'id': 'iva', 'readonly': True, 'class': 'text-center font-weight-bold text-white bg-info'}),
-            'total' : forms.TextInput(attrs={'id': 'total', 'readonly': True, 'class': 'text-center font-weight-bold text-white bg-info'}),
-            'subTotal' : forms.TextInput(attrs={'id': 'subTotal', 'readonly': True, 'class': 'text-center font-weight-bold text-white bg-info'}),
             'tipoComprobante': forms.Select(choices=tipo_Comprobante, attrs={'id': 'tipoComprobante'} )
         }
 

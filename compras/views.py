@@ -13,14 +13,21 @@ from cedal.form import formPago
 from caja.forms import cajaForm
 from caja.models import Caja
 from datetime import datetime
+from django.db.models import Sum
+from django.contrib import messages
 
 # Create your views here.
 def index(request):
 
-    compra = Compras.objects.all().select_related('cuit')
+
+    compra = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha').annotate(Sum('total'))
+
+
     data = {
         "compras": compra
     }
+
+
     return render(request, 'compras/compras.html', data)
 
 
@@ -204,33 +211,131 @@ def cargarDetalleCompra(request):
         ultima_compra = Compras.objects.order_by('id', 'fecha').last()
         id_producto = request.GET['id_producto']
         cantidad = request.GET['cantidad']
-        total = request.GET['total']
+        precio = Producto.objects.get(id=id_producto)
+        
+        
+        total = int(cantidad) * float(precio.precio_compra)
+        
+        neto = float(total) / 1.21
+        iva = float(neto) * 0.21
+        
 
         data['id_compra'] = ultima_compra
         data['id_producto'] = id_producto
         data['cantidad'] = cantidad
+        data['iva'] = "{0:.2f}".format(iva)
+        data['subTotal'] = "{0:.2f}".format(neto)
         data['total'] = total
+        
         
         formulario = detalleComprasForm(data)
         if formulario.is_valid():
             
             formulario.save()
+
+            if id_producto:
+                producto = Producto.objects.get(id=id_producto)
+                stock = int(producto.stock) + int(cantidad)
+                producto.stock = stock
+                producto.save()
+            messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
+
             return HttpResponse(True)
             
+        
+
     return JsonResponse({"error": "Error"}, status=400)
 
-
+from decimal import Decimal
 def detallesCompra(request, id):
     
     compras = Compras.objects.filter(id=id).select_related('cuit')
     
-    detalle = detalleCompra.objects.filter(id_compra=id).select_related('id_producto')
-
     data = {
         "datos": compras
     }
     
+    data["pagos"] = formaPago.objects.filter(id_compra=id).select_related('tipoDebito').select_related('tipoCredito')
+
+    data["formPago"] = formPago()
+
+    detalle = detalleCompra.objects.filter(id_compra=id).select_related('id_producto')
+    
+    iva = detalleCompra.objects.filter(id_compra=id).aggregate(Sum('iva'))
+    subTotal = detalleCompra.objects.filter(id_compra=id).aggregate(Sum('subTotal'))
+    total = detalleCompra.objects.filter(id_compra=id).aggregate(Sum('total'))
+    
+    
+    for d in data["datos"]:
+        comprobante = d.comprobante
+    data["iva"] = iva
+    data["subTotal"] = subTotal
+    data["total"] = total
+    
     data["detalles"] = detalle
+
+    if request.method == "POST":
+        
+        efectivo = float(request.POST.get('efectivo'))
+        credito = float(request.POST.get('credito'))
+        debito = float(request.POST.get('debito'))
+        cuotas = request.POST.get('cuotas')
+        tipoCredito = request.POST.get('tipoCredito')
+        tipoDebito = request.POST.get('tipoDebito')
+
+        sumaTotal = efectivo + credito + debito
+
+        if sumaTotal == float(data['total']["total__sum"]):
+            
+            data['id_compra'] = id
+            data['efectivo'] = efectivo
+            data['credito'] = credito
+            data['debito'] = debito
+            data['cuotas'] = cuotas
+            data['tipoCredito'] = tipoCredito
+            data['tipoDebito'] = tipoDebito
+
+            data['id_compra'] = id
+            #data['efectivo'] = efectivo
+
+            pago = formPago(data)
+        
+            if pago.is_valid(): 
+                pago.save()
+                
+                messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
+            
+            if efectivo > 0:
+                
+                caja = {}
+                caja['descripcion'] = "Compra comprobante N° " + comprobante
+                caja['operacion'] = 1
+                caja['monto'] = efectivo 
+
+                formulario = cajaForm(caja)
+
+                if formulario.is_valid():
+                    post = formulario.save(commit=False)
+            
+                    ultimo_saldo = Caja.objects.latest('fecha').saldo
+                    
+                    post.saldo = float(ultimo_saldo) - float(efectivo)
+            
+                    fecha = datetime.now()
+                    post.fecha = fecha
+                    post.save()
+            else:
+                data["formPago"] = formPago() 
+        else:
+            messages.add_message(request, messages.ERROR, "El monto seleccionado es diferente al monto total de la compra")
+            return render(request, 'compras/detalleCompra.html', data)
+        #else:
+            
+        #     totalParcial = total - efectivo
+        #     response = ''
+        #     for key, value in request.POST.items():
+        #         response += 'key:%s value:%s\n' % (key, value)
+        #     return HttpResponse(response) 
 
     return render(request, 'compras/detalleCompra.html', data)
 

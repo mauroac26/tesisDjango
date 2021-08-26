@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+   
 {% load static %}
 <head>
 
@@ -436,7 +436,7 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Resumen de Compras</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -628,7 +628,33 @@
     <!-- Page level custom scripts -->
     <script src="{% static 'cedal/js/demo/chart-area-demo.js' %}"></script>
     <script src="{% static 'cedal/js/demo/chart-pie-demo.js' %}"></script>
-    
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    {% if messages %}
+        {% for m in messages %}
+            {% if m.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <script>
+                Swal.fire({
+                    "title":"Felicitaciones",
+                    "text": "{{m}}",
+                    "icon": "success"
+
+                })
+            </script>
+            {% endif %}
+
+            {% if m.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            <script>
+                Swal.fire({
+                    "title":"Error",
+                    "text": "{{m}}",
+                    "icon": "error"
+
+                })
+            </script>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
     {% block js %}
 
     {% endblock %}

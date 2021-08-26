@@ -38,10 +38,9 @@ def index(request):
             post.save()
             
             #data["mensaje"] = ultimo_saldo
-    # hoy = datetime.now()
-    # man = timedelta(days=1)
-    # caja = Caja.objects.filter(fecha__range=[hoy, hoy + timedelta(days=1)])
-    caja = Caja.objects.all()
+    hoy = datetime.now()
+    caja = Caja.objects.filter(fecha__range=[hoy - timedelta(days=1), hoy + timedelta(days=1)])
+    #caja = Caja.objects.all()
     data["cajaIngreso"] = caja
 
     return render(request, 'caja/caja.html', data)

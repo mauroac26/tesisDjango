@@ -1,6 +1,8 @@
 {% extends 'cedal/index.html' %}
 {% load static %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}Detalle de la Compra{% endblock %}
 
 {% block content %}
@@ -28,7 +30,7 @@
             <div class="row ml-2 "><label for="" class=""> CUIT: <b>{{c.cuit}}</b></label></div>
             <div class="row ml-2 "><label for="" class=""> Fecha: <b>{{c.fecha}}</b></label></div>
             
-          
+            {% endfor %}
         </div>
         <br>
         <div class="card-body">
@@ -52,27 +54,247 @@
                         <td>{{d.id_producto.precio_compra}}</td>
                         <td>{{d.total}}</td>
                     </tr>
+                    
                     {% endfor %}
                 
                     </tbody>
                 </table>
                 
             </div>
+            {% if not pagos %}
+            <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modalformaPago">Formas de pago</button>
+            {% endif %}
             <div class="row col-12 offset-md-10">
-               <small> sub-Total: <b>${{c.subTotal}}</b></small>
+               <small> sub-Total: <b>${{subTotal.subTotal__sum}}</b></small>
               
             </div>
             <div class="row col-12 offset-md-10">
-               <small> iva 21.00%: <b>${{c.iva}}</b></small>
+               <small> iva 21.00%: <b>${{iva.iva__sum}}</b></small>
             </div>
             <div class="row col-12 offset-md-10">
-                <small> Total: <b>${{c.total}}</b></small>
+                <label id="total" for="total"><small> Total: <b>${{total.total__sum}}</b></small></label>
              </div>
-            {% endfor %}
+             
         </div>
     </div>
 
 </div>
+
+<!-- Modal -->
+<!-- <div class="modal fade" id="modalformaPago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Formas de pago</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+             
+             <div>
+                <button type="button" id="btnEfectivo" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#modalformaPago">Efectivo</button>
+                <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="">Tarjeta de credito</button>
+                <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="">Tarjeta de debito</button>
+            </div>
+                  
+    </div>
+  </div>   
+   </div>  
+</div> -->
+
+<!-- Modal -->
+<div class="modal fade" id="modalformaPago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Formas de pago</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div>
+                Elige las siguientes opciones:<br>
+            <div class="form-check form-check-inline justify-content-center">
+                <input class="form-check-input>" type="checkbox" id="chEfectivo" value="1">
+                <label class="form-check-label" for="chEfectivo">Efectivo</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="chCredito" value="2">
+                <label class="form-check-label" for="chCredito">Crédito</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="chDebito" value="3">
+                <label class="form-check-label" for="chDebito">Débito</label>
+              </div>
+            </div>
+            <p>Total a pagar ${{total.total__sum}}</p>
+             <!-- <div>
+                <button type="button" id="btnEfectivo" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#modalEfectivo">Efectivo</button>
+                <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="">Tarjeta de credito</button>
+                <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="">Tarjeta de debito</button>
+            </div> -->
+                  
+                    <form action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row mt-3 d-none" id="divEfectivo" >
+                            <div class="col-4 col-md-4 " >
+                               
+                                {{ formPago.efectivo|as_crispy_field }}
+                                
+                              </div>
+
+                              
+                        </div>
+
+                              <div class="row mt-3">
+                              <div class="col-4 d-none" id="divCredito">
+                               
+                                {{ formPago.credito|as_crispy_field }}
+                               
+                              </div>
+        
+                              <div class="col-4 d-none" id="divTipoCredito" >
+                            
+                              {{ formPago.tipoCredito|as_crispy_field }}
+                             
+                            </div>
+
+                            <div class="col-4 d-none" id="divCuotas">
+                      
+                              {{ formPago.cuotas|as_crispy_field }}
+                              
+                            </div>
+                        </div>
+
+                        <!-- <div class="row mt-3" id="divCuotas">
+                          <div class="col-4 col-md-4 ">
+                      
+                              {{ formPago.cuotas|as_crispy_field }}
+                              
+                            </div>
+                      </div> -->
+
+                        <div class="row mt-3" >
+                            <div class="col-4 d-none" id="divDebito" >
+                             
+                              {{ formPago.debito|as_crispy_field }}
+                             
+                            </div>
+      
+                            <div class="col-4 d-none" id="divTipoDebito" >
+                          
+                            {{ formPago.tipoDebito|as_crispy_field }}
+                           
+                          </div>
+                      </div>
+                      
+                    
+                
+        </div>
+        
+    
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary" type="submit">confirmar</button>
+      </div>
+    </div>
+</form>
+    {{mensaje}}
+    </div>
+  </div>   
+   </div>  
+</div>
+
+{% if pagos %}
+{% for p in pagos %}
+<div class="container-fluid">
+  <div class="card shadow mb-4" >
+      <div class="card-header py-3">
+        Formas de pago
+      </div>
+      <div class="card-body">
+        
+        
+        <div class="row mt-2">
+          <div class="col-3 col-md-3 offset-md-2 ">
+            <label for="">Pago Efectivo</label>
+              <input type="text" name="" value=${{p.efectivo}} class="form-control-sm bg-secondary" readonly>
+          </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-3 col-md-3 offset-md-2">
+              <label for="">Pago Tarjeta Credito</label>
+              <input type="text" name="" value=${{p.credito}} class="form-control-sm bg-secondary" readonly>
+          </div>
+          <div class="col-3 col-md-3 ">
+           <label for="">Tarjeta Credito </label>
+            <input type="text" name="" value= {{p.tipoCredito.nombre}} class="form-control-sm bg-secondary" readonly>
+        </div>
+        <div class="col-2 col-md-2 ">
+          <label for="">Cuotas</label>
+          <input type="text" name="" value={{p.cuotas}} class="form-control-sm bg-secondary" readonly>
+      </div>
+          </div>
+
+          <div class="row  mt-3">
+          <div class="col-3 col-md-3 offset-md-2">
+            <label for=""> Pago Debito </label>
+            <input type="text" name="" value="${{p.debito}}" class="form-control-sm bg-secondary" readonly>
+          </div>
+          <div class="col-3 col-md-3">
+            <label for=""> Tarjeta Debito </label>
+            {% if p.tipoDebito == none %}
+            <input type="text" name="" value="" class="form-control-sm bg-secondary" readonly>
+            {% else %}
+            <input type="text" name="" value={{p.tipoDebito.nombre}} class="form-control-sm bg-secondary" readonly>
+            {% endif %}
+            
+        </div>
+        </div>
+      </div>
+      </div>
+    </div>
+
+{% endfor %}
+{% endif %}
+<!-- MODAL PAGO EN EFECTIVO -->
+<!-- <div class="modal fade" id="modalEfectivo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Pago en efectivo</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="row mt-3 " id="divEfectivo" >
+                <div class="col-4 col-md-4 " > 
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                    Efectivo
+                        <input type="text" name="efectivo" id="efectivo" value={{total.total__sum}} class="form-control">
+                    {{ formPago.efectivo|as_crispy_field }}  
+                    
+                  </div>
+            </div>
+        </div>
+                
+    
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <div class="d-flex justify-content-end">
+          <button  class="btn btn-primary" type="submit" >confirmar</button>
+      </div> 
+    </div>
+</form>
+    </div>
+    </div>
+</div>   -->
 <!-- /.container-fluid -->
 
 
@@ -97,6 +319,59 @@
     });
 </script>
 
+<script>
+   $( '#chEfectivo').on( 'click', function() {
+         var mydiv = document.getElementById('divEfectivo');
+         if( $(this).is(':checked') ) {
+             mydiv.className = 'row mt-3 d-block'
+            //  document.getElementById('efectivo').readOnly = false;
+            //  document.getElementById('efectivo').value = {{total.total__sum}};
+            
+ }else{
+       mydiv.className = 'row mt-3 d-none'
+    //  document.getElementById('efectivo').readOnly = true;
+ }
+ })
+
+ $( '#chCredito').on( 'click', function() {
+         
+  var divCredito = document.getElementById('divCredito');
+  var divTipoCredito = document.getElementById('divTipoCredito');
+  var divCuotas = document.getElementById('divCuotas');
+         if( $(this).is(':checked') ) {
+             divCredito.className = 'col-4 d-block';
+             divTipoCredito.className = 'col-4 d-block';
+             divCuotas.className = 'col-4 d-block';
+            //  document.getElementById('credito').readOnly = false;
+            //  document.getElementById('cuotas').readOnly = false;
+            
+            
+ }else{
+    //  document.getElementById('credito').readOnly = true;
+    //  document.getElementById('cuotas').readOnly = true;
+             divCredito.className = 'col-4 d-none';
+             divTipoCredito.className = 'col-4 d-none';
+             divCuotas.className = 'col-4 d-none';
+ }
+ })
+
+ $( '#chDebito').on( 'click', function() {
+  var divDebito = document.getElementById('divDebito');
+  var divTipoDebito = document.getElementById('divTipoDebito');
+
+         if( $(this).is(':checked') ) {
+             divDebito.className = 'col-4 d-block';
+             divTipoDebito.className = 'col-4 d-block';
+             //document.getElementById('debito').readOnly = false;
+             //document.getElementById('efectivo').value = $('#total').val();
+            
+ }else{
+     //document.getElementById('debito').readOnly = true;
+     divDebito.className = 'col-4 d-none'
+     divTipoDebito.className = 'col-4 d-none'
+ }
+ })
+</script>
 
 {% endblock %}
 
