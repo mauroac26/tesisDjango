@@ -228,18 +228,26 @@
           <div class="row mt-3">
             <div class="col-3 col-md-3 offset-md-2">
               <label for="">Pago Tarjeta Credito</label>
+              
               <input type="text" name="" value=${{p.credito}} class="form-control-sm bg-secondary" readonly>
           </div>
           <div class="col-3 col-md-3 ">
            <label for="">Tarjeta Credito </label>
+           {% if p.tipoCredito == none %}
+           <input type="text" name="" value="" class="form-control-sm bg-secondary" readonly>
+           {% else %}
             <input type="text" name="" value= {{p.tipoCredito.nombre}} class="form-control-sm bg-secondary" readonly>
+            {% endif %}
         </div>
+        
         <div class="col-2 col-md-2 ">
           <label for="">Cuotas</label>
           <input type="text" name="" value={{p.cuotas}} class="form-control-sm bg-secondary" readonly>
+          
       </div>
+      
           </div>
-
+          
           <div class="row  mt-3">
           <div class="col-3 col-md-3 offset-md-2">
             <label for=""> Pago Debito </label>

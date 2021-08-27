@@ -58,6 +58,9 @@ var paramPrecio = [];
 
 // Area Chart Example
 
+fecha = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+
+
 $.ajax({
   type: "get",
   dataType: 'json',
@@ -68,7 +71,7 @@ success: function(response) {
     //alert(pe);
                  $.each(pe, function(i, item){
                   //const shortMonthName = moment(item.id_compra__fecha).format('MMM');
-                 paramFecha.push(item.id_compra__fecha__month);
+                 paramFecha.push(fecha[item.id_compra__fecha__month - 1]);
               
                  paramPrecio.push(parseFloat(item.total__sum).toFixed(2)); 
                                         
@@ -87,7 +90,7 @@ var myLineChart = new Chart(ctx, {
   data: {
     labels: paramFecha,
     datasets: [{
-      label: "Earnings",
+      label: "Compras",
       lineTension: 0.3,
       backgroundColor: "rgba(78, 115, 223, 0.05)",
       borderColor: "rgba(78, 115, 223, 1)",
@@ -144,8 +147,16 @@ var myLineChart = new Chart(ctx, {
       }],
     },
     legend: {
-      display: false
-    },
+      display: false,
+      labels: {
+        // This more specific font property overrides the global property
+        font: {
+            size: 50
+            
+        }
+    }
+    
+},
     tooltips: {
       backgroundColor: "rgb(255,255,255)",
       bodyFontColor: "#858796",
