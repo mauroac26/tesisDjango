@@ -14,20 +14,20 @@
     
     <div class="row">
         
-    <div class="col-5">
+    <div class="col-md-5">
     <div class="card border-dark mb-3">
         <div class="card-header">Seleccion de Productos</div>
         <div class="card-body text-primary">
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="row">
-                    <div class="col-9 col-md-9 ">
+                    <div class="col-md-9">
                         Nombre
                         <input type="text" name="nombreProducto" id="nombreProducto" class="form-control">
                         <!-- {{form.nombre|as_crispy_field}} -->
                     </div>
                    
-                    <div class="col-3 col-md-3 ">
+                    <div class="col-md-3 ">
                         Código
                         <input type="text" name="" id="codigo" class="form-control" disabled>
                         <!-- {{form.codigo|as_crispy_field}} -->
@@ -35,13 +35,13 @@
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-6 col-md-6 ">
+                    <div class="col-md-6 ">
                         Precio Compra
                         <input type="text" name="" id="precio" class="form-control">
                         <!-- {{form.precio_compra|as_crispy_field}} -->
                     </div>
 
-                    <div class="col-6 col-md-6 ">
+                    <div class="col-md-6 ">
                         Stock Actual
                         <input type="text" name="" id="stock" class="form-control" disabled>
                         <!-- {{form.stock|as_crispy_field}} -->
@@ -49,7 +49,7 @@
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-6 col-md-6 ">
+                    <div class="col-md-6 ">
                         Cantidad
                       <input type="text" name="cantidad" id="cantidad" class="form-control">
                     
@@ -69,7 +69,7 @@
       </div>
     </div>
 
-    <div class="col-7">
+    <div class="col-md-7">
       <div class="card border-dark mb-3 ml-4" >
         <div class="card-header">Total de la compra</div>
         <div class="card-body text-primary">
@@ -151,7 +151,7 @@
                 </div>
                 <div class="row justify-content-end">
                
-                <div class="col-4">
+                <div class="col-md-4">
                     <button class="btn btn-primary" type="submit">Confirmar Compra</button>
                 </div>
                </div> 
@@ -164,7 +164,7 @@
     </div>
 
     <div class="row">
-        <div class="col-12 pt-3">
+        <div class="col-md-12 pt-3">
             <div class="table-responsive" style="height: 160px;">
                 <table class="table table-hover table-bordered table-sm table-striped text-white" id="tablaAltaCompra">
                     <thead class="bg-dark">
