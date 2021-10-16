@@ -199,23 +199,34 @@
 <script>
     
 $(function() {
-
+    var p = 0;
     $("#nombreProducto").autocomplete({
+        
         source:  "{% url 'productoAutocomplete' %}",
+        
         select: function(event, ui){
-
-            $("#stock").val(ui.item.stock); 
-            $("#codigo").val(ui.item.codigo);
-            $("#precio").val(ui.item.precio);
-            $("#nombreProducto").val(ui.item.value); 
+            p = ui.item.n;
+            if (ui.item.n == 1){
+               
+                window.location = "{% url 'altaProducto' %}";
+                $("#nombreProducto").val('');
+                event.preventDefault();
+            }else{
+                $("#stock").val(ui.item.stock); 
+                $("#codigo").val(ui.item.codigo);
+                $("#precio").val(ui.item.precio);
+                $("#nombreProducto").val(ui.item.value); 
             
-            idProducto = ui.item.id
+                idProducto = ui.item.id
+            }
+            
             
 }
 }).data('ui-autocomplete')._renderItem = function(ul, item) {
         
-    
+        
                 return $("<li>").append(item.label).appendTo(ul);
+                
                 
             };
   

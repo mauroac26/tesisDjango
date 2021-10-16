@@ -62,23 +62,32 @@ def productoAutocomplete(request):
 
         producto = Producto.objects.filter(nombre__icontains=request.GET.get("term"))
         nombre = list()
-        for n in producto:
-            if n.stock > n.stock_min:
-                color = "badge-success"
-            elif n.stock <= n.stock_min:
-                color = "badge-warning"
-            else:
-                color = "badge-danger"
+        if producto:
             
+            for n in producto:
+                if n.stock > n.stock_min:
+                    color = "badge-success"
+                elif n.stock <= n.stock_min:
+                    color = "badge-warning"
+                else:
+                    color = "badge-danger"
+                
+                signer_json = {}
+                signer_json['id'] = n.id
+                signer_json['label'] = '<li class="list-group-item d-flex justify-content-between align-items-center"><div class="col-sm-4">'+str(n.nombre)+'</div><span class="badge '+str(color)+' badge-pill text-white">'+str(n.stock)+'</span><span class="float-right">$'+str(n.precio_venta)+'</span></li>'
+                signer_json['value'] = n.nombre
+                signer_json['stock'] = n.stock
+                signer_json['codigo'] = n.codigo
+                signer_json['precio'] = n.precio_compra
+                nombre.append(signer_json)
+            return JsonResponse(nombre, safe=False)
+        else:
             signer_json = {}
-            signer_json['id'] = n.id
-            signer_json['label'] = '<li class="list-group-item d-flex justify-content-between align-items-center"><div class="col-sm-4">'+str(n.nombre)+'</div><span class="badge '+str(color)+' badge-pill text-white">'+str(n.stock)+'</span><span class="float-right">$'+str(n.precio_venta)+'</span></li>'
-            signer_json['value'] = n.nombre
-            signer_json['stock'] = n.stock
-            signer_json['codigo'] = n.codigo
-            signer_json['precio'] = n.precio_compra
+            signer_json['n'] = 1
+            signer_json['label'] = '<li class="list-group-item align-items-center"><div class="col-sm-4"><span class="badge badge-pill badge-danger">Dar alta producto</span></div></li>'
             nombre.append(signer_json)
-        return JsonResponse(nombre, safe=False)
+            return JsonResponse(nombre, safe=False)
+
     
     #return render(request, 'compras/altaCompra.html')
 
