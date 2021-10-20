@@ -29,6 +29,7 @@
                             <th>E-mail</th>
                             <th>CUIT</th>
                             <th>Cond. Tributaria</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                 
@@ -48,6 +49,8 @@
                             Responsable Inscripto
                             {% endif %}
                         </td>
+                        <td class="row justify-content-center"><a class="btn-sm btn-success" href="{% url 'editarCliente' c.cuit %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
+                            <a class="btn-sm btn-danger ml-3" href="{% url 'eliminarCliente' c.cuit %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
                     </tr>
                        {% endfor %}
                     </tbody>

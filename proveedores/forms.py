@@ -8,6 +8,15 @@ class proveedorForm(forms.ModelForm):
         fields = '__all__'
 
 
+class editarProvForm(forms.ModelForm):
+
+    class Meta:
+        model = proveedores
+        fields = '__all__'
+        widgets = {
+            'cuit': forms.TextInput(attrs={'id': 'cuit', 'readonly': True})
+        }
+
 
 class proveedorCompraForm(forms.ModelForm):
 
