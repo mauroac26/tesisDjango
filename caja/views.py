@@ -45,10 +45,3 @@ def index(request):
 
     return render(request, 'caja/caja.html', data)
 
-# def ingresoDinero(request):
-
-#     data = {
-#         "form": cajaForm()
-#     }
-
-#     return render(request, 'caja/ingresoDinero.html', data)

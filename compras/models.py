@@ -3,7 +3,7 @@ from proveedores.models import proveedores
 from producto.models import Producto
 # Create your models here.
 
-tipo_Comprbante = [
+tipo_Comprobante = [
     [0, "Factura"],
     [1, "Recibo"],
     [2, "Nota Credito"]
@@ -12,7 +12,7 @@ class Compras(models.Model):
     comprobante = models.CharField(max_length=50, unique=True)
     cuit = models.ForeignKey(proveedores, on_delete=models.CASCADE)
     fecha = models.DateField()
-    tipoComprobante = models.IntegerField(choices=tipo_Comprbante, verbose_name="Tipo Comprobante")
+    tipoComprobante = models.IntegerField(choices=tipo_Comprobante, verbose_name="Tipo Comprobante")
 
     class Meta:
         ordering = ('-fecha',)

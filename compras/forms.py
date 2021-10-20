@@ -29,7 +29,7 @@ class comprasForm(forms.ModelForm):
             'comprobante': forms.TextInput(attrs={'id': 'comprobante', 'required': True}),
             'fecha' : forms.DateInput(attrs={"type": "date", "value": date.today(), 'id': 'fecha'}),
             'cuit' : forms.TextInput(attrs={'id': 'cuit', 'readonly': True}),
-            'tipoComprobante': forms.Select(choices=tipo_Comprobante, attrs={'id': 'tipoComprobante'} )
+            'tipoComprobante': forms.Select(attrs={'id': 'tipoComprobante'} )
         }
 
 
