@@ -1487,6 +1487,7 @@ pre code {
   width: 100%;
   margin-bottom: 1rem;
   color: #858796;
+  
 }
 
 .table th,
@@ -1494,6 +1495,7 @@ pre code {
   padding: 0.75rem;
   vertical-align: top;
   border-top: 1px solid #e3e6f0;
+  
 }
 
 .table thead th {

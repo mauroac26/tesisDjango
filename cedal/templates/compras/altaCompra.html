@@ -1,4 +1,4 @@
-{% extends 'cedal/index.html' %}
+{% extends 'Header/header.html' %}
 {% load static %}
 
 {% load crispy_forms_tags %}
@@ -10,13 +10,13 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Nueva Compra</h1>
+    <h1 class="h3 text-gray-800">Nueva Compra</h1>
     
-    <div class="row">
+    <div class="row mt-3">
         
     <div class="col-md-5">
-    <div class="card border-dark mb-3">
-        <div class="card-header">Seleccion de Productos</div>
+    <div class="card border-primary mb-3">
+        <div class="card-header bg-primary text-white">Seleccion de Productos</div>
         <div class="card-body text-primary">
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
@@ -70,8 +70,8 @@
     </div>
 
     <div class="col-md-7">
-      <div class="card border-dark mb-3 ml-4" >
-        <div class="card-header">Total de la compra</div>
+      <div class="card border-primary mb-3 ml-4" >
+        <div class="card-header bg-primary text-white">Total de la compra</div>
         <div class="card-body text-primary">
             <div class="row">
                 <div class="col-12 ">
@@ -167,7 +167,7 @@
         <div class="col-md-12 pt-3">
             <div class="table-responsive" style="height: 160px;">
                 <table class="table table-hover table-bordered table-sm table-striped text-white" id="tablaAltaCompra">
-                    <thead class="bg-dark">
+                    <thead class="bg-primary">
                         
                         <th>Codigo</th>
                         <th>Nombre</th>
@@ -274,6 +274,7 @@ $(function() {
         }
 
 //  var objProducto = {}
+
          function cargarDetalleCompra(){
            
 //             let filaTablaAC = $('#tablaAltaCompra tr').length;
@@ -293,18 +294,18 @@ $(function() {
             
                 //var obj = JSON.stringify(objProducto);
                
-                var tipoComprobante = $('#tipoComprobante').val();
+                var tipoComprobante = $('#tipoComprobante option:selected').text();
                 var comprobante = $('#comprobante').val();
                 var fecha = $('#fecha').val();
                 var cuit = $('#cuit').val();
                 var iva = $('#iva').val();
                 var total = $('#total').val();
                 var subTotal = $('#subTotal').val();
-
+                
                 $.ajax({
                   type: "post",
                    url: "{% url 'cargarCompra' %}",
-                  data: {tipoComprobante: tipoComprobante,
+                  data: {tipoComprobante: '' + tipoComprobante + '',
                          comprobante: '' + comprobante + '',
                          iva: iva,
                          fecha:  '' + fecha + '',
@@ -379,23 +380,37 @@ $(function() {
     $("#nombreProveedor").autocomplete({
         source:  "{% url 'proveedorAutocomplete' %}",
         select: function(event, ui){
-
-            $("#cuit").val(ui.item.cuit);
-
-            if (ui.item.condicion == 0){
-               condicion = "Consumidor Final";
+            if (ui.item.n == 1){
+               
+               window.location = "{% url 'altaProveedor' %}";
+               $("#nombreProveedor").val('');
+               event.preventDefault();
             }else{
-                condicion = "Responsable Inscripto";
+                $("#cuit").val(ui.item.cuit);
+
+                if (ui.item.condicion == 0){
+                    condicion = "Consumidor Final";
+                }else{
+                    condicion = "Responsable Inscripto";
+                }
+                    $("#condicion").val(condicion); 
             }
-            $("#condicion").val(condicion); 
+            
             
         
 }
+}).data('ui-autocomplete')._renderItem = function(ul, item) {
+        
+        
+        return $("<li>").append(item.label).appendTo(ul);
+        
+        
+    };
 
   
     
     });
-});
+
 </script>
 
 <script>
