@@ -16,7 +16,7 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <a href="{% url 'altaCompra' %}" class="btn btn-primary">Alta Compra</a>
+            <a href="{% url 'altaCompra' %}" class="btn btn-primary"  ><i class="fas fa-plus pr-2"></i>Nuevo</a>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -38,7 +38,7 @@
                         <td>{{c.id_compra__fecha}}</td>
                         <td >{{c.id_compra__cuit__nombre}}</td>
                         <td>${{c.total__sum}}</td>
-                        <td class="text-center"><a href="{% url 'detallesCompra' c.id_compra__id %}" class="btn btn-primary btn-sm ">Detalle</a></td>
+                        <td class="text-center"><a href="{% url 'detallesCompra' c.id_compra__id %}" class="btn btn-primary btn-sm " role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalle"><i class="far fa-file-alt"></i></a></td>
                     </tr>
                        {% endfor %}
                       

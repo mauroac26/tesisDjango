@@ -129,14 +129,14 @@
                 <label class="form-check-label" for="chDebito">Débito</label>
               </div>
             </div>
-            <p>Total a pagar ${{total.total__sum}}</p>
+            <p>Total a pagar $<label id="lebTotal">{{total.total__sum}}</label></p>
              <!-- <div>
                 <button type="button" id="btnEfectivo" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#modalEfectivo">Efectivo</button>
                 <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="">Tarjeta de credito</button>
                 <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="">Tarjeta de debito</button>
             </div> -->
                   
-                    <form action="" method="post" enctype="multipart/form-data">
+                    <form id="form-pago" action="#" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="row mt-3 d-none" id="divEfectivo" >
                             <div class="col-4 col-md-4 " >
@@ -198,7 +198,7 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <div class="d-flex justify-content-end">
-          <button class="btn btn-primary" type="submit">confirmar</button>
+          <button class="btn btn-primary" id="btn-pago" type="submit">confirmar</button>
       </div>
     </div>
 </form>
@@ -328,12 +328,13 @@
 </script>
 
 <script>
+  var total = $('#lebTotal').html();
    $( '#chEfectivo').on( 'click', function() {
          var mydiv = document.getElementById('divEfectivo');
          if( $(this).is(':checked') ) {
              mydiv.className = 'row mt-3 d-block'
             //  document.getElementById('efectivo').readOnly = false;
-            //  document.getElementById('efectivo').value = {{total.total__sum}};
+            //document.getElementById('efectivo').value = {{total.total__sum}};
             
  }else{
        mydiv.className = 'row mt-3 d-none'
@@ -381,5 +382,26 @@
  })
 </script>
 
+<script>
+  
+  $( '#btn-pago').on( 'click', function(e) {
+    e.preventDefault()
+        Swal.fire({
+            "title": "Estas seguro",
+            "text": "El total a pagar es:" + " $" + total,
+            "icon":"question",
+            "showCancelButton": true,
+            "cancelButtonText":"No, Cancelar",
+            "confirmButtonText":"Si, confirmar",
+        })
+        .then(function(result){
+            if(result.isConfirmed){
+          
+              $( "#form-pago" ).submit();
+              
+            }
+          });
+  });
+</script>
 {% endblock %}
 

@@ -16,7 +16,7 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <a href="{% url 'altaCategorias' %}" class="btn btn-primary">Alta Categorias</a>
+            <a href="{% url 'altaCategorias' %}" class="btn btn-primary"><i class="fas fa-plus pr-2"></i>Nuevo</a>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -24,12 +24,19 @@
                     <thead>
                         <tr>
                             <th>Descripcion</th>
+                            <th style="width: 30px;">Acción</th>
                         </tr>
                     </thead>
                     <tbody>
+                        
                        {% for c in categorias %}
+                       <tr>
                         <td>{{c.descripcion}}</td>
+                        <td class="row justify-content-center"><a class="btn-sm btn-success" href="{% url 'editarCategoria' c.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
+                            <a class="btn-sm btn-danger ml-3" onclick="eliminarCategoria({{c.id}})" href="#" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
+                        </tr>
                        {% endfor %}
+                    
                     </tbody>
                 </table>
             </div>
@@ -59,6 +66,26 @@
     $(document).ready(function() {
     table("tablaCategorias");
     });
+</script>
+
+<script>
+    function eliminarCategoria(id){
+        
+    Swal.fire({
+            "title": "Estas seguro?",
+            "text": "Esta acción no se puede deshacer ",
+            "icon":"question",
+            "showCancelButton": true,
+            "cancelButtonText":"No, Cancelar",
+            "confirmButtonText":"Si, confirmar",
+            "confirmButtonColor":"#80070F",
+        })
+        .then(function(result){
+            if(result.isConfirmed){
+                window.location.href = "/productos/eliminarCategoria/"+id+""
+            }
+        });
+    }
 </script>
 {% endblock %}
 

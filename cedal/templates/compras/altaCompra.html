@@ -107,7 +107,7 @@
                    
                     </div>
             </div>
-            <form id="friend-form" enctype="multipart/form-data">
+            <form id="form-compra" enctype="multipart/form-data">
                 {% csrf_token %}
                 
               
@@ -215,7 +215,8 @@ $(function() {
                 $("#stock").val(ui.item.stock); 
                 $("#codigo").val(ui.item.codigo);
                 $("#precio").val(ui.item.precio);
-                $("#nombreProducto").val(ui.item.value); 
+                $("#nombreProducto").val(ui.item.value);
+                $("#cantidad").val(1); 
             
                 idProducto = ui.item.id
             }
@@ -258,7 +259,7 @@ $(function() {
                 '<td>' + cantidad +'</td>'+
                 '</td><td style="text-align: right;">' + precio + '</td>'+
                 '<td>' + iva.toFixed(2) + '</td><td>' + neto.toFixed(2) + '</td>'+'<td>' + total + '</td>'+
-                '<td><div><button  class="btn btn-danger btn-sm" style="padding:1px;" type="button"  id="btn_del'+i+'" onclick="eliminarFC('+i+', '+total+', '+neto+', '+iva+', )">Eliminar</button></div></td>'+
+                '<td class="row justify-content-center"><div><button  class="btn btn-danger " style="padding:1px;" type="button"  id="btn_del'+i+'" onclick="eliminarFC('+i+', '+total+', '+neto+', '+iva+', )" ><i class="fas fa-times-circle"></i></button></div></td>'+
                 '</tr>';
              
                 $('#tablaAltaCompra').append(fila);
@@ -419,36 +420,30 @@ $(function() {
         request to server and after successfull submission
         display the object.
     */
-    $("#friend-form").submit(function (e) {
+    $("#form-compra").submit(function (e) {
+
         // preventing from page reload and default actions
         e.preventDefault();
-        // serialize the data for sending the form data.
         var serializedData = $(this).serialize();
+        Swal.fire({
+            "title": "Confirma la compra?",
+            "text": "Total de la compra: " + "$" + totalFinal.toFixed(2),
+            "icon":"question",
+            "showCancelButton": true,
+            "cancelButtonText":"No, Cancelar",
+            "confirmButtonText":"Si, confirmar",
+        })
+        .then(function(result){
+            if(result.isConfirmed){
+               
+                // serialize the data for sending the form data.
+        
         // carga la compra realizada
         $.ajax({
             type: 'POST',
             url: "{% url 'prueba' %}",
             data: serializedData,
             success: function (response) {
-                 //carga forma de pago
-    // let efectivo= $('#efectivo').val();
-    // let credito= $('#credito').val();
-    // let debito= $('#debito').val();
-    // let cuotas= $('#cuotas').val();
-    // let tipoCredito= $('#tipoCredito').val();
-    // let tipoDebito= $('#tipoDebito').val();
-
-    // $.ajax({
-    //         type: 'get',
-    //         url: "{% url 'cargarFormaPago' %}",
-    //         data: {'efectivo': efectivo,
-    //                'credito': credito,
-    //                'debito': debito,
-    //                'cuotas': cuotas,
-    //                'tipoCredito': tipoCredito,
-    //                'tipoDebito': tipoDebito,
-    //     }
-    //     })
 
                 let filaTablaAC = $('#tablaAltaCompra tr').length;
                
@@ -483,7 +478,13 @@ $(function() {
                 alert(response["responseJSON"]["error"]);
             }
         })
-    })
+            }
+
+        })
+        })
+        
+        
+    
 </script>
 
 <script>
@@ -555,19 +556,6 @@ $( '#btnCredito').on( 'click', function() {
 
 
 </script>
-{% if messages %}
-        {% for m in messages %}
-<script>
-  
-  Swal.fire({
-    "title":"Felicitaciones",
-      "text": "{{m}}",
-        "icon": "success"
-
-  })
-</script>
-     {% endfor %}
-{% endif %}
 
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>

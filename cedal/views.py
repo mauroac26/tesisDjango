@@ -1,13 +1,18 @@
 import json
 from json.encoder import JSONEncoder
-from django.shortcuts import render
+from django.contrib import messages
+from django.shortcuts import redirect, render
 from django.db.models import Sum
 from compras.models import detalleCompra
 from django.http import HttpResponse, response
 from django.http import JsonResponse
 from django.db.models.functions import Extract
+from .form import UserRegisterForm
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required, permission_required
 # Create your views here.
 
+@login_required
 def index(request):
     # if request.is_ajax() and request.method == "POST":
     #     compra = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__fecha').annotate(Sum('total'))
@@ -29,4 +34,26 @@ def graficoCompras(request):
         return JsonResponse({"data": list(compra)})
         
     return render(request, 'cedal/index.html')
+
+
+@permission_required('app.add_user')
+def registro(request):
+    data = {
+        'form': UserRegisterForm()
+    }
+
+    if request.method == 'POST':
+        formulario = UserRegisterForm(data=request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            # user = authenticate(username=formulario.cleaned_data["username"], password=formulario.cleaned_data["password1"])
+            # login(request, user)
+            messages.add_message(request, messages.SUCCESS, "Usuario creado correctamente")
+            return redirect(to="index")
+        data["form"] = formulario
+    return render(request, 'registration/registro.html', data)
+
+@login_required
+def configuracion(request):
+    return render(request, 'cedal/configuracion.html')
     

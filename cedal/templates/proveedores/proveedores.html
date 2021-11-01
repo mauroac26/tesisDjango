@@ -16,7 +16,7 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <a href="{% url 'altaProveedor' %}" class="btn btn-primary">Alta Proveedor</a>
+            <a href="{% url 'altaProveedor' %}" class="btn btn-primary" ><i class="fas fa-plus pr-2"></i>Nuevo</a>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -90,11 +90,6 @@
     });
 </script>
 
-<script>
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-  return new bootstrap.Tooltip(tooltipTriggerEl)
-})
-</script>
+
 {% endblock %}
 

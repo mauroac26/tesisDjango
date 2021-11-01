@@ -1,5 +1,6 @@
 from django.urls import path
 from compras.views import index, altaCompra, productoAutocomplete, proveedorAutocomplete, cargarCompra, prueba, cargarDetalleCompra, detallesCompra, cargarFormaPago
+
 urlpatterns = [
     path('', index, name='compras'),
     path('altaCompra/', altaCompra, name="altaCompra"),

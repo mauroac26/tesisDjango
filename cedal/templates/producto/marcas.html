@@ -16,7 +16,7 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <a href="{% url 'altaMarcas' %}" class="btn btn-primary">Alta Marcas</a>
+            <a href="{% url 'altaMarcas' %}" class="btn btn-primary"><i class="fas fa-plus pr-2"></i>Nuevo</a>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -24,7 +24,7 @@
                     <thead>
                         <tr>
                             <th>Descripcion</th>
-                            
+                            <th  style="width: 30px;">Acción</th>
                         </tr>
                     </thead>
                     <!-- <tfoot>
@@ -35,10 +35,15 @@
                     </tfoot> -->
                     <tbody>
                        {% for m in marcas %}
+                       <tr>
                         <td>{{m.descripcion}}</td>
+                        <td class="row justify-content-center"><a class="btn-sm btn-success" href="{% url 'editarMarca' m.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
+                            <a class="btn-sm btn-danger ml-3" onclick="eliminarMarca({{m.id}})"  href="#"    role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
                        {% endfor %}
+                    </tr>
                     </tbody>
                 </table>
+                {{mensaje}}
             </div>
         </div>
     </div>
@@ -66,6 +71,26 @@
     $(document).ready(function() {
     table("tablaMarcas");
     });
+</script>
+
+<script>
+    function eliminarMarca(id){
+        
+    Swal.fire({
+            "title": "Estas seguro?",
+            "text": "Esta acción no se puede deshacer ",
+            "icon":"question",
+            "showCancelButton": true,
+            "cancelButtonText":"No, Cancelar",
+            "confirmButtonText":"Si, confirmar",
+            "confirmButtonColor":"#80070F",
+        })
+        .then(function(result){
+            if(result.isConfirmed){
+                window.location.href = "/productos/eliminarMarca/"+id+""
+            }
+        });
+    }
 </script>
 {% endblock %}
 

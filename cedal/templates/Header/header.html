@@ -98,7 +98,7 @@
                     </div>
                 </div> -->
                 <a class="nav-link" href="{% url 'compras' %}" >
-                    <i class="fas fa-fw fa-shopping-basket"></i>
+                    <i class="fas fa-cart-arrow-down"></i>
                     <span>Compras</span>
                 </a>
             </li>
@@ -160,7 +160,7 @@
                 
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
+                    <i class="fas fa-clipboard-list"></i>
                     <span>Productos</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -205,7 +205,7 @@
                         <a class="collapse-item" href="cards.html">Cards</a>
                     </div>
                 </div> -->
-                <a class="nav-link" href="#" >
+                <a class="nav-link" href="{% url 'configuracion' %}" >
                     <i class="fas fa-fw fa-cog"></i>
                     <span>Configuracion</span>
                 </a>
@@ -242,7 +242,7 @@
             </button>
 
             <!-- Topbar Search -->
-            <form
+            <!-- <form
                 class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                 <div class="input-group">
                     <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
@@ -253,7 +253,7 @@
                         </button>
                     </div>
                 </div>
-            </form>
+            </form> -->
 
             <!-- Topbar Navbar -->
             <ul class="navbar-nav ml-auto">
@@ -321,7 +321,7 @@
                 </li>
                 {% else %} 
                  
-                <a href="{% url 'login' %}">Iniciar Sesión</a>
+                <a clas="bg-primary" href="{% url 'login' %}" role="button">Iniciar Sesión</a>
                 {% endif %}
             </ul>
 
@@ -412,8 +412,14 @@
         {% endfor %}
     {% endif %}
 
+    <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+    </script>
     {% block js %}
-
+    
     {% endblock %}
 </body>
 

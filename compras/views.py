@@ -15,6 +15,7 @@ from caja.models import Caja
 from datetime import datetime
 from django.db.models import Sum
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required, permission_required
 
 # Create your views here.
 def index(request):
@@ -30,7 +31,7 @@ def index(request):
 
     return render(request, 'compras/compras.html', data)
 
-
+@permission_required('app.add_compra')
 def altaCompra(request):
 
     data = {
@@ -215,7 +216,7 @@ def prueba(request):
             
 
     # some error occured
-    return JsonResponse({"error": "ingresar compribante valido"}, status=400)
+    return JsonResponse({"error": "ingresar comprobante valido"}, status=400)
 
 
 def cargarDetalleCompra(request):
@@ -253,7 +254,7 @@ def cargarDetalleCompra(request):
                 stock = int(producto.stock) + int(cantidad)
                 producto.stock = stock
                 producto.save()
-            messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
+            messages.add_message(request, messages.SUCCESS, "La compra se confirmó exitosamente")
 
             return HttpResponse(True)
             

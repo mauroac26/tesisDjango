@@ -22,8 +22,8 @@ class Producto(models.Model):
     precio_venta = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     stock = models.IntegerField()
     stock_min = models.IntegerField()
-    categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT)
-    marca = models.ForeignKey(Marca, on_delete=models.PROTECT)
+    categoria = models.ForeignKey(Categoria, null=True, on_delete=models.SET_NULL)
+    marca = models.ForeignKey(Marca, null=True, on_delete=models.SET_NULL)
 
     def __int__(self):
         return self.id
