@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'compras',
     'crispy_forms',
     'colorfield',
+    'user',
 ]
 
 X_FRAME_OPTIONS='SAMEORIGIN'
@@ -148,4 +149,4 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
-#AUTH_USER_MODEL = 'usuario.usuarios'
+AUTH_USER_MODEL = 'user.Users'
