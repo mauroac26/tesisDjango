@@ -150,3 +150,8 @@ USE_TZ = False
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'user.Users'
+
+import os
+
+MEDIA_URL =  "cedal/static/cedal/img/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "cedal/static/cedal/img/")

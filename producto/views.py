@@ -5,6 +5,7 @@ from .models import Marca, Categoria, Producto
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required, permission_required
 # Create your views here.
+@login_required
 def index(request):
     
     producto = Producto.objects.all()
@@ -14,7 +15,8 @@ def index(request):
     }
     return render(request, 'producto/producto.html', data)
 
-
+@login_required
+@permission_required('producto.add_producto', login_url='productos')
 def altaProducto(request):
 
     data = {
@@ -52,7 +54,8 @@ def categorias(request):
     }
     return render(request, 'producto/categorias.html', data)
 
-
+@login_required
+@permission_required('producto.add_categoria', login_url='categorias')
 def altaCategorias(request):
     
     data = {
@@ -70,7 +73,8 @@ def altaCategorias(request):
 
     return render(request, 'producto/altaCategorias.html', data)
 
-
+@login_required
+@permission_required('producto.add_marca', login_url='marcas')
 def altaMarcas(request):
     
     data = {
@@ -88,7 +92,8 @@ def altaMarcas(request):
 
     return render(request, 'producto/altaMarcas.html', data)
 
-
+@login_required
+@permission_required('producto.change_producto', login_url='productos')
 def editarProducto(request, id):
     producto = get_object_or_404(Producto, pk=id)
     
@@ -107,6 +112,8 @@ def editarProducto(request, id):
     return render(request, 'producto/editarProducto.html', data)
 
 
+@login_required
+@permission_required('producto.delete_producto', login_url='productos')
 def eliminarProducto(request, id):
     producto = get_object_or_404( Producto, pk=id)
     
@@ -116,6 +123,8 @@ def eliminarProducto(request, id):
         return redirect(to='productos')
 
 
+@login_required
+@permission_required('producto.change_marca', login_url='marcas')
 def editarMarca(request, id):
     marca = get_object_or_404(Marca, pk=id)
     
@@ -134,7 +143,8 @@ def editarMarca(request, id):
     return render(request, 'producto/editarMarca.html', data)
 
 
-@permission_required('app.delete_marca')
+@login_required
+@permission_required('producto.delete_marca', login_url='marcas')
 def eliminarMarca(request, id):
     print(id)
     marca = get_object_or_404(Marca, pk=id)
@@ -145,6 +155,8 @@ def eliminarMarca(request, id):
         return redirect(to='marcas')
 
 
+@login_required
+@permission_required('producto.change_categoria', login_url='categorias')
 def editarCategoria(request, id):
     categoria = get_object_or_404(Categoria, pk=id)
     
@@ -163,6 +175,8 @@ def editarCategoria(request, id):
     return render(request, 'producto/editarCategoria.html', data)
 
 
+@login_required
+@permission_required('producto.delete_categoria', login_url='categorias')
 def eliminarCategoria(request, id):
     categoria = get_object_or_404( Categoria, pk=id)
     

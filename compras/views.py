@@ -1,3 +1,4 @@
+from django.http.response import HttpResponseForbidden
 from django.shortcuts import render, redirect
 from .forms import comprasForm, detalleComprasForm
 from producto.forms import productoForm, compraProductoForm
@@ -18,6 +19,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 
 # Create your views here.
+
+@login_required
+@permission_required('compras.view_compras', login_url='index')
 def index(request):
 
 
@@ -31,7 +35,8 @@ def index(request):
 
     return render(request, 'compras/compras.html', data)
 
-@permission_required('app.add_compra')
+@login_required
+@permission_required('compras.add_compras', login_url='compras')
 def altaCompra(request):
 
     data = {
@@ -53,6 +58,9 @@ def altaCompra(request):
     #     else:
     #         data["formCompra"] = formulario
         
+    # def get(self, request, **kwargs):
+    #     if not self.request.user.has_perm('compras.add_compras'):
+    #         return HttpResponseForbidden()
 
     return render(request, 'compras/altaCompra.html', data)
 
@@ -218,7 +226,7 @@ def prueba(request):
     # some error occured
     return JsonResponse({"error": "ingresar comprobante valido"}, status=400)
 
-
+@login_required
 def cargarDetalleCompra(request):
 
     if request.is_ajax():
@@ -263,6 +271,9 @@ def cargarDetalleCompra(request):
     return JsonResponse({"error": "Error"}, status=400)
 
 from decimal import Decimal
+
+@login_required
+@permission_required('compras.view_detallecompra', login_url='compras')
 def detallesCompra(request, id):
     
     compras = Compras.objects.filter(id=id).select_related('cuit')

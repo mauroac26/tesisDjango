@@ -1,9 +1,12 @@
+from django.contrib.auth.decorators import login_required
 from django.urls import path
-from .views import configuracion, index, graficoCompras, registro
+
+from user.views import usuarios
+from .views import configuracion, index, graficoCompras
 
 urlpatterns = [
     path('', index, name="index"),
     path('graficoCompras/', graficoCompras, name="graficoCompras"),
-    path('registro/', registro, name="registro"),
+    #path('usuarios/', usuarios, name="usuarios"),
     path('configuracion/', configuracion, name="configuracion"),
 ]

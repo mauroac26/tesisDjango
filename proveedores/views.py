@@ -1,9 +1,11 @@
+from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse
 from .forms import editarProvForm, proveedorForm
 from .models import proveedores
 
 # Create your views here.
+@login_required
 def index(request):
 
     proveedor = proveedores.objects.all()
@@ -13,7 +15,8 @@ def index(request):
     }
     return render(request, 'proveedores/proveedores.html', data)
 
-
+@login_required
+@permission_required('proveedores.add_proveedores', login_url='proveedores')
 def altaProveedor(request):
 
     data = {
@@ -31,7 +34,8 @@ def altaProveedor(request):
     return render(request, 'proveedores/altaProveedor.html', data)
 
 
-
+@login_required
+@permission_required('proveedores.change_proveedores', login_url='proveedores')
 def editarProveedor(request, id):
     proveedor = get_object_or_404(proveedores, pk=id)
     
@@ -49,7 +53,8 @@ def editarProveedor(request, id):
             
     return render(request, 'proveedores/editarProveedor.html', data)
 
-
+@login_required
+@permission_required('proveedores.delete_proveedores', login_url='proveedores')
 def eliminarProveedor(request, id):
     proveedor = get_object_or_404(proveedores, pk=id)
     

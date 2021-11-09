@@ -1,10 +1,12 @@
+from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render
 from .forms import cajaForm
 from .models import Caja
 from datetime import datetime, date, timedelta
 # Create your views here.
 
-
+@login_required
+@permission_required('caja.add_caja', login_url='index')
 def index(request):
 
     data = {

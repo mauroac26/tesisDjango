@@ -1,8 +1,10 @@
+from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import get_object_or_404, render, redirect
 from .forms import clienteForm, editarCliForm
 from .models import Clientes
 # Create your views here.
 
+@login_required
 def index(request):
 
     cliente = Clientes.objects.all()
@@ -13,6 +15,8 @@ def index(request):
     return render(request, 'clientes/clientes.html', data)
 
 
+@login_required
+@permission_required('clientes.add_clientes', login_url='clientes')
 def altaClientes(request):
 
     data = {
@@ -31,6 +35,8 @@ def altaClientes(request):
     return render(request, 'clientes/altaCliente.html', data)
 
 
+@login_required
+@permission_required('clientes.change_clientes', login_url='clientes')
 def editarCliente(request, id):
     cliente = get_object_or_404(Clientes, pk=id)
     
@@ -49,6 +55,8 @@ def editarCliente(request, id):
     return render(request, 'clientes/editarCliente.html', data)
 
 
+@login_required
+@permission_required('clientes.delete_clientes', login_url='clientes')
 def eliminarCliente(request, id):
     cliente = get_object_or_404(Clientes, pk=id)
     
