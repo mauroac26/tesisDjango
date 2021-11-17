@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404, redirect, render
 
 from user.forms import UserRegisterForm, cambiarPasswordForm, editarPerfilForm, editarUserForm
@@ -17,11 +18,18 @@ def registro(request):
     if request.method == 'POST':
         formulario = UserRegisterForm(data=request.POST)
         if formulario.is_valid():
-            formulario.save()
+            nivel=formulario.cleaned_data.get("groups")
+           
+            u = formulario.save()
+            
+            
+            group = Group.objects.get(name=nivel)
+            group.user_set.add(u.id)
+
             # user = authenticate(username=formulario.cleaned_data["username"], password=formulario.cleaned_data["password1"])
             # login(request, user)
             messages.add_message(request, messages.SUCCESS, "Usuario creado correctamente")
-            return redirect(to="index")
+            return redirect(to="usuarios")
         data["form"] = formulario
     return render(request, 'registration/registro.html', data)
 
@@ -30,8 +38,8 @@ def registro(request):
 @permission_required('user.view_user', login_url='configuracion')
 def usuarios(request):
 
-    usuarios = Users.objects.filter(is_superuser=0)
-    print(usuarios)
+    usuarios = Users.objects.filter(is_superuser=0).values('id', 'username', 'first_name', 'last_name', 'email', 'groups__name')
+    
     data = {
         "usuarios": usuarios
     }
@@ -49,8 +57,14 @@ def editarUsuario(request, id):
     if request.method == "POST":
         formulario = editarUserForm(data=request.POST, instance=usuarios)
         if formulario.is_valid():
-            formulario.save()
-            data["mensaje"] = "Usuario Modificado"
+            
+            usuarios.groups.clear()
+            nivel=formulario.cleaned_data.get("groups")
+            
+            group = Group.objects.get(name=nivel)
+            group.user_set.add(usuarios)
+           
+            messages.add_message(request, messages.SUCCESS, "Puesto de usuario modificado correctamente")
             return redirect(to='usuarios')
         data["form"] = editarUserForm()
             
