@@ -1,0 +1,5 @@
+id_compra__id,id_compra__comprobante,id_compra__cuit__nombre,id_compra__fecha,total__sum
+1,00000001,Mauro Campani,2021-11-01,20.00
+2,00000002,Mauro Campani,2021-11-06,20.00
+3,00000003,Mauro Campani,2021-12-06,20.00
+4,00000005,Mauro Campani,2021-11-22,20.00

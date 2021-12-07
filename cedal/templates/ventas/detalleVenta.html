@@ -3,7 +3,7 @@
 
 {% load crispy_forms_tags %}
 
-{% block title %}Detalle de la Compra{% endblock %}
+{% block title %}Detalle de la Venta{% endblock %}
 
 {% block content %}
 
@@ -12,7 +12,7 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Detalle de la Compra</h1>
+    <h1 class="h3 mb-2 text-gray-800">Detalle de la Venta</h1>
     
 
     <!-- DataTales Example -->
@@ -26,7 +26,7 @@
             
             <div class="row ml-2 "> <label for="" class="" > Comprobante: <b>{{c.comprobante}}</b></label></div>
             <div class="row ml-2 "><label for="" class=" ">Tipo de comprobante: <b>{{c.tipoComprobante}}</b></label></div>
-            <div class="row ml-2 "><label for="" class=" ">Proveedor: <b>{{c.cuit.nombre}}</b></label></div>
+            <div class="row ml-2 "><label for="" class=" ">Cliente: <b>{{c.cuit.nombre}}</b></label></div>
             <div class="row ml-2 "><label for="" class=""> CUIT: <b>{{c.cuit.cuit}}</b></label></div>
             <div class="row ml-2 "><label for="" class=""> Fecha: <b>{{c.fecha}}</b></label></div>
             
@@ -51,7 +51,7 @@
                         <td>{{d.cantidad}}</td>
                         <td>{{d.id_producto.nombre}}</td>
                         <td >{{d.id_producto.codigo}}</td>
-                        <td>{{d.id_producto.precio_compra}}</td>
+                        <td>{{d.id_producto.precio_venta}}</td>
                         <td>{{d.total}}</td>
                     </tr>
                     
@@ -80,28 +80,6 @@
 
 </div>
 
-<!-- Modal -->
-<!-- <div class="modal fade" id="modalformaPago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Formas de pago</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-             
-             <div>
-                <button type="button" id="btnEfectivo" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#modalformaPago">Efectivo</button>
-                <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="">Tarjeta de credito</button>
-                <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="">Tarjeta de debito</button>
-            </div>
-                  
-    </div>
-  </div>   
-   </div>  
-</div> -->
 
 <!-- Modal -->
 <div class="modal fade" id="modalformaPago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -130,11 +108,7 @@
               </div>
             </div>
             <p>Total a pagar $<label id="lebTotal">{{total.total__sum}}</label></p>
-             <!-- <div>
-                <button type="button" id="btnEfectivo" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#modalEfectivo">Efectivo</button>
-                <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="">Tarjeta de credito</button>
-                <button type="button" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="">Tarjeta de debito</button>
-            </div> -->
+            
                   
                     <form id="form-pago" action="#" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
@@ -168,13 +142,7 @@
                             </div>
                         </div>
 
-                        <!-- <div class="row mt-3" id="divCuotas">
-                          <div class="col-4 col-md-4 ">
-                      
-                              {{ formPago.cuotas|as_crispy_field }}
-                              
-                            </div>
-                      </div> -->
+                       
 
                         <div class="row mt-3" >
                             <div class="col-4 d-none" id="divDebito" >
@@ -269,47 +237,6 @@
 
 {% endfor %}
 {% endif %}
-<!-- MODAL PAGO EN EFECTIVO -->
-<!-- <div class="modal fade" id="modalEfectivo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Pago en efectivo</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <div class="row mt-3 " id="divEfectivo" >
-                <div class="col-4 col-md-4 " > 
-                    <form action="" method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                    Efectivo
-                        <input type="text" name="efectivo" id="efectivo" value={{total.total__sum}} class="form-control">
-                    {{ formPago.efectivo|as_crispy_field }}  
-                    
-                  </div>
-            </div>
-        </div>
-                
-    
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <div class="d-flex justify-content-end">
-          <button  class="btn btn-primary" type="submit" >confirmar</button>
-      </div> 
-    </div>
-</form>
-    </div>
-    </div>
-</div>   -->
-<!-- /.container-fluid -->
-
-
-<!-- Scroll to Top Button-->
-<!-- <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a> -->
 
 {% endblock %}
 
@@ -321,11 +248,11 @@
 <!-- Page level custom scripts -->
 <script src="{% static 'cedal/js/demo/datatables-demo.js' %}"></script>
 
-<script>
+<!-- <script>
     $(document).ready(function() {
-    table("tablaDetalleCompra");
+    table("tablaDetalleVenta");
     });
-</script>
+</script> -->
 
 <script>
   var total = $('#lebTotal').html();
@@ -404,4 +331,3 @@
   });
 </script>
 {% endblock %}
-

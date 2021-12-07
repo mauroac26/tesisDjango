@@ -1,5 +1,8 @@
 from django.http.response import HttpResponseForbidden
 from django.shortcuts import render, redirect
+
+#import pandas as pd
+from compras.utils import render_pdf
 from .forms import comprasForm, detalleComprasForm
 from producto.forms import productoForm, compraProductoForm
 from .models import Compras, detalleCompra
@@ -323,7 +326,7 @@ def detallesCompra(request, id):
             data['tipoDebito'] = tipoDebito
 
             data['id_compra'] = id
-            #data['efectivo'] = efectivo
+            
 
             pago = formPago(data)
         
@@ -356,65 +359,89 @@ def detallesCompra(request, id):
         else:
             messages.add_message(request, messages.ERROR, "El monto seleccionado es diferente al monto total de la compra")
             return render(request, 'compras/detalleCompra.html', data)
-        #else:
-            
-        #     totalParcial = total - efectivo
-        #     response = ''
-        #     for key, value in request.POST.items():
-        #         response += 'key:%s value:%s\n' % (key, value)
-        #     return HttpResponse(response) 
+        
 
     return render(request, 'compras/detalleCompra.html', data)
 
 
 
-def cargarFormaPago(request):
+# def cargarFormaPago(request):
     
-    if request.is_ajax():
-        data = {}
+#     if request.is_ajax():
+#         data = {}
 
-        ultima_compra = Compras.objects.order_by('id', 'fecha').last()
-        efectivo = request.GET['efectivo']
-        credito = request.GET['credito']
-        debito = request.GET['debito']
-        cuotas = request.GET['cuotas']
-        tipoCredito = request.GET['tipoCredito']
-        tipoDebito = request.GET['tipoDebito']
+#         ultima_compra = Compras.objects.order_by('id', 'fecha').last()
+#         efectivo = request.GET['efectivo']
+#         credito = request.GET['credito']
+#         debito = request.GET['debito']
+#         cuotas = request.GET['cuotas']
+#         tipoCredito = request.GET['tipoCredito']
+#         tipoDebito = request.GET['tipoDebito']
   
-        data['id_compra'] = ultima_compra
-        data['efectivo'] = efectivo
-        data['credito'] = credito
-        data['debito'] = debito
-        data['cuotas'] = cuotas
-        data['tipoCredito'] = tipoCredito
-        data['tipoDebito'] = tipoDebito
+#         data['id_compra'] = ultima_compra
+#         data['efectivo'] = efectivo
+#         data['credito'] = credito
+#         data['debito'] = debito
+#         data['cuotas'] = cuotas
+#         data['tipoCredito'] = tipoCredito
+#         data['tipoDebito'] = tipoDebito
         
-        formulario = formPago(data)
-        if formulario.is_valid():
+#         formulario = formPago(data)
+#         if formulario.is_valid():
             
-            formulario.save()
+#             formulario.save()
         
         
-        if efectivo > "":
+#         if efectivo > "":
             
-            ultimo_saldo = Caja.objects.latest('fecha').saldo
+#             ultimo_saldo = Caja.objects.latest('fecha').saldo
             
-            #fecha = Compras.objects.latest('fecha').fecha
+#             #fecha = Compras.objects.latest('fecha').fecha
            
-            saldo = float(ultimo_saldo) - float(efectivo)
+#             saldo = float(ultimo_saldo) - float(efectivo)
             
-            caja = {} 
+#             caja = {} 
             
-            caja['fecha'] = datetime.now()
-            caja['descripcion'] = "Compra comprobante N°"
-            caja['operacion'] = 1
-            caja['monto'] = efectivo 
-            caja['saldo'] = saldo
+#             caja['fecha'] = datetime.now()
+#             caja['descripcion'] = "Compra comprobante N°"
+#             caja['operacion'] = 1
+#             caja['monto'] = efectivo 
+#             caja['saldo'] = saldo
 
-            formulario = cajaForm(caja)
+#             formulario = cajaForm(caja)
             
-            if formulario.is_valid():
+#             if formulario.is_valid():
             
-                formulario.save()
+#                 formulario.save()
             
-    return JsonResponse({"error": "Error"}, status=400)
+#     return JsonResponse({"error": "Error"}, status=400)
+
+
+@login_required
+def imprimir(request):
+    return render(request, 'compras/imprimir.html')
+
+
+def reporteCompras(request):
+
+    
+    compra = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha').annotate(Sum('total'))
+
+
+    data = {
+        "compras": compra,
+        "fecha" : datetime.now()
+    }
+
+    pdf = render_pdf('compras/pdfCompras.html', data)
+
+    return HttpResponse(pdf, content_type='application/pdf')
+
+# from django.conf import settings
+# import uuid
+
+# def reporteExcel(request):
+#     compra = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha').annotate(Sum('total'))
+#     df = pd.DataFrame(compra)
+#     df.to_excel("cedal/static/excel/sdf.xlsx", encoding="UTF-8", index=False)
+#     #return HttpResponse(df)

@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'colorfield',
     'user',
+    'ventas',
 ]
 
 X_FRAME_OPTIONS='SAMEORIGIN'

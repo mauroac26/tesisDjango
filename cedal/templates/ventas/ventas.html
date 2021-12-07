@@ -1,7 +1,7 @@
 {% extends 'Header/header.html' %}
 {% load static %}
 
-{% block title %}Compras{% endblock %}
+{% block title %}Ventas{% endblock %}
 
 {% block content %}
 
@@ -10,7 +10,7 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Compras</h1>
+    <h1 class="h3 mb-2 text-gray-800">Ventas</h1>
     
 
     <!-- DataTales Example -->
@@ -20,11 +20,11 @@
         <div class="card-header py-3">
             <div class="row">
                 <div class="col">
-            <a href="{% url 'altaCompra' %}" class="btn btn-primary"  ><i class="fas fa-plus pr-2"></i>Nuevo</a>
+            <a href="{% url 'altaVenta' %}" class="btn btn-primary"  ><i class="fas fa-plus pr-2"></i>Nuevo</a>
         </div>
             <div class="col-2 text-right ">
                 
-                <a href="{% url 'reporteCompras' %}" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf fa-1x"></i></a>
+                <a href="" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf fa-1x"></i></a>
                 <a href="" class="btn btn-success btn-sm"><i class="fas fa-file-excel fa-1x"></i></a>
                 <a href="" class="btn btn-secondary btn-sm"><i class="fas fa-print fa-1x"></i></a>
             </div>
@@ -35,25 +35,25 @@
         
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover" id="tablaCompra" width="100%" cellspacing="0">
+                <table class="table table-bordered table-striped table-hover" id="tablaVenta" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Comprobante</th>
                             <th>Fecha de compra</th>
-                            <th>Proveedor</th>
+                            <th>Cliente</th>
                             <th>total($)</th>
                             <th>Accion</th>
                         </tr>
                     </thead>
                     <tbody>
-                       {% for c in compras %}
+                       {% for c in ventas %}
                        
                        <tr>
-                        <td>{{c.id_compra__comprobante}}</td>
-                        <td>{{c.id_compra__fecha}}</td>
-                        <td >{{c.id_compra__cuit__nombre}}</td>
+                        <td>{{c.id_venta__comprobante}}</td>
+                        <td>{{c.id_venta__fecha}}</td>
+                        <td >{{c.id_venta__cuit__nombre}}</td>
                         <td>${{c.total__sum}}</td>
-                        <td class="text-center"><a href="{% url 'detallesCompra' c.id_compra__id %}" class="btn btn-primary btn-sm " role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalle"><i class="far fa-file-alt"></i></a></td>
+                        <td class="text-center"><a href="{% url 'detallesVenta' c.id_venta__id %}" class="btn btn-primary btn-sm " role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalle"><i class="far fa-file-alt"></i></a></td>
                     </tr>
                        {% endfor %}
                       
@@ -85,10 +85,9 @@
 
 <script>
     $(document).ready(function() {
-    table("tablaCompra");
+    table("tablaVenta");
     });
 </script>
 
 
 {% endblock %}
-

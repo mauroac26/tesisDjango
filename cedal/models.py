@@ -1,5 +1,6 @@
 from django.db import models
-from compras.models import Compras 
+from compras.models import Compras
+from ventas.models import Ventas 
 # Create your models here.
 
 
@@ -24,7 +25,8 @@ class formaPago(models.Model):
     tipoCredito = models.ForeignKey(tarjetaCredito, on_delete=models.PROTECT, null=True, blank=True)
     tipoDebito = models.ForeignKey(tarjetaDebito, on_delete=models.PROTECT, null=True, blank=True)
     cuotas = models.IntegerField(null=True, blank=True)
-    id_compra =  models.ForeignKey(Compras, on_delete=models.CASCADE)
+    id_compra =  models.ForeignKey(Compras, on_delete=models.CASCADE, null=True, blank=True)
+    id_venta =  models.ForeignKey(Ventas, on_delete=models.CASCADE, null=True, blank=True)
 
 def __str__(self):
     return self.id

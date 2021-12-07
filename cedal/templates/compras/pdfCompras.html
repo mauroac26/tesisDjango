@@ -1,0 +1,43 @@
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+  
+        <h1 class="h3 mb-2 text-gray-800">Compras</h1>
+    
+      
+            Reporte de Compras<p style="text-align: right;">{{fecha}}</p>
+           
+
+    
+    
+    <hr>
+
+    <!-- DataTales Example -->
+
+                <table width="100%" cellspacing="0" style="padding-top: 5px;">
+                    <thead>
+                        <tr>
+                            <th>Comprobante</th>
+                            <th>Fecha de compra</th>
+                            <th>Proveedor</th>
+                            <th>total($)</th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                       {% for c in compras %}
+                       
+                       <tr>
+                        <td>{{c.id_compra__comprobante}}</td>
+                        <td>{{c.id_compra__fecha}}</td>
+                        <td >{{c.id_compra__cuit__nombre}}</td>
+                        <td>${{c.total__sum}}</td>
+                    </tr>
+                       {% endfor %}
+                      
+                    </tbody>
+                </table>
+             
+   
+
+</div>
