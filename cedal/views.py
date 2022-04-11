@@ -3,6 +3,7 @@ from json.encoder import JSONEncoder
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.db.models import Sum
+from cedal.models import tarjetaCredito
 from compras.models import detalleCompra
 from django.http import HttpResponse, response
 from django.http import JsonResponse
@@ -57,4 +58,15 @@ def graficoCompras(request):
 @login_required
 def configuracion(request):
     return render(request, 'cedal/configuracion.html')
+
+@login_required
+def credito(request):
+    
+    credito = tarjetaCredito.objects.all()
+
+
+    data = {
+        "credito": credito
+    }
+    return render(request, 'cedal/credito.html', data)
     

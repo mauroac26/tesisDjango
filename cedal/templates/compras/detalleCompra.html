@@ -149,19 +149,19 @@
                         </div>
 
                               <div class="row mt-3">
-                              <div class="col-4 d-none" id="divCredito">
+                              <div class="col-md-4 col-sm-4 col-xs-12 " id="divCredito">
                                
                                 {{ formPago.credito|as_crispy_field }}
                                
                               </div>
         
-                              <div class="col-4 d-none" id="divTipoCredito" >
+                              <div class="col-md-4 col-sm-4 col-xs-12 " id="divTipoCredito" >
                             
                               {{ formPago.tipoCredito|as_crispy_field }}
                              
                             </div>
 
-                            <div class="col-4 d-none" id="divCuotas">
+                            <div class="col-md-4 col-sm-4 col-xs-12 " id="divCuotas">
                       
                               {{ formPago.cuotas|as_crispy_field }}
                               
@@ -177,13 +177,13 @@
                       </div> -->
 
                         <div class="row mt-3" >
-                            <div class="col-4 d-none" id="divDebito" >
+                            <div class="col-md-4 col-sm-4 col-xs-12 d-none" id="divDebito" >
                              
                               {{ formPago.debito|as_crispy_field }}
                              
                             </div>
       
-                            <div class="col-4 d-none" id="divTipoDebito" >
+                            <div class="col-md-4 col-sm-4 col-xs-12 d-none" id="divTipoDebito" >
                           
                             {{ formPago.tipoDebito|as_crispy_field }}
                            
@@ -219,20 +219,20 @@
         
         
         <div class="row mt-2">
-          <div class="col-3 col-md-3 offset-md-2 ">
+          <div class="col-3 col-md-3 offset-md-1 ">
             <label for="">Pago Efectivo</label>
               <input type="text" name="" value=${{p.efectivo}} class="form-control-sm bg-secondary" readonly>
           </div>
           </div>
 
           <div class="row mt-3">
-            <div class="col-3 col-md-3 offset-md-2">
-              <label for="">Pago Tarjeta Credito</label>
+            <div class="col-md-4 col-sm-4 col-xs-12 offset-md-1">
+              Pago Credito
               
               <input type="text" name="" value=${{p.credito}} class="form-control-sm bg-secondary" readonly>
           </div>
-          <div class="col-3 col-md-3 ">
-           <label for="">Tarjeta Credito </label>
+          <div class="col-md-3 col-sm-3 col-xs-12 ">
+           Tarjeta Credito
            {% if p.tipoCredito == none %}
            <input type="text" name="" value="" class="form-control-sm bg-secondary" readonly>
            {% else %}
@@ -240,8 +240,8 @@
             {% endif %}
         </div>
         
-        <div class="col-2 col-md-2 ">
-          <label for="">Cuotas</label>
+        <div class="col-md-3 col-sm-3 col-xs-12 ">
+          Cuotas
           <input type="text" name="" value={{p.cuotas}} class="form-control-sm bg-secondary" readonly>
           
       </div>
@@ -249,7 +249,7 @@
           </div>
           
           <div class="row  mt-3">
-          <div class="col-3 col-md-3 offset-md-2">
+          <div class="col-4 col-md-4 offset-md-1">
             <label for=""> Pago Debito </label>
             <input type="text" name="" value="${{p.debito}}" class="form-control-sm bg-secondary" readonly>
           </div>

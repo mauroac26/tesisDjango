@@ -18,12 +18,26 @@ def __str__(self):
     return self.nombre
 
 
+# tipo_Tarjeta = [
+#     [0, "Credito"],
+#     [1, "Debito"]
+# ]
+
+# class tarjetas(models.Model):
+#     nombre = models.CharField(max_length=100)
+#     tipo = models.IntegerField(choices=tipo_Tarjeta, verbose_name="Tipo Tarjeta") 
+
+# def __str__(self):
+#     return self.nombre
+
+
 class formaPago(models.Model):
     efectivo = models.DecimalField(max_digits=8, decimal_places=2 , null=True, blank=True)
     credito = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     debito = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
     tipoCredito = models.ForeignKey(tarjetaCredito, on_delete=models.PROTECT, null=True, blank=True)
     tipoDebito = models.ForeignKey(tarjetaDebito, on_delete=models.PROTECT, null=True, blank=True)
+    #tipoTarjeta = models.ForeignKey(tarjetas, on_delete=models.PROTECT, null=True, blank=True)
     cuotas = models.IntegerField(null=True, blank=True)
     id_compra =  models.ForeignKey(Compras, on_delete=models.CASCADE, null=True, blank=True)
     id_venta =  models.ForeignKey(Ventas, on_delete=models.CASCADE, null=True, blank=True)
