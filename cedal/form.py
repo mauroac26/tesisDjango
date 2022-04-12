@@ -1,7 +1,7 @@
 from django import forms
 import django
 from django.forms import fields, widgets
-from .models import formaPago, tarjetaCredito
+from .models import formaPago, tarjetaCredito, tarjetaDebito
 from .validators import minValueValidator
 from compras.models import detalleCompra
 from django.contrib.auth.forms import UserCreationForm
@@ -50,4 +50,12 @@ class formCredito(forms.ModelForm):
 
     class Meta:
         model = tarjetaCredito
+        fields = '__all__'
+
+
+class formDebito(forms.ModelForm):
+    
+
+    class Meta:
+        model = tarjetaDebito
         fields = '__all__'

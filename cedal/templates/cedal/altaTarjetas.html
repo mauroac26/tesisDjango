@@ -3,14 +3,14 @@
 
 {% load crispy_forms_tags %}
 
-{% block title %}Alta Marcas{% endblock %}
+{% block title %}Alta Tarjetas{% endblock %}
 
 {% block content %}
 
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Nueva Marca</h1>
+    <h1 class="h3 mb-2 text-gray-800">Nueva Tarjeta</h1>
     <div class="card shadow mb-4"></div>
         <div class="card-body">
           
@@ -19,7 +19,14 @@
                 <div class="row">
                     <div class="col-12 col-md-6 offset-md-3">
                      
-                        {{ form|crispy}}
+                        <!-- {{ form|crispy}} -->
+
+                        Nombre: <input type="text" name="nombre" id="nombre"><br>
+
+                        Tipo: <select name="selectTarjetas" id="selectTarjetas">
+                            <option value="0">Tarjeta de credito</option>
+                            <option value="1">Tarjeta de debito</option>
+                        </select>
                     
                     
                 <br>
