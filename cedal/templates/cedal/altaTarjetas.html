@@ -1,0 +1,43 @@
+{% extends 'Header/header.html' %}
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Alta Tarjetas{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Nueva Tarjeta</h1>
+    <div class="card shadow mb-4"></div>
+        <div class="card-body">
+          
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-12 col-md-6 offset-md-3">
+                     
+                        <!-- {{ form|crispy}} -->
+
+                        Nombre: <input type="text" name="nombre" id="nombre" class="form-control"><br>
+
+                        Tipo: <select name="selectTarjetas" id="selectTarjetas" class="form-control">
+                            <option value="0">Tarjeta de credito</option>
+                            <option value="1">Tarjeta de debito</option>
+                        </select>
+                    
+                    
+                <br>
+                <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" type="submit">Añadir</button>
+            </div>
+                </div>
+                </div>
+            </form>
+            {{mensaje}}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -3,6 +3,7 @@ from json.encoder import JSONEncoder
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.db.models import Sum
+from cedal.models import tarjetaCredito, tarjetaDebito
 from compras.models import detalleCompra
 from django.http import HttpResponse, response
 from django.http import JsonResponse
@@ -57,4 +58,47 @@ def graficoCompras(request):
 @login_required
 def configuracion(request):
     return render(request, 'cedal/configuracion.html')
+
+
+@login_required
+def credito(request):
+    
+    credito = tarjetaCredito.objects.all()
+    debito = tarjetaDebito.objects.all()
+
+    data = {
+        "credito": credito,
+        "debito": debito
+    }
+    return render(request, 'cedal/credito.html', data)
+
+
+def altaTarjeta(request):
+    
+    # data = {
+    #     'form': formCredito()
+    # }
+
+    data = {}
+
+    if request.method == "POST":
+        nombre = request.POST.get('nombre')
+        tarjetas = request.POST.get('selectTarjetas')
+        
+        data['nombre'] = nombre
+        if tarjetas == "0":
+           
+            formulario = formCredito(data)
+        else:
+            
+            formulario = formDebito(data)
+
+        if formulario.is_valid():
+            formulario.save()
+            messages.add_message(request, messages.SUCCESS, "La tarjeta de credito se guardó exitosamente")
+            return redirect(to='credito')
+        else:
+            messages.add_message(request, messages.ERROR, "Error al guardar los datos")
+
+    return render(request, 'cedal/altaTarjetas.html')
     

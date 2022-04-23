@@ -1,0 +1,108 @@
+{% extends 'Header/header.html' %}
+{% load static %}
+
+{% block title %}Tarjetas{% endblock %}
+
+{% block content %}
+
+
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Tarjetas</h1>
+    
+
+    <!-- DataTales Example -->
+    
+    <div class="card shadow mb-4">
+        
+        <div class="card-header py-3">
+            <div class="row">
+                <div class="col">
+            <a href="{% url 'altaTarjeta' %}"  class="btn btn-primary"  ><i class="fas fa-plus pr-2"></i>Nuevo</a>
+        </div>
+        
+            </div>
+            
+        </div>
+        
+        <div class="card-body">
+            
+            <h5 class="h3 mb-2 text-gray-800">Tarjetas de credito</h5>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover" id="tablaCredito" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Accion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       {% for c in credito %}
+                       
+                       <tr>
+                        <td >{{c.nombre}}</td>
+                 
+                        
+                        <td class="row justify-content-center"><a class="btn-sm btn-success" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
+                            <a class="btn-sm btn-danger ml-3" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
+                    </tr>
+                       {% endfor %}
+                      
+                    </tbody>
+                </table>
+               
+            </div><br>
+
+            <h5 class="h3 mb-2 text-gray-800">Tarjetas de debito</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover" id="tablaDebito" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Accion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       {% for d in debito %}
+                       
+                       <tr>
+                        <td >{{d.nombre}}</td>
+                 
+                        
+                        <td class="row justify-content-center"><a class="btn-sm btn-success" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
+                            <a class="btn-sm btn-danger ml-3" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
+                    </tr>
+                       {% endfor %}
+                      
+                    </tbody>
+                </table>
+               
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block js %}
+<!-- Page level plugins -->
+<script src="{% static 'cedal/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'cedal/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+<!-- Page level custom scripts -->
+<script src="{% static 'cedal/js/demo/datatables-demo.js' %}"></script>
+
+<script>
+    $(document).ready(function() {
+    table("tablaCredito");
+    table("tablaDebito");
+    });
+</script>
+
+
+{% endblock %}
