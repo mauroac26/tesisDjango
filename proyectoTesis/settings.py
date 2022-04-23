@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'colorfield',
     'user',
     'ventas',
+    
 ]
 
 X_FRAME_OPTIONS='SAMEORIGIN'

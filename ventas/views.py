@@ -229,7 +229,7 @@ def detallesVenta(request, id):
                 
                 caja = {}
                 caja['descripcion'] = "Venta comprobante N° " + comprobante
-                caja['operacion'] = 1
+                caja['operacion'] = 0
                 caja['monto'] = efectivo 
 
                 formulario = cajaForm(caja)

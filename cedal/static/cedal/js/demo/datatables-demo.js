@@ -51,6 +51,30 @@ function table(tabla){
               "next": "Siguiente",
               "previous": "Anterior"
           }
-        }
+        },
+        responsive: "true",
+        dom: 'Bfrtilp',
+        buttons:[
+          {
+            extend: 'excelHtml5',
+            text: '<i class="fas fa-file-excel fa-1x"></i>',
+            titleAttr: 'Exportar a Excel',
+            className: 'btn btn-success btn-sm'
+          },
+          {
+            extend: 'pdfHtml5',
+            text: '<i class="fas fa-file-pdf fa-1x"></i>',
+            titleAttr: 'Exportar a PDF',
+            className: 'btn btn-primary btn-sm'
+          },
+          {
+            extend: 'print',
+            text: '<i class="fas fa-print fa-1x"></i>',
+            titleAttr: 'Exportar a Imprimir',
+            className: 'btn btn-secondary btn-sm'
+          
+
+          }
+        ]
       });
 }

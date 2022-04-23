@@ -25,7 +25,11 @@
     <link href="{% static 'cedal/css/sb-admin-2.min.css' %}" rel="stylesheet">
 
     <!-- Custom styles for this page -->
-    <link href="{% static 'cedal/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+    <link href="{% static 'cedal/datatables/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+
+    <link
+        href="{% static 'cedal/datatables/dataTables.min.css' %}"
+        rel="stylesheet">
 
 </head>
 
@@ -383,6 +387,21 @@
     <!-- Page level plugins -->
     
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <!-- Page level plugins -->
+<script src="{% static 'cedal/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'cedal/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+<!-- Page level custom scripts -->
+<script src="{% static 'cedal/js/demo/datatables-demo.js' %}"></script>
+
+    <script src="{% static 'cedal/datatables/Buttons-2.2.2/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'cedal/datatables/JSZip-2.5.0/jszip.min.js' %}"></script>
+    <script src="{% static 'cedal/datatables/pdfmake-0.1.36/pdfmake.min.js' %}"></script>
+    <script src="{% static 'cedal/datatables/pdfmake-0.1.36/vfs_fonts.js' %}"></script>
+    <script src="{% static 'cedal/datatables/Buttons-2.2.2/js/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'cedal/datatables/Buttons-2.2.2/js/buttons.print.min.js' %}"></script>
+
     {% if messages %}
         {% for m in messages %}
             {% if m.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
