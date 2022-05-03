@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'colorfield',
     'user',
     'ventas',
+    'django.contrib.humanize',
     
 ]
 

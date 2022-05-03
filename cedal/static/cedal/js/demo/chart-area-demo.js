@@ -71,7 +71,7 @@ success: function(response) {
     //alert(pe);
                  $.each(pe, function(i, item){
                   //const shortMonthName = moment(item.id_compra__fecha).format('MMM');
-                 paramFecha.push(fecha[item.id_compra__fecha__month - 1]);
+                 paramFecha.push(fecha[item.id_venta__fecha__month - 1]);
               
                  paramPrecio.push(parseFloat(item.total__sum).toFixed(2)); 
                                         

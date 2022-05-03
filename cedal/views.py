@@ -8,6 +8,8 @@ from compras.models import detalleCompra
 from django.http import HttpResponse, response
 from django.http import JsonResponse
 from django.db.models.functions import Extract
+
+from ventas.models import detalleVenta
 from .form import UserRegisterForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login
@@ -25,18 +27,27 @@ def graficoCompras(request):
     
     if request.is_ajax() and request.method == "GET":
         
-        #compra = detalleCompra.objects.values('id_compra__fecha').annotate(Sum('total')).order_by(Extract('id_compra__fecha', 'month') )
-        compra = detalleCompra.objects.values('id_compra__fecha__month').order_by('id_compra__fecha__month').annotate(Sum('total')) 
-        #compra = detalleCompra.objects.values(month=TruncMonth('id_compra__fecha__month').order_by('id_compra__fecha').annotate(Sum('total'))
-        # data = {
-        #     'datos': compra
-        # }
-        
 
-        return JsonResponse({"data": list(compra)})
+        #compra = detalleCompra.objects.filter(id_compra__fecha__year = "2022").values('id_compra__fecha__month').order_by('id_compra__fecha__month').annotate(Sum('total'))
+        venta = detalleVenta.objects.filter(id_venta__fecha__year = "2022").values('id_venta__fecha__month').order_by('id_venta__fecha__month').annotate(Sum('total'))
+
+        return JsonResponse({"data": list(venta)})
         
     return render(request, 'cedal/index.html')
 
+
+def graficoProductos(request):
+    
+    if request.is_ajax() and request.method == "GET":
+        
+        productos = detalleVenta.objects.all().select_related('id_producto').values('id_producto__nombre').annotate(Sum('cantidad'))      
+        data = {
+        "producto": productos
+        }
+        return JsonResponse({"producto": list(productos)})
+        
+
+    return render(request, 'cedal/index.html', data)
 
 # @permission_required('app.add_user')
 # def registro(request):
