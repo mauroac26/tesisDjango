@@ -1,17 +1,12 @@
+import datetime
 import json
 from json.encoder import JSONEncoder
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from cedal.models import tarjetaCredito, tarjetaDebito
-from compras.models import detalleCompra
-from django.http import HttpResponse, response
 from django.http import JsonResponse
-from django.db.models.functions import Extract
-
-from ventas.models import detalleVenta
-from .form import UserRegisterForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from ventas.models import detalleVenta, Ventas
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required, permission_required
 # Create your views here.
@@ -24,16 +19,26 @@ def index(request):
     return render(request, 'cedal/index.html')
 
 def graficoCompras(request):
-    
+    resultado = list()
     if request.is_ajax() and request.method == "GET":
         
 
         #compra = detalleCompra.objects.filter(id_compra__fecha__year = "2022").values('id_compra__fecha__month').order_by('id_compra__fecha__month').annotate(Sum('total'))
-        venta = detalleVenta.objects.filter(id_venta__fecha__year = "2022").values('id_venta__fecha__month').order_by('id_venta__fecha__month').annotate(Sum('total'))
+        venta = detalleVenta.objects.all().values('id_venta__fecha__month').annotate(Sum('total')).order_by('id_venta__fecha__month')
+        
+        # for e in venta:
+        #     fecha = e['id_venta__fecha']
+            
+        #     tablaProsiciones = {}
+        #     tablaProsiciones['total'] = e['total__sum']
+        #     tablaProsiciones['fecha'] = fecha
 
+        #     resultado.append(tablaProsiciones)
+
+        #     print(resultado)
         return JsonResponse({"data": list(venta)})
         
-    return render(request, 'cedal/index.html')
+   
 
 
 def graficoProductos(request):
@@ -41,13 +46,20 @@ def graficoProductos(request):
     if request.is_ajax() and request.method == "GET":
         
         productos = detalleVenta.objects.all().select_related('id_producto').values('id_producto__nombre').annotate(Sum('cantidad'))      
-        data = {
-        "producto": productos
-        }
+
         return JsonResponse({"producto": list(productos)})
         
 
-    return render(request, 'cedal/index.html', data)
+    return render(request, 'cedal/index.html')
+
+
+def graficoClientes(request):
+    
+    if request.is_ajax() and request.method == "GET":
+        
+        clientes = Ventas.objects.all().values('cuit__nombre').annotate(cantidad=Count('cuit')).order_by('-cantidad')
+
+        return JsonResponse({"clientes": list(clientes)})
 
 # @permission_required('app.add_user')
 # def registro(request):

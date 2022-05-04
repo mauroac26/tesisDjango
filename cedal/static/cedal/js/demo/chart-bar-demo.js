@@ -27,65 +27,71 @@ function number_format(number, decimals, dec_point, thousands_sep) {
   return s.join(dec);
 }
 
+
+
+
+$.ajax({
+  type: "get",
+  dataType: 'json',
+   url:  "graficoClientes",
+success: function(response) {
+  var paramClientes = [];
+  var paramCantidad = [];
+    var pe = response.clientes;
+    //alert(pe);
+                 $.each(pe, function(i, item){
+                  //const shortMonthName = moment(item.id_compra__fecha).format('MMM');
+                  paramClientes.push(item.cuit__nombre);
+              
+                  paramCantidad.push(item.cantidad); 
+                                        
+            
+                
+                 });
 // Bar Chart Example
 var ctx = document.getElementById("myBarChart");
 var myBarChart = new Chart(ctx, {
   type: 'horizontalBar',
   data: {
-    labels: ["January", "February"],
+    labels: paramClientes,
     datasets: [{
       axis: 'x',
       label: "Cantidad",
-      data: [5, 15],
+      data: paramCantidad,
       fill: false,
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
         'rgba(255, 159, 64, 0.2)',
-        // 'rgba(255, 205, 86, 0.2)',
-        // 'rgba(75, 192, 192, 0.2)',
-        // 'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 205, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
         // 'rgba(153, 102, 255, 0.2)',
         // 'rgba(201, 203, 207, 0.2)'
       ],
       borderColor: [
         'rgb(255, 99, 132)',
         'rgb(255, 159, 64)',
-        // 'rgb(255, 205, 86)',
-        // 'rgb(75, 192, 192)',
-        // 'rgb(54, 162, 235)',
+        'rgb(255, 205, 86)',
+        'rgb(75, 192, 192)',
+        'rgb(54, 162, 235)',
         // 'rgb(153, 102, 255)',
         // 'rgb(201, 203, 207)'
       ],
       borderWidth: 1
-    // labels: ["January", "February", "March", "April", "May", "June"],
-    // datasets: [{
-    //   axis: 'y',
-    //   fill: false,
-    //   label: "Revenue",
-    //   backgroundColor: "#4e73df",
-    //   hoverBackgroundColor: "#2e59d9",
-    //   borderColor: "#4e73df",
-    //   data: [4215, 5312, 6251, 7841, 9821, 14984],
     }],
   },
   options: {
-
+    
       tooltips: {
         enabled: true
       },
       responsive: true,
       legend: {
          display: false,
-         position: 'bottom',
-         fullWidth: true,
-         labels: {
-           boxWidth: 10,
-           padding: 50
-         }
       },
       scales: {
          yAxes: [{
-           barPercentage: 0.75,
+           barPercentage: 0.50,
            gridLines: {
              display: true,
              drawTicks: true,
@@ -102,7 +108,7 @@ var myBarChart = new Chart(ctx, {
              gridLines: {
                display: true,
                drawTicks: false,
-               tickMarkLength: 5,
+               tickMarkLength: 10,
                drawBorder: false
              },
            ticks: {
@@ -115,7 +121,7 @@ var myBarChart = new Chart(ctx, {
               return label/1;
              }
                
-           },
+            },
             // scaleLabel: {
             //   display: true,
             //   padding: 10,
@@ -129,4 +135,7 @@ var myBarChart = new Chart(ctx, {
       }
     
   }
+});
+
+}
 });
