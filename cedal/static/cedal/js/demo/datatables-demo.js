@@ -54,7 +54,7 @@ function table(tabla){
               "previous": "Anterior"
           }
         },
-        responsive: "true",
+        responsive: true,
         dom: 'Bfrtilp',
         buttons:[
           {

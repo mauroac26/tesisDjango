@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
 from .forms import marcaForm, categoriaForm, productoForm
 from .models import Marca, Categoria, Producto
-from django.http import JsonResponse
+
 from django.contrib.auth.decorators import login_required, permission_required
 # Create your views here.
 @login_required

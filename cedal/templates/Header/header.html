@@ -29,7 +29,7 @@
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="{% static 'cedal/css/sb-admin-2.min.css' %}" rel="stylesheet">
+    <link href="{% static 'cedal/css/sb-admin-2.css' %}" rel="stylesheet">
 
     <!-- Custom styles for this page -->
     
@@ -44,7 +44,7 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css"/>
 
 <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css">
 </head>
 
 <body id="page-top">
@@ -79,7 +79,7 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Modulos
+               MODULOS
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
@@ -204,10 +204,22 @@
                         <a class="collapse-item" href="cards.html">Cards</a>
                     </div>
                 </div> -->
-                <a class="nav-link" href="#" >
+                <!-- <a class="nav-link" href="{% url 'produccion' %}" > -->
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseStock" aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-pallet"></i>
                     <span>Stock</span>
                 </a>
+
+                <div id="collapseStock" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-secondary text-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'produccion' %}">Retiro Mercaderia</a>
+                        
+                        
+                        <a class="collapse-item" href="{% url 'pedido' %}" >Pedido Mercaderia<span id="badgePedidos" class="badge badge-info badge-pill ml-2 d-none"></span></a> 
+                        
+                        
+                    </div>
+                </div>
             </li>
             
             <li class="nav-item">
@@ -399,7 +411,7 @@
     <script src="{% static 'cedal/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="{% static 'cedal/js/sb-admin-2.min.js' %}"></script>
+    <script src="{% static 'cedal/js/sb-admin-2.js' %}"></script>
 
     <!-- Page level plugins -->
     
@@ -413,20 +425,49 @@
 
 <!-- Page level custom scripts -->
 <script src="{% static 'cedal/js/demo/datatables-demo.js' %}"></script>
-
+<!-- <script src="{% static 'cedal/js/badge.js' %}"></script> -->
 
 <script src="//code.jquery.com/jquery-3.5.1.js"></script>
 <!-- DataTables JS library -->
 <script type="text/javascript" src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 <!-- DataTables JBootstrap -->
 <script type="text/javascript" src="//cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
-
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
     <script src="{% static 'cedal/datatables/Buttons-2.2.2/js/dataTables.buttons.min.js' %}"></script>
     <script src="{% static 'cedal/datatables/JSZip-2.5.0/jszip.min.js' %}"></script>
     <script src="{% static 'cedal/datatables/pdfmake-0.1.36/pdfmake.min.js' %}"></script>
     <script src="{% static 'cedal/datatables/pdfmake-0.1.36/vfs_fonts.js' %}"></script>
     <script src="{% static 'cedal/datatables/Buttons-2.2.2/js/buttons.html5.min.js' %}"></script>
     <script src="{% static 'cedal/datatables/Buttons-2.2.2/js/buttons.print.min.js' %}"></script>
+
+    
+    {% if user.groups.all.0.name == 'productor' %}
+    <script>
+        
+       $.ajax({
+    type: "get",
+    dataType: 'json',
+     url:  "{% url 'cantidadPedidos' %}",
+  success: function(response) {
+    
+      var cantidad = response.data;
+      if(cantidad > 0){
+        document.getElementById('badgePedidos').className = "badge badge-info badge-pill ml-2 d-inline";
+        document.getElementById('badgePedidos').innerText = cantidad
+        // document.getElementById('badgePedidosStock').className = "badge badge-info badge-pill ml-2 d-inline";
+        // document.getElementById('badgePedidosStock').innerText = cantidad
+        document.getElementById('divPedidos').innerText = cantidad
+      }
+      else{
+        document.getElementById('badgePedidos').className = "badge badge-info badge-pill ml-2 d-none";
+        // document.getElementById('badgePedidosStock').className = "badge badge-info badge-pill ml-2 d-none";
+      }
+  
+  }
+  });
+
+    </script>
+{% endif %}
 
     {% if messages %}
         {% for m in messages %}

@@ -1,6 +1,6 @@
 {% extends 'Header/header.html' %}
 {% load static %}
-
+{% load crispy_forms_tags %}
 {% block title %}Compras{% endblock %}
 
 {% block content %}
@@ -35,7 +35,7 @@
         
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table-sm table-bordered table-striped table-hover" id="tablaCompra" width="100%" >
+                <table class="table table-sm table-bordered table-striped table-hover" id="tablaCompra" width="100%" >
                     <thead>
                         <tr>
                             <th>Comprobante</th>
@@ -76,7 +76,6 @@
 {% endblock %}
 
 {% block js %}
-
 
 <script>
     $(document).ready(function() {

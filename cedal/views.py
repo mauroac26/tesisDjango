@@ -6,6 +6,9 @@ from django.shortcuts import redirect, render
 from django.db.models import Sum, Count
 from cedal.models import tarjetaCredito, tarjetaDebito
 from django.http import JsonResponse
+from produccion.models import Pedido
+from producto.models import Marca
+from user.models import Users
 from ventas.models import detalleVenta, Ventas
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required, permission_required
@@ -125,3 +128,18 @@ def altaTarjeta(request):
 
     return render(request, 'cedal/altaTarjetas.html')
     
+
+def cantidadPedidos(request):
+    pedidos = 0
+    if request.is_ajax() and request.method == "GET":
+        pedidos = Pedido.objects.filter(estado='Pendiente').count()
+        return JsonResponse({"data": pedidos})
+        # usuario = request.user.id
+        # grupo = Users.objects.filter(id=usuario).values('groups')
+        # for p in grupo:
+           
+        #     if p['groups'] == 5:
+
+        #         pedidos = Pedido.objects.filter(estado='Pendiente').count()
+               
+        # return JsonResponse({"data": pedidos})

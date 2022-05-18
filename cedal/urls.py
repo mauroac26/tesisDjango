@@ -1,8 +1,8 @@
-from django.contrib.auth.decorators import login_required
+
 from django.urls import path
 
-from user.views import usuarios
-from .views import altaTarjeta, configuracion, credito, graficoClientes, graficoProductos, index, graficoCompras
+
+from .views import altaTarjeta, cantidadPedidos, configuracion, credito, graficoClientes, graficoProductos, index, graficoCompras
 
 urlpatterns = [
     path('', index, name="index"),
@@ -13,4 +13,5 @@ urlpatterns = [
     path('altaTarjeta/', altaTarjeta, name="altaTarjeta"),
     path('graficoProductos/', graficoProductos, name="graficoProductos"),
     path('graficoClientes/', graficoClientes, name="graficoClientes"),
+    path('cantidadPedidos/', cantidadPedidos, name="cantidadPedidos"),
 ]

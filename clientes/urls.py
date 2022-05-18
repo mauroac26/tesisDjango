@@ -6,5 +6,5 @@ urlpatterns = [
     path('altaClientes/', altaClientes, name="altaClientes"),
     path('editarCliente/<id>', editarCliente, name="editarCliente"),
     path('eliminarCliente/<id>', eliminarCliente, name="eliminarCliente"),
-
+    
 ]
