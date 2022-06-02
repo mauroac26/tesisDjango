@@ -21,7 +21,8 @@
             Compra Realizada
         </div>
         <div class="card body">
-            
+         
+
             {% for c in datos %}
             
             <div class="row ml-2 "> <label for="" class="" > Comprobante: <b>{{c.comprobante}}</b></label></div>
@@ -61,9 +62,7 @@
                 </table>
                 
             </div>
-            {% if not pagos %}
-            <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modalformaPago">Formas de pago</button>
-            {% endif %}
+            
             <div class="row col-12 offset-md-10">
                <small> sub-Total: <b>${{subTotal.subTotal__sum}}</b></small>
               
@@ -74,7 +73,15 @@
             <div class="row col-12 offset-md-10">
                 <label id="total" for="total"><small> Total: <b>${{total.total__sum}}</b></small></label>
              </div>
-             
+             {% if not pagos %}
+            <a class="btn btn-primary" href="#modalformaPago" type="button" data-toggle="modal" data-target="#modalformaPago"><i class="fas fa-credit-card fa-1x"></i> Formas de pago</a>
+            {% endif %}
+             {% for d in detalles %}
+             <div class=""><a class="btn btn-primary" href="{% url 'reporteVentas' d.id_venta %}" type="button" >Imprimir</a></div>
+             {% endfor %}
+             {% for d in detalles %}
+             <div class=""><a class="btn btn-primary" href="{% url 'repVentas' d.id_venta %}" type="button" >Imprimir pdf</a></div>
+             {% endfor %}
         </div>
     </div>
 

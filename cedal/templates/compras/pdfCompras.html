@@ -5,7 +5,7 @@
         <h1 class="h3 mb-2 text-gray-800">Compras</h1>
     
       
-            Reporte de Compras<p style="text-align: right;">{{fecha}}</p>
+            <h4>Reporte de Compras<p style="text-align: right;">{{fecha}}</p></h4>
            
 
     
@@ -27,7 +27,7 @@
                     <tbody>
                        {% for c in compras %}
                        
-                       <tr>
+                       <tr style="text-align: center;">
                         <td>{{c.id_compra__comprobante}}</td>
                         <td>{{c.id_compra__fecha}}</td>
                         <td >{{c.id_compra__cuit__nombre}}</td>

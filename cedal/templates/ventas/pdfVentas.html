@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table th  {
+  padding-top: 2px;
+}
+
+table td  {
+  padding-top: 2px;
+}
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <p style="text-align: center;"><b>Cedal</b></br>
+        
+         {{direccion}}</br>
+        {{localidad}}</br>
+        {{provincia}}</p>
+    
+ 
+            
+           
+                <img src="" width="70px" height="70px">
+                {% for c in datos %}
+                
+    
+                <div > <label style="font-size: 12px;">Comprobante: <b>{{c.comprobante}}</b></label></div>
+                <div ><label style="font-size: 12px;"> Fecha:</label> <b>{{c.fecha}}</b></label></div>
+                <div ><label style="font-size: 12px;">Tipo de comprobante:</label> <b>{{c.tipoComprobante}}</b></label></div>
+                <div ><label style="font-size: 12px;">Cliente:</label> <b>{{c.cuit.nombre}}</b></label></div>
+                <div ><label style="font-size: 12px;"> CUIT:</label> <b>{{c.cuit.cuit}}</b></label></div>
+            
+               
+            
+                {% endfor %}
+           
+            <br>
+            
+                
+                    
+                    <table id="" width="100%" >
+                        <thead>
+                            <tr style="border-top: 1px solid black;">
+                                <th>Cantidad</th>
+                                <th>Producto</th>
+                                <th>Codigo</th>
+                                <th>Precio Unitario($)</th>
+                                <th>Precio Total</th>
+                            </tr>
+                        </thead>
+                       
+                        <tbody>
+                            {% for d in detalles %}
+                           <tr style="text-align: center; border-top: 1px solid black;">
+                            <td>{{d.cantidad}}</td>
+                            <td>{{d.id_producto.nombre}}</td>
+                            <td >{{d.id_producto.codigo}}</td>
+                            <td>{{d.id_producto.precio_venta}}</td>
+                            <td>{{d.total}}</td>
+                        </tr>
+                        
+                        {% endfor %}
+                    <tr style="border-top: 1px solid black; padding-top: 6px;">
+                        <td colspan="4"><b>SUBTOTAL:</b></td>
+                        <td style="text-align: right;">${{subTotal.subTotal__sum}}</td>
+                    </tr>
+                        
+                    <tr style="padding-top: 0;">
+                        <td colspan="4"><b>IVA 21.00%:</b></td>
+                        <td style="text-align: right;">${{iva.iva__sum}}</td>
+                    </tr>
+
+                    <tr style="padding-top: 0;">
+                        <td colspan="4"><b>TOTAL A PAGAR:</b></td>
+                        <td style="text-align: right;">${{total.total__sum}}</td>
+                    </tr>
+                        </tbody>
+                        
+                        
+                    </table>
+                    
+                </div>
+
+</body>
+</html>
+
+
+

@@ -101,8 +101,9 @@ def producido(request):
         # data = {}
         cantidad = request.GET['cantidad']
         producto = request.GET['id_Producto']
+        id_pedido = request.GET['id']
         
-        pedido = Pedido.objects.get(producto_id = producto)
+        pedido = Pedido.objects.get(id = id_pedido)
 
         pedido.estado = 'Producido'
         pedido.save()

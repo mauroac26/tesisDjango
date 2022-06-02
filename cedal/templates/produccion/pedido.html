@@ -38,7 +38,7 @@
                         <td>{{p.producto}}</td>
                         <td>{{p.cantidad}}</td>
                         {% if p.estado == 'Pendiente'%}
-                        <td> <button onclick="producido({{p.producto.id}}, {{p.cantidad}});" class="btn btn-primary" type="button">{{p.estado}}</button></td>
+                        <td> <button onclick="producido({{p.producto.id}}, {{p.cantidad}}, {{p.id}} );" class="btn btn-primary" type="button">{{p.estado}}</button></td>
                        {% else %}
                        <td>{{p.estado}}</td>
                        {% endif %}
@@ -60,14 +60,15 @@
 
     
 <script>
-    function producido(id_producto, cantidad){
+    function producido(id_producto, cantidad, id){
         
         $.ajax({
             type: 'get',
             url: "{% url 'producido' %}",
             data: {
                     'id_Producto': id_producto,
-                   'cantidad': cantidad
+                   'cantidad': cantidad,
+                   'id': id
         },
             success: function (response) {
                 window.location = "{% url 'pedido' %}";
