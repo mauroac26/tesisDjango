@@ -8,10 +8,20 @@
     <style>
         table th  {
   padding-top: 2px;
+  font-size: 12px;
 }
 
 table td  {
   padding-top: 2px;
+  font-size: 11px;
+}
+
+label {
+    font-size: 12px;
+}
+
+b{
+    font-size: 11px;
 }
     </style>
 </head>
@@ -19,24 +29,25 @@ table td  {
     <div class="container-fluid">
 
         <!-- Page Heading -->
-        <p style="text-align: center;"><b>Cedal</b></br>
+        <img style="text-align: center;" src="{{icono}}" width="80px" height="80px">
+        <p style="text-align: center; font-size: 12px;"><b style="font-size: 20px;">Cedal</b><br>
         
-         {{direccion}}</br>
+     {{direccion}}</br>
         {{localidad}}</br>
         {{provincia}}</p>
     
  
             
            
-                <img src="" width="70px" height="70px">
+                
                 {% for c in datos %}
                 
     
-                <div > <label style="font-size: 12px;">Comprobante: <b>{{c.comprobante}}</b></label></div>
-                <div ><label style="font-size: 12px;"> Fecha:</label> <b>{{c.fecha}}</b></label></div>
-                <div ><label style="font-size: 12px;">Tipo de comprobante:</label> <b>{{c.tipoComprobante}}</b></label></div>
-                <div ><label style="font-size: 12px;">Cliente:</label> <b>{{c.cuit.nombre}}</b></label></div>
-                <div ><label style="font-size: 12px;"> CUIT:</label> <b>{{c.cuit.cuit}}</b></label></div>
+                <div style="padding-top: 10px;" > <label>Comprobante: <b>{{c.comprobante}}</b></label></div>
+                <div ><label> Fecha:</label> <b>{{c.fecha}}</b></label></div>
+                <div ><label>Tipo de comprobante:</label> <b>{{c.tipoComprobante}}</b></label></div>
+                <div ><label>Cliente:</label> <b>{{c.cuit.nombre}}</b></label></div>
+                <div ><label> CUIT:</label> <b>{{c.cuit.cuit}}</b></label></div>
             
                
             
@@ -49,11 +60,10 @@ table td  {
                     <table id="" width="100%" >
                         <thead>
                             <tr style="border-top: 1px solid black;">
-                                <th>Cantidad</th>
-                                <th>Producto</th>
-                                <th>Codigo</th>
-                                <th>Precio Unitario($)</th>
-                                <th>Precio Total</th>
+                                <th style="width: 200px; ">Cantidad</th>
+                                <th style="width: 250px;">Producto</th>
+                                <th style="width: 200px; ">Precio Unitario($)</th>
+                                <th  style="width: 250px;">Precio Total</th>
                             </tr>
                         </thead>
                        
@@ -62,9 +72,8 @@ table td  {
                            <tr style="text-align: center; border-top: 1px solid black;">
                             <td>{{d.cantidad}}</td>
                             <td>{{d.id_producto.nombre}}</td>
-                            <td >{{d.id_producto.codigo}}</td>
-                            <td>{{d.id_producto.precio_venta}}</td>
-                            <td>{{d.total}}</td>
+                            <td>${{d.id_producto.precio_venta}}</td>
+                            <td style="text-align: right;">${{d.total}}</td>
                         </tr>
                         
                         {% endfor %}

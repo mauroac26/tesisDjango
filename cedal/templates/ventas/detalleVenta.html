@@ -36,7 +36,7 @@
         <br>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover table-sm" id="" width="100%" cellspacing="0">
+                <table class="table table-bordered table-striped table-hover table-sm" id="tablaDetalleVenta" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Cantidad</th>
@@ -76,12 +76,12 @@
              {% if not pagos %}
             <a class="btn btn-primary" href="#modalformaPago" type="button" data-toggle="modal" data-target="#modalformaPago"><i class="fas fa-credit-card fa-1x"></i> Formas de pago</a>
             {% endif %}
-             {% for d in detalles %}
+             <!-- {% for d in detalles %}
              <div class=""><a class="btn btn-primary" href="{% url 'reporteVentas' d.id_venta %}" type="button" >Imprimir</a></div>
-             {% endfor %}
-             {% for d in detalles %}
-             <div class=""><a class="btn btn-primary" href="{% url 'repVentas' d.id_venta %}" type="button" >Imprimir pdf</a></div>
-             {% endfor %}
+             {% endfor %} -->
+             
+             <div class=""><a class="btn btn-primary" href="{% url 'repVentas' id_venta %}" type="button" >Imprimir pdf</a></div>
+             
         </div>
     </div>
 
@@ -337,4 +337,12 @@
           });
   });
 </script>
+
+<script>
+  $(document).ready(function() {
+  table("tablaDetalleVenta");
+  });
+</script>
+
+
 {% endblock %}

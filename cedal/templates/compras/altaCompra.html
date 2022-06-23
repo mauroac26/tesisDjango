@@ -70,27 +70,33 @@
     </div>
 
     <div class="col-md-7">
-      <div class="card border-primary mb-3 ml-4" >
+      <div class="card border-primary mb-3" >
         <div class="card-header bg-primary text-white">Total de la compra</div>
         <div class="card-body text-primary">
             <div class="row">
-                <div class="col-12 ">
+                <div class="col-md-12 ">
                     <!-- Total -->
                     
-                      
-                    <input type="text" name="total" id="total" value="0.00" class="form-control bg-info text-center font-weight-bold text-white"> 
-                      
+                    <div class="input-group  input-group-sm">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="totalPrepend">Total</span>
+                          </div>
+                    <input style="font-size: 15px;" type="text" name="total" id="total" value="0.00" aria-label="Small" aria-describedby="totalPrepend" class="form-control bg-info text-center font-weight-bold text-white"> 
+                    </div>
                     
                 
                 </div>
             </div>
         
             <div class="row">
-                <div class="col-6 col-md-6 ">
+                <div class="col-md-6 mt-1">
                     
-                      
-                        <input type="text" name="iva" id="iva" value="0.00" class="form-control bg-info font-weight-bold text-center text-white" > 
-                      
+                    <div class="input-group  input-group-sm">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="ivaPrepend">Iva</span>
+                          </div>
+                        <input style="font-size: 15px;" type="text" name="iva" id="iva" value="0.00" aria-label="Small" aria-describedby="ivaPrepend" class="form-control bg-info font-weight-bold text-center text-white" > 
+                    </div>
                     
                   
                   
@@ -98,33 +104,36 @@
             
 
             
-                <div class="col-6 col-md-6 ">
+                <div class="col-md-6 mt-1">
                     
                      
                       
-                      
-                 <input type="text" name="subTotal" id="subTotal" value="0.00" class="form-control bg-info font-weight-bold text-center text-white" > 
-                   
+                    <div class="input-group  input-group-sm">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="subPrepend">Sub total</span>
+                          </div>
+                 <input type="text" style="font-size: 15px;" name="subTotal" id="subTotal" value="0.00" aria-label="Small" aria-describedby="subPrepend" class="form-control bg-info font-weight-bold text-center text-white" > 
+                    </div>
                     </div>
             </div>
             <form id="form-compra" enctype="multipart/form-data">
                 {% csrf_token %}
                 
               
-                <div class="row">
-                    <div class="col-4 col-md-4 ">
+                <div class="row mt-1">
+                    <div class="col-md-4 ">
                 
                         {{ formCompra.fecha|as_crispy_field }}
                         <!-- <input type="data" name="fecha" id="fecha"  class="form-control  font-weight-bold text-center " > -->
                       </div>
 
-                      <div class="col-4 col-md-4">
+                      <div class="col-md-4">
                        
                         {{ formCompra.comprobante|as_crispy_field }}
                         <!-- <input type="data" name="comprobante" id="comprobante"  class="form-control  font-weight-bold text-center " > -->
                       </div>
 
-                      <div class="col-4 col-md-4 ">
+                      <div class=" col-md-4 ">
                     
                       {{ formCompra.tipoComprobante|as_crispy_field }}
                       <!-- <input type="data" name="comprobante" id="comprobante"  class="form-control  font-weight-bold text-center " > -->
@@ -132,18 +141,18 @@
                 </div>
                 
                 <div class="row">
-                    <div class="col-4 col-md-4 mt-2">
+                    <div class="col-md-4 mt-2">
                         Razon Social
                         <input type="text" name="nombreProveedor" id="nombreProveedor" class="form-control">
                       
                       </div>
                        
-                      <div class="col-4 col-md-4 ">
+                      <div class="col-md-4 ">
                         {{ formCompra.cuit|as_crispy_field }}
                       
                       </div>
                       
-                      <div class="col-4 col-md-4 mt-2 ">
+                      <div class="col-md-4 mt-2 ">
                         Condicion
                         <input type="text" name="condicion" id="condicion" class="form-control" disabled>
                       
@@ -151,7 +160,7 @@
                 </div>
                 <div class="row justify-content-end">
                
-                <div class="col-md-4">
+                <div class="col-md-4 mt-1">
                     <button class="btn btn-primary" type="submit">Confirmar Compra</button>
                 </div>
                </div> 

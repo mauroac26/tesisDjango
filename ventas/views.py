@@ -194,6 +194,8 @@ def detallesVenta(request, id):
     subTotal = detalleVenta.objects.filter(id_venta=id).aggregate(Sum('subTotal'))
     total = detalleVenta.objects.filter(id_venta=id).aggregate(Sum('total'))
     
+    data['id_venta'] = id
+    
     
     for d in data["datos"]:
         comprobante = d.comprobante
@@ -224,7 +226,6 @@ def detallesVenta(request, id):
             data['tipoCredito'] = tipoCredito
             data['tipoDebito'] = tipoDebito
 
-            data['id_venta'] = id
             
 
             pago = formPago(data)
@@ -299,24 +300,19 @@ class VentasPdf(View):
 
     def link_callback(self, uri, rel):
         
-        result = finders.find(uri)
-        if result:
-                if not isinstance(result, (list, tuple)):
-                        result = [result]
-                result = list(os.path.realpath(path) for path in result)
-                path=result[0]
-        else:
-                sUrl = settings.STATIC_URL        # Typically /static/
-                sRoot = settings.STATIC_ROOT      # Typically /home/userX/project_static/
-                mUrl = settings.MEDIA_URL         # Typically /media/
-                mRoot = settings.MEDIA_ROOT       # Typically /home/userX/project_static/media/
+    
+        
+        sUrl = settings.STATIC_URL        # Typically /static/
+        sRoot = settings.STATIC_ROOT      # Typically /home/userX/project_static/
+        mUrl = settings.MEDIA_URL         # Typically /media/
+        mRoot = settings.MEDIA_ROOT       # Typically /home/userX/project_static/media/
 
-                if uri.startswith(mUrl):
-                    path = os.path.join(mRoot, uri.replace(mUrl, ""))
-                elif uri.startswith(sUrl):
-                    path = os.path.join(sRoot, uri.replace(sUrl, ""))
-                else:
-                    return uri
+        if uri.startswith(mUrl):
+            path = os.path.join(mRoot, uri.replace(mUrl, ""))
+        elif uri.startswith(sUrl):
+            path = os.path.join(sRoot, uri.replace(sUrl, ""))
+        else:
+            return uri
 
             # make sure that file exists
         if not os.path.isfile(path):
@@ -347,19 +343,20 @@ class VentasPdf(View):
         data["iva"] = iva
         data["subTotal"] = subTotal
         data["total"] = total
-            
+        data['id_venta'] = self.kwargs['id']
         data["detalles"] = detalle
-
-        data['direccion'] = 'entre rios 124'
-        data['localidad'] = 'Rio Ceballos'
-        data['provincia'] = 'Cordoba'
+        
+        data['direccion'] = 'Ruta E53 km 18'
+        data['localidad'] = 'Río Ceballos'
+        data['provincia'] = 'Córdoba'
+        data['icono'] = '{}{}'.format(settings.MEDIA_URL, 'cedal.png')
 
         template = get_template('ventas/pdfVentas.html')
-        context = {'title': 'Mi primer pdf'}
+        
         html = template.render(data)
         response = HttpResponse(content_type='application/pdf')
         #response['Content-Disposition'] = 'attachment; filename="reporte.pdf"'
-        pisaStatus = pisa.CreatePDF(html, dest=response)
+        pisaStatus = pisa.CreatePDF(html, dest=response, link_callback=self.link_callback)
         if pisaStatus.err:
             return HttpResponse("asdads" + html + 'asddd')
         

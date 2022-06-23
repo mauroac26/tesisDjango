@@ -146,6 +146,7 @@ USE_L10N = True
 
 USE_TZ = False
 
+import os
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
@@ -156,7 +157,7 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'user.Users'
 
-import os
+
 
 MEDIA_URL =  "cedal/static/cedal/img/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "cedal/static/cedal/img/")
