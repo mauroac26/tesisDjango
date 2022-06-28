@@ -20,12 +20,12 @@
         <div class="card-header py-3">
             <div class="row">
                 <div class="col">
-            <a href="{% url 'altaCompra' %}" class="btn btn-primary"  ><i class="fas fa-plus pr-2"></i>Nuevo</a>
+            <a href="{% url 'altaCompra' %}" class="btn btn-primary"  ><i class="fas fa-plus pr-2"></i>Nueva Compra</a>
         </div>
             <div class="col-2 text-right ">
-                <a href="{% url 'reporteCompras' %}" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf fa-1x"></i></a>
+                <!-- <a href="{% url 'reporteCompras' %}" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf fa-1x"></i></a> -->
                 <!-- <a href="{% url 'reporteCompras' %}" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf fa-1x"></i></a>
-                <a href="{% url 'reporteComprasExcel' %}" class="btn btn-success btn-sm"><i class="fas fa-file-excel fa-1x"></i></a>
+                
                 <a href="" class="btn btn-secondary btn-sm"><i class="fas fa-print fa-1x"></i></a> -->
             </div>
         
@@ -53,7 +53,9 @@
                         <td>{{c.id_compra__fecha}}</td>
                         <td >{{c.id_compra__cuit__nombre}}</td>
                         <td>${{c.total__sum}}</td>
-                        <td class="text-center"><a href="{% url 'detallesCompra' c.id_compra__id %}" class="btn btn-primary btn-sm " role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalle"><i class="far fa-file-alt"></i></a></td>
+                        <td class="text-center"><a href="{% url 'detallesCompra' c.id_compra__id %}" class="btn btn-primary btn-sm " role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalle"><i class="far fa-file-alt"></i></a>
+                        <!-- <a class="btn-sm btn-danger ml-3" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a> -->
+                        </td>
                     </tr>
                        {% endfor %}
                       

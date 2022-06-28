@@ -58,23 +58,27 @@
                     {% endfor %}
                 
                     </tbody>
+                    
                 </table>
-                
+                <div class="mt-2">
+                  <small> sub-Total: <b>${{subTotal.subTotal__sum}}</b></small>
+                 
+               </div>
+               <div class="">
+                  <small> iva 21.00%: <b>${{iva.iva__sum}}</b></small>
+               </div>
+               <div class="">
+                   <label id="total" for="total"><small> Total: <b>${{total.total__sum}}</b></small></label>
+                </div>
             </div>
-            {% if not pagos %}
+            <!-- {% if not pagos %}
             <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#modalformaPago">Formas de pago</button>
-            {% endif %}
-            <div class="row col-12 offset-md-10">
-               <small> sub-Total: <b>${{subTotal.subTotal__sum}}</b></small>
-              
-            </div>
-            <div class="row col-12 offset-md-10">
-               <small> iva 21.00%: <b>${{iva.iva__sum}}</b></small>
-            </div>
-            <div class="row col-12 offset-md-10">
-                <label id="total" for="total"><small> Total: <b>${{total.total__sum}}</b></small></label>
+            {% endif %} -->
+            
+             <div class="d-flex justify-content-end mt-2">
+               
+             <button class="btn btn-danger btn-sm " aria-hidden="true" type="button" data-toggle="modal" data-target="#modalformaPago">Eliminar Compra</button>
              </div>
-             
         </div>
     </div>
 

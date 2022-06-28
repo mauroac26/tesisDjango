@@ -447,38 +447,38 @@ def reporteCompras(request):
 #     df.to_excel("cedal/static/excel/sdf.xlsx", encoding="UTF-8", index=False)
 #     #return HttpResponse(df)
 
-import xlwt
+# import xlwt
 
-def reporteComprasExcel(request):
-    hoy = datetime.now()
-    response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename='f'compras{hoy}.xls'''
+# def reporteComprasExcel(request):
+#     hoy = datetime.now()
+#     response = HttpResponse(content_type='application/ms-excel')
+#     response['Content-Disposition'] = 'attachment; filename='f'compras{hoy}.xls'''
 
-    wb = xlwt.Workbook(encoding='utf-8')
-    ws = wb.add_sheet('Compras')
+#     wb = xlwt.Workbook(encoding='utf-8')
+#     ws = wb.add_sheet('Compras')
 
-    # Sheet header, first row
-    row_num = 0
+#     # Sheet header, first row
+#     row_num = 0
 
-    font_style = xlwt.XFStyle()
-    font_style.font.bold = True
+#     font_style = xlwt.XFStyle()
+#     font_style.font.bold = True
 
-    columns = ['Comprobante', 'nombre', 'fecha', 'Total', ]
+#     columns = ['Comprobante', 'nombre', 'fecha', 'Total', ]
 
-    for col_num in range(len(columns)):
-        ws.write(row_num, col_num, columns[col_num], font_style)
+#     for col_num in range(len(columns)):
+#         ws.write(row_num, col_num, columns[col_num], font_style)
 
-    # Sheet body, remaining rows
-    font_style = xlwt.XFStyle()
+#     # Sheet body, remaining rows
+#     font_style = xlwt.XFStyle()
 
-    rows = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha').annotate(Sum('total')).values_list("id_compra__comprobante", "id_compra__cuit__nombre", "id_compra__fecha", "total")
-    for row in rows:
-        row_num += 1
-        for col_num in range(len(row)):
-            ws.write(row_num, col_num, row[col_num], font_style)
+#     rows = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha').annotate(Sum('total')).values_list("id_compra__comprobante", "id_compra__cuit__nombre", "id_compra__fecha", "total")
+#     for row in rows:
+#         row_num += 1
+#         for col_num in range(len(row)):
+#             ws.write(row_num, col_num, row[col_num], font_style)
 
-    wb.save(response)
-    return response
+#     wb.save(response)
+#     return response
 
 
     
