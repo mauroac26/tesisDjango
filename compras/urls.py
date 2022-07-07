@@ -1,5 +1,5 @@
 from django.urls import path
-from compras.views import imprimir, index, altaCompra, productoAutocomplete, proveedorAutocomplete, cargarCompra, prueba, cargarDetalleCompra, detallesCompra, reporteCompras
+from compras.views import compraAdeudada, imprimir, index, altaCompra, productoAutocomplete, proveedorAutocomplete, cargarCompra, prueba, cargarDetalleCompra, detallesCompra, registroPago, reporteCompras, pago
 
 urlpatterns = [
     path('', index, name='compras'),
@@ -15,5 +15,8 @@ urlpatterns = [
     path('reporteCompras/', reporteCompras, name="reporteCompras"),
     #path('reporteExcel/', reporteExcel, name="reporteExcel"),
     #path('reporteComprasExcel/', reporteComprasExcel, name="reporteComprasExcel"),
+    path('pago/', pago, name="pago"),
+    path('registroPago/', registroPago, name="registroPago"),
+    path('compraAdeudada/', compraAdeudada, name="compraAdeudada"),
     
 ]

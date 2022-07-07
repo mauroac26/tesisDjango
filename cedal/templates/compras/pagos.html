@@ -1,0 +1,99 @@
+{% extends 'Header/header.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Forma de Pago{% endblock %}
+
+{% block content %}
+
+
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Fromas de pago</h1>
+    
+
+    <!-- DataTales Example -->
+    
+    <div class="card shadow mb-4">
+        
+        <div class="card-header py-3">
+            <div class="row">
+                <div class="col">
+            <a href="{% url 'registroPago' %}" class="btn btn-primary"  ><i class="fas fa-plus pr-2"></i>Registrar Pago</a>
+        </div>
+            <div class="col-2 text-right ">
+                <!-- <a href="{% url 'reporteCompras' %}" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf fa-1x"></i></a> -->
+                <!-- <a href="{% url 'reporteCompras' %}" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf fa-1x"></i></a>
+                
+                <a href="" class="btn btn-secondary btn-sm"><i class="fas fa-print fa-1x"></i></a> -->
+            </div>
+        
+            </div>
+            
+        </div>
+        
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered table-striped table-hover display" id="tablaPago" width="100%" >
+                    <thead>
+                        <tr>
+                            <th>Comprobante</th>
+                            <th>Fecha de compra</th>
+                            <th>Proveedor</th>
+                            <th>Deuda</th>
+                            <th>Saldo</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       {% for c in compras %}
+                       
+                       <tr>
+                        <td>{{c.comprobante}}</td>
+                        <td>{{c.fecha}}</td>
+                        <td >{{c.nombre}}</td>
+                        <td>${{c.total}}</td>
+                        <td>${{c.saldo}}</td>
+                        {% if c.estado == 'Adeudado' %}
+                        <td><span class="badge badge-danger">{{c.estado}}</span></td>
+                        {% else %}
+                        <td><span class="badge badge-success">{{c.estado}}</span></td>
+                        {% endif %}
+                        <td class="text-center"><a href="" class="btn btn-primary btn-sm " role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalle"><i class="far fa-file-alt"></i></a>
+                        <a class="btn btn-sm btn-danger ml-3" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                        </td>
+                    </tr>
+                       {% endfor %}
+                      
+                    </tbody>
+                </table>
+               
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+
+
+<!-- Scroll to Top Button-->
+<!-- <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a> -->
+
+{% endblock %}
+
+{% block js %}
+
+<script>
+    $(document).ready(function() {
+    table("tablaPago");
+
+
+    });
+</script>
+
+
+{% endblock %}

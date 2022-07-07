@@ -125,7 +125,7 @@ def cargarCompra(request):
         data['tipoComprobante'] = request.POST.cleaned_data['tipoComprobante']
         data['fecha'] = request.POST.get('fecha')
         
-        print(request.POST.cleaned_data['tipoComprobante'])
+  
         # compra = comprasForm(data)
 
         # if compra.is_valid(): 
@@ -481,4 +481,83 @@ def reporteCompras(request):
 #     return response
 
 
+def pago(request):
+    compra = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha', 'id_compra__estado').annotate(Sum('total'))
+
+    compratotal = list()
+
+    data = {
+        "compras": compra
+    }
+
+    for d in data["compras"]:
+        pago = formaPago.objects.filter(id_compra=d['id_compra__id']).annotate(Sum('total'))
+        saldo = 0
+        for p in pago:
+            saldo = float(p.total__sum) + saldo
+            
+        total = float(d['total__sum']) - saldo
+        signer_json = {}
+        signer_json['id'] = d['id_compra__id']
+        signer_json['comprobante'] = d['id_compra__comprobante']
+        signer_json['fecha'] = d['id_compra__fecha']
+        signer_json['nombre'] = d['id_compra__cuit__nombre']
+        signer_json['total'] = d['total__sum']
+        signer_json['saldo'] = total
+        signer_json['estado'] = d['id_compra__estado']
+        
+        compratotal.append(signer_json)
+
+    data = {
+        "compras": compratotal
+    }
+
+
     
+    
+    
+
+    return render(request, 'compras/pagos.html', data)
+
+
+def registroPago(request):
+    data= {
+        "formPago": formPago()
+        }
+    return render(request, 'compras/registroPago.html', data)
+
+def compraAdeudada(request):
+    if 'term' in request.GET:
+        
+        compras = detalleCompra.objects.annotate(Sum('total')).values('total__sum', 'id_compra__cuit__nombre', 'id_compra__fecha','id_compra').filter(id_compra__cuit__nombre__icontains=request.GET.get("term"), id_compra__estado = 'Adeudado')
+        
+        nombre = list()
+        if compras:
+            for n in compras:
+            
+                
+                signer_json = {}
+                signer_json['id'] = n['id_compra']
+                signer_json['label'] = '<li style="font-size: 11px;" class="list-group-item d-flex justify-content-between align-items-center"><div class="col-sm-5">'+str(n['id_compra__cuit__nombre'])+'</div><span>'+str(n['id_compra__fecha'])+'</span><span>$'+str(n['total__sum'])+'</span></li>'
+                
+            
+                
+                nombre.append(signer_json)
+            return JsonResponse(nombre, safe=False)
+        else:
+            signer_json = {}
+            signer_json['n'] = 1
+            signer_json['label'] = '<li class="list-group-item align-items-center"><div class="col-sm-4"><span>No se encuentas compras adeudadas</span></div></li>'
+            nombre.append(signer_json)
+            return JsonResponse(nombre, safe=False)
+
+    
+
+  
+    
+    # data = {
+    #     "datos": compras
+    # }
+    
+    # data["pagos"] = formaPago.objects.filter(id_compra=id).select_related('tipoDebito').select_related('tipoCredito')
+    # data["formPago"] = formPago()

@@ -114,10 +114,25 @@
                         <a class="collapse-item" href="cards.html">Cards</a>
                     </div>
                 </div> -->
-                <a class="nav-link" href="{% url 'compras' %}" >
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCompra" aria-expanded="true" aria-controls="collapseCompra">
                     <i class="fas fa-cart-arrow-down"></i>
                     <span>Compras</span>
                 </a>
+
+                <div id="collapseCompra" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-secondary text-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'compras' %}">Compras</a>
+                        
+                        
+                        <a class="collapse-item" href="{% url 'pago' %}" >Forma de pago</a> 
+                        
+                        
+                    </div>
+                </div>
+                <!-- <a class="nav-link" href="{% url 'compras' %}" >
+                    <i class="fas fa-cart-arrow-down"></i>
+                    <span>Compras</span>
+                </a> -->
             </li>
 
             <li class="nav-item">
