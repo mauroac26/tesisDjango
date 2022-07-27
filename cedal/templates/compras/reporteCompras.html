@@ -1,0 +1,136 @@
+{% extends 'Header/header.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Reporte Compras{% endblock %}
+
+{% block content %}
+
+
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Reporte Compras</h1>
+    
+
+    <!-- DataTales Example -->
+    
+    <div class="card shadow mb-4">
+        
+        <div class="card-header py-3">
+            <label for="">Seleccionar rango fechas:</label></br>
+            <div class="row">
+                
+                <div class="col-md-3">
+                    
+                    <input class="form-control form-control-sm" type="text" name="daterange" value="01/01/2022 - 01/31/2022" />
+                    
+        </div>
+        <div class="col-md-3">
+
+            <button class="btn btn-sm btn-primary" id="btn-pago" type="button">Buscar por fechas</button>
+        </div>
+            <div class="col-2 text-right ">
+                <!-- <a href="{% url 'reporteCompras' %}" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf fa-1x"></i></a> -->
+                <!-- <a href="{% url 'reporteCompras' %}" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf fa-1x"></i></a>
+                
+                <a href="" class="btn btn-secondary btn-sm"><i class="fas fa-print fa-1x"></i></a> -->
+            </div>
+        
+            </div>
+            
+        </div>
+        
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered table-striped table-hover display" id="tablaReporteCompra" width="100%" >
+                    <thead>
+                        <tr>
+                            <th>Comprobante</th>
+                            <th>Fecha de compra</th>
+                            <th>Proveedor</th>
+                            <th>total($)</th>
+                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                       <!-- {% for c in compras %}
+                       
+                       <tr>
+                        <td>{{c.id_compra__comprobante}}</td>
+                        <td>{{c.id_compra__fecha}}</td>
+                        <td >{{c.id_compra__cuit__nombre}}</td>
+                        <td>${{c.total__sum}}</td>
+                    </tr>
+                       {% endfor %} -->
+                      
+                    </tbody>
+                </table>
+               
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+
+
+<!-- Scroll to Top Button-->
+<!-- <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a> -->
+
+{% endblock %}
+
+{% block js %}
+
+<script>
+    $(document).ready(function() {
+    table("tablaCompra");
+
+
+    });
+</script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script>
+    $(function() {
+  $('input[name="daterange"]').daterangepicker({
+    opens: 'left'
+  }, function(start, end, label) {
+    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+  });
+});
+</script>
+
+<script>
+    $('#tablaReporteCompra').DataTable({
+        "searching": false,
+        
+      
+      "language": {
+       
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+      },
+      responsive: "true",
+      
+    });
+
+</script>
+{% endblock %}

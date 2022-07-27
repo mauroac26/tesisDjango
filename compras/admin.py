@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from compras.models import Compras, detalleCompra
 
 # Register your models here.

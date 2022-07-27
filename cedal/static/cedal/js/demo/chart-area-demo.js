@@ -71,8 +71,8 @@ success: function(response) {
     //alert(pe);
                  $.each(pe, function(i, item){
                   //const shortMonthName = moment(item.id_compra__fecha).format('MMM');
-                 paramFecha.push(fecha[item.id_compra__fecha__month - 1]);
-              
+                paramFecha.push(fecha[item.id_venta__fecha__month - 1]);
+                
                  paramPrecio.push(parseFloat(item.total__sum).toFixed(2)); 
                                         
             
@@ -90,7 +90,7 @@ var myLineChart = new Chart(ctx, {
   data: {
     labels: paramFecha,
     datasets: [{
-      label: "Compras",
+      label: "Ventas",
       lineTension: 0.3,
       backgroundColor: "rgba(78, 115, 223, 0.05)",
       borderColor: "rgba(78, 115, 223, 1)",

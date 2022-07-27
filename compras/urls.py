@@ -1,5 +1,5 @@
 from django.urls import path
-from compras.views import imprimir, index, altaCompra, productoAutocomplete, proveedorAutocomplete, cargarCompra, prueba, cargarDetalleCompra, detallesCompra, reporteCompras
+from compras.views import compraAdeudada, detallePago, eliminarCompra, eliminarPago, imprimir, index, altaCompra, productoAutocomplete, proveedorAutocomplete, cargarCompra, prueba, cargarDetalleCompra, detallesCompra, registroPago, reporteCompra, reporteCompras, pago
 
 urlpatterns = [
     path('', index, name='compras'),
@@ -14,5 +14,12 @@ urlpatterns = [
     path('imprimir/', imprimir, name="imprimir"),
     path('reporteCompras/', reporteCompras, name="reporteCompras"),
     #path('reporteExcel/', reporteExcel, name="reporteExcel"),
-    
+    #path('reporteComprasExcel/', reporteComprasExcel, name="reporteComprasExcel"),
+    path('pago/', pago, name="pago"),
+    path('registroPago/', registroPago, name="registroPago"),
+    path('compraAdeudada/', compraAdeudada, name="compraAdeudada"),
+    path('detallePago/', detallePago, name="detallePago"),
+    path('reporteCompra/', reporteCompra, name="reporteCompra"),
+    path('eliminarCompra/<id>/', eliminarCompra, name="eliminarCompra"),
+    path('eliminarPago/<id>/', eliminarPago, name="eliminarPago"),
 ]

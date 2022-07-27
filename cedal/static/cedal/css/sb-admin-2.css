@@ -2943,6 +2943,10 @@ fieldset:disabled a.btn {
   margin-top: 0.5rem;
 }
 
+.btn-group, .btn-group-vertical{
+  position: absolute !important;
+}
+
 input[type="submit"].btn-block,
 input[type="reset"].btn-block,
 input[type="button"].btn-block {
@@ -4127,6 +4131,7 @@ input[type="button"].btn-block {
   padding-left: 0;
   margin-bottom: 0;
   list-style: none;
+  
 }
 
 .navbar-nav .nav-link {
@@ -4149,6 +4154,7 @@ input[type="button"].btn-block {
   flex-basis: 100%;
   flex-grow: 1;
   align-items: center;
+  
 }
 
 .navbar-toggler {
@@ -4175,6 +4181,7 @@ input[type="button"].btn-block {
 }
 
 @media (max-width: 575.98px) {
+  
   .navbar-expand-sm > .container,
   .navbar-expand-sm > .container-fluid, .navbar-expand-sm > .container-sm, .navbar-expand-sm > .container-md, .navbar-expand-sm > .container-lg, .navbar-expand-sm > .container-xl {
     padding-right: 0;
@@ -4183,6 +4190,8 @@ input[type="button"].btn-block {
 }
 
 @media (min-width: 576px) {
+
+  
   .navbar-expand-sm {
     flex-flow: row nowrap;
     justify-content: flex-start;
@@ -10287,6 +10296,7 @@ a:focus {
 .sidebar {
   width: 6.5rem;
   min-height: 100vh;
+  
 }
 
 .sidebar .nav-item {
@@ -10317,6 +10327,7 @@ a:focus {
   left: calc(6.5rem + 1.5rem / 2);
   z-index: 1;
   top: 2px;
+  
 }
 
 .sidebar .nav-item .collapse .collapse-inner {
@@ -10472,9 +10483,12 @@ a:focus {
   color: rgba(255, 255, 255, 0.5);
 }
 
+
+
 @media (min-width: 768px) {
   .sidebar {
     width: 14rem !important;
+  
   }
   .sidebar .nav-item .collapse {
     position: relative;
@@ -11244,3 +11258,4 @@ footer.sticky-footer .copyright {
 body.sidebar-toggled footer.sticky-footer {
   width: 100%;
 }
+

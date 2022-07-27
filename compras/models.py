@@ -4,15 +4,16 @@ from producto.models import Producto
 # Create your models here.
 
 tipo_Comprobante = [
-    [0, "Factura"],
-    [1, "Recibo"],
-    [2, "Nota Credito"]
+    ["Factura", "Factura"],
+    ["Recibo", "Recibo"],
+    ["Nota Credito", "Nota Credito"]
 ]
 class Compras(models.Model):
     comprobante = models.CharField(max_length=50, unique=True)
     cuit = models.ForeignKey(proveedores, on_delete=models.CASCADE)
     fecha = models.DateField()
-    tipoComprobante = models.IntegerField(choices=tipo_Comprobante, verbose_name="Tipo Comprobante")
+    tipoComprobante =  models.CharField(max_length = 150, choices=tipo_Comprobante, verbose_name="Tipo Comprobante")
+    estado = models.CharField(max_length=150, default='Adeudado')
 
     class Meta:
         ordering = ('-fecha',)

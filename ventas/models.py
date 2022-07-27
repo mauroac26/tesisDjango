@@ -4,23 +4,24 @@ from producto.models import Producto
 # Create your models here.
 
 tipo_Comprobante = [
-    [0, "Factura"],
-    [1, "Recibo"],
-    [2, "Nota Credito"]
+    ["Factura", "Factura"],
+    ["Recibo", "Recibo"],
+    ["Nota Credito", "Nota Credito"]
 ]
 
 class Ventas(models.Model):
     comprobante = models.CharField(max_length=50, unique=True)
     cuit = models.ForeignKey(Clientes, on_delete=models.CASCADE)
     fecha = models.DateField()
-    tipoComprobante = models.IntegerField(choices=tipo_Comprobante, verbose_name="Tipo Comprobante")
+    tipoComprobante = models.CharField(max_length = 50, choices=tipo_Comprobante, verbose_name="Tipo Comprobante")
+    
 
     class Meta:
         ordering = ('-fecha',)
 
 
-def __str__(self):
-    return self.id
+    def __str__(self):
+        return str(self.id)
     
 
 
@@ -33,5 +34,5 @@ class detalleVenta(models.Model):
     total = models.DecimalField(max_digits=8, decimal_places=2)
 
 
-def __str__(self):
-    return self.id_venta
+    def __str__(self):
+        return str(self.id)

@@ -2,6 +2,9 @@
 <html lang="en">
    
 {% load static %}
+
+
+
 <head>
 
     <meta charset="utf-8">
@@ -15,18 +18,32 @@
     <!-- Custom fonts for this template-->
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    
+    
+
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> -->
     <link href="{% static 'cedal/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
     <link
         href="{% static 'https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i' %}"
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="{% static 'cedal/css/sb-admin-2.min.css' %}" rel="stylesheet">
+    <link href="{% static 'cedal/css/sb-admin-2.css' %}" rel="stylesheet">
 
     <!-- Custom styles for this page -->
-    <link href="{% static 'cedal/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+    
+    
+    <!-- <link href="{% static 'cedal/datatables/DataTables-1.11.5/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet"> -->
+    
+    <!-- <link href="{% static 'cedal/datatables/DataTables-1.11.5/css/jquery.dataTables.min.css' %}" rel="stylesheet"> -->
+    <link href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet">
+    
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css"/> 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css"/>  -->
 
+<link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css">
 </head>
 
 <body id="page-top">
@@ -61,7 +78,7 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Modulos
+               MODULOS
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
@@ -97,10 +114,25 @@
                         <a class="collapse-item" href="cards.html">Cards</a>
                     </div>
                 </div> -->
-                <a class="nav-link" href="{% url 'compras' %}" >
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCompra" aria-expanded="true" aria-controls="collapseCompra">
                     <i class="fas fa-cart-arrow-down"></i>
                     <span>Compras</span>
                 </a>
+
+                <div id="collapseCompra" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-secondary text-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'compras' %}">Compras</a>
+                        
+                        
+                        <a class="collapse-item" href="{% url 'pago' %}" >Forma de pago</a> 
+                        
+                        
+                    </div>
+                </div>
+                <!-- <a class="nav-link" href="{% url 'compras' %}" >
+                    <i class="fas fa-cart-arrow-down"></i>
+                    <span>Compras</span>
+                </a> -->
             </li>
 
             <li class="nav-item">
@@ -186,10 +218,22 @@
                         <a class="collapse-item" href="cards.html">Cards</a>
                     </div>
                 </div> -->
-                <a class="nav-link" href="#" >
+                <!-- <a class="nav-link" href="{% url 'produccion' %}" > -->
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseStock" aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-pallet"></i>
-                    <span>Stock</span>
+                    <span>Produccion</span>
                 </a>
+
+                <div id="collapseStock" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-secondary text-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'produccion' %}">Retiro Mercaderia</a>
+                        
+                        
+                        <a class="collapse-item" href="{% url 'pedido' %}" >Pedido Mercaderia<span id="badgePedidos" class="badge badge-info badge-pill ml-2 d-none"></span></a> 
+                        
+                        
+                    </div>
+                </div>
             </li>
             
             <li class="nav-item">
@@ -259,13 +303,13 @@
             <ul class="navbar-nav ml-auto">
 
                 <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                <li class="nav-item dropdown no-arrow d-sm-none">
+                <!-- <li class="nav-item dropdown no-arrow d-sm-none">
                     <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-search fa-fw"></i>
-                    </a>
+                    </a> -->
                     <!-- Dropdown - Messages -->
-                    <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                    <!-- <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                         aria-labelledby="searchDropdown">
                         <form class="form-inline mr-auto w-100 navbar-search">
                             <div class="input-group">
@@ -280,7 +324,7 @@
                             </div>
                         </form>
                     </div>
-                </li>
+                </li> -->
 
             
 
@@ -353,7 +397,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Desea cerrar sesión?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -372,17 +416,72 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     
     <script src="{% static 'cedal/vendor/jquery/jquery.min.js' %}"></script>
+   
+
     <script src="{% static 'cedal/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="{% static 'cedal/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="{% static 'cedal/js/sb-admin-2.min.js' %}"></script>
+    <script src="{% static 'cedal/js/sb-admin-2.js' %}"></script>
 
     <!-- Page level plugins -->
     
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    
+    <!-- Page level plugins -->
+
+<!-- <script src="{% static 'cedal/datatables/DataTables-1.11.5/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'cedal/datatables/DataTables-1.11.5/js/jquery.dataTables.min.js' %}"></script> -->
+
+<!-- Page level custom scripts -->
+<!-- <script src="{% static 'cedal/js/demo/datatables-demo.js' %}"></script> -->
+<script src="{% static 'cedal/js/main.js' %}"></script> 
+
+<script src="//code.jquery.com/jquery-3.5.1.js"></script>
+<!-- DataTables JS library -->
+<script type="text/javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<!-- DataTables JBootstrap -->
+<!-- <script type="text/javascript" src="//cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script> -->
+<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+    <script src="{% static 'cedal/datatables/Buttons-2.2.2/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'cedal/datatables/JSZip-2.5.0/jszip.min.js' %}"></script>
+    <script src="{% static 'cedal/datatables/pdfmake-0.1.36/pdfmake.min.js' %}"></script>
+    <script src="{% static 'cedal/datatables/pdfmake-0.1.36/vfs_fonts.js' %}"></script>
+    <script src="{% static 'cedal/datatables/Buttons-2.2.2/js/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'cedal/datatables/Buttons-2.2.2/js/buttons.print.min.js' %}"></script>
+
+    
+    {% if user.groups.all.0.name == 'productor' %}
+    <script>
+        
+       $.ajax({
+    type: "get",
+    dataType: 'json',
+     url:  "{% url 'cantidadPedidos' %}",
+  success: function(response) {
+    
+      var cantidad = response.data;
+      if(cantidad > 0){
+        document.getElementById('badgePedidos').className = "badge badge-info badge-pill ml-2 d-inline";
+        document.getElementById('badgePedidos').innerText = cantidad
+        // document.getElementById('badgePedidosStock').className = "badge badge-info badge-pill ml-2 d-inline";
+        // document.getElementById('badgePedidosStock').innerText = cantidad
+        document.getElementById('divPedidos').innerText = cantidad
+      }
+      else{
+        document.getElementById('badgePedidos').className = "badge badge-info badge-pill ml-2 d-none";
+        // document.getElementById('badgePedidosStock').className = "badge badge-info badge-pill ml-2 d-none";
+      }
+  
+  }
+  });
+
+    </script>
+{% endif %}
+
     {% if messages %}
         {% for m in messages %}
             {% if m.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}

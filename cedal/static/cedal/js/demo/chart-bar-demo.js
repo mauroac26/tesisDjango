@@ -1,5 +1,5 @@
 // Set new default font family and font color to mimic Bootstrap's default styling
-Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+Chart.defaults.global.defaultFontFamily = 'Verdana';
 Chart.defaults.global.defaultFontColor = '#858796';
 
 function number_format(number, decimals, dec_point, thousands_sep) {
@@ -27,85 +27,115 @@ function number_format(number, decimals, dec_point, thousands_sep) {
   return s.join(dec);
 }
 
+
+
+
+$.ajax({
+  type: "get",
+  dataType: 'json',
+   url:  "graficoClientes",
+success: function(response) {
+  var paramClientes = [];
+  var paramCantidad = [];
+    var pe = response.clientes;
+    //alert(pe);
+                 $.each(pe, function(i, item){
+                  //const shortMonthName = moment(item.id_compra__fecha).format('MMM');
+                  paramClientes.push(item.cuit__nombre);
+              
+                  paramCantidad.push(item.cantidad); 
+                                        
+            
+                
+                 });
 // Bar Chart Example
 var ctx = document.getElementById("myBarChart");
 var myBarChart = new Chart(ctx, {
-  type: 'bar',
+  type: 'horizontalBar',
   data: {
-    labels: ["January", "February", "March", "April", "May", "June"],
+    labels: paramClientes,
     datasets: [{
-      label: "Revenue",
-      backgroundColor: "#4e73df",
-      hoverBackgroundColor: "#2e59d9",
-      borderColor: "#4e73df",
-      data: [4215, 5312, 6251, 7841, 9821, 14984],
+      axis: 'x',
+      label: "Cantidad",
+      data: paramCantidad,
+      fill: false,
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(255, 159, 64, 0.2)',
+        'rgba(255, 205, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        // 'rgba(153, 102, 255, 0.2)',
+        // 'rgba(201, 203, 207, 0.2)'
+      ],
+      borderColor: [
+        'rgb(255, 99, 132)',
+        'rgb(255, 159, 64)',
+        'rgb(255, 205, 86)',
+        'rgb(75, 192, 192)',
+        'rgb(54, 162, 235)',
+        // 'rgb(153, 102, 255)',
+        // 'rgb(201, 203, 207)'
+      ],
+      borderWidth: 1
     }],
   },
   options: {
-    maintainAspectRatio: false,
-    layout: {
-      padding: {
-        left: 10,
-        right: 25,
-        top: 25,
-        bottom: 0
+    
+      tooltips: {
+        enabled: true
+      },
+      responsive: true,
+      legend: {
+         display: false,
+      },
+      scales: {
+         yAxes: [{
+           barPercentage: 0.50,
+           gridLines: {
+             display: true,
+             drawTicks: true,
+             drawOnChartArea: false
+           },
+           ticks: {
+             fontColor: '#555759',
+             fontFamily: 'Verdana',
+             fontSize: 11
+           }
+            
+         }],
+         xAxes: [{
+             gridLines: {
+               display: true,
+               drawTicks: false,
+               tickMarkLength: 10,
+               drawBorder: false
+             },
+           ticks: {
+             padding: 5,
+             beginAtZero: true,
+             fontColor: '#555759',
+             fontFamily: 'Verdana',
+             fontSize: 11,
+             callback: function(label, index, labels) {
+              return label/1;
+             }
+               
+            },
+            // scaleLabel: {
+            //   display: true,
+            //   padding: 10,
+            //   fontFamily: 'Verdana',
+            //   fontColor: '#555759',
+            //   fontSize: 16,
+            //   fontStyle: 700
+            // },
+           
+         }]
       }
-    },
-    scales: {
-      xAxes: [{
-        time: {
-          unit: 'month'
-        },
-        gridLines: {
-          display: false,
-          drawBorder: false
-        },
-        ticks: {
-          maxTicksLimit: 6
-        },
-        maxBarThickness: 25,
-      }],
-      yAxes: [{
-        ticks: {
-          min: 0,
-          max: 15000,
-          maxTicksLimit: 5,
-          padding: 10,
-          // Include a dollar sign in the ticks
-          callback: function(value, index, values) {
-            return '$' + number_format(value);
-          }
-        },
-        gridLines: {
-          color: "rgb(234, 236, 244)",
-          zeroLineColor: "rgb(234, 236, 244)",
-          drawBorder: false,
-          borderDash: [2],
-          zeroLineBorderDash: [2]
-        }
-      }],
-    },
-    legend: {
-      display: false
-    },
-    tooltips: {
-      titleMarginBottom: 10,
-      titleFontColor: '#6e707e',
-      titleFontSize: 14,
-      backgroundColor: "rgb(255,255,255)",
-      bodyFontColor: "#858796",
-      borderColor: '#dddfeb',
-      borderWidth: 1,
-      xPadding: 15,
-      yPadding: 15,
-      displayColors: false,
-      caretPadding: 10,
-      callbacks: {
-        label: function(tooltipItem, chart) {
-          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-          return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
-        }
-      }
-    },
+    
   }
+});
+
+}
 });

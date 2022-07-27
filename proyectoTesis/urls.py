@@ -16,9 +16,14 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.http import JsonResponse
 from django.urls import path, include
 
 
+
+
+
+        
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('cedal.urls')),
@@ -30,6 +35,9 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('user/', include('user.urls')),
     path('ventas/', include('ventas.urls')),
+    path('produccion/', include('produccion.urls')),
+   
+    
 ]
 
 

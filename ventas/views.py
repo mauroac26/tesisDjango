@@ -13,9 +13,18 @@ from clientes.models import Clientes
 from producto.forms import ventaProductoForm
 from producto.models import Producto
 from ventas.forms import detalleVentaForm, ventasForm
+from compras.utils import render_pdf
+from django.views.generic import View
 
 from ventas.models import Ventas, detalleVenta
 
+from xhtml2pdf import pisa
+from django.template.loader import get_template
+from io import BytesIO
+import os
+from django.conf import settings
+
+from django.contrib.staticfiles import finders
 # Create your views here.
 # @login_required
 # @permission_required('ventas.view_ventas', login_url='index')
@@ -170,7 +179,7 @@ def cargarDetalleVenta(request):
 def detallesVenta(request, id):
     
     ventas = Ventas.objects.filter(id=id).select_related('cuit')
-    
+   
     data = {
         "datos": ventas
     }
@@ -184,6 +193,8 @@ def detallesVenta(request, id):
     iva = detalleVenta.objects.filter(id_venta=id).aggregate(Sum('iva'))
     subTotal = detalleVenta.objects.filter(id_venta=id).aggregate(Sum('subTotal'))
     total = detalleVenta.objects.filter(id_venta=id).aggregate(Sum('total'))
+    
+    data['id_venta'] = id
     
     
     for d in data["datos"]:
@@ -215,7 +226,6 @@ def detallesVenta(request, id):
             data['tipoCredito'] = tipoCredito
             data['tipoDebito'] = tipoDebito
 
-            data['id_venta'] = id
             
 
             pago = formPago(data)
@@ -229,7 +239,7 @@ def detallesVenta(request, id):
                 
                 caja = {}
                 caja['descripcion'] = "Venta comprobante N° " + comprobante
-                caja['operacion'] = 1
+                caja['operacion'] = 0
                 caja['monto'] = efectivo 
 
                 formulario = cajaForm(caja)
@@ -252,3 +262,102 @@ def detallesVenta(request, id):
         
 
     return render(request, 'ventas/detalleVenta.html', data)
+
+
+def reporteVentas(request, id):
+
+    
+    ventas = Ventas.objects.filter(id=id).select_related('cuit')
+    
+    data = {
+        "datos": ventas
+    }
+    
+    data["pagos"] = formaPago.objects.filter(id_venta=id).select_related('tipoDebito').select_related('tipoCredito')
+
+    data["formPago"] = formPago()
+
+    detalle = detalleVenta.objects.filter(id_venta=id).select_related('id_producto')
+    
+    iva = detalleVenta.objects.filter(id_venta=id).aggregate(Sum('iva'))
+    subTotal = detalleVenta.objects.filter(id_venta=id).aggregate(Sum('subTotal'))
+    total = detalleVenta.objects.filter(id_venta=id).aggregate(Sum('total'))
+
+    
+    data["iva"] = iva
+    data["subTotal"] = subTotal
+    data["total"] = total
+        
+    data["detalles"] = detalle
+    datos ={}
+
+    pdf = render_pdf('ventas/imprimirVenta.html', datos)
+
+    return HttpResponse(pdf, content_type='application/pdf')
+
+
+class VentasPdf(View):
+
+    def link_callback(self, uri, rel):
+        
+    
+        
+        sUrl = settings.STATIC_URL        # Typically /static/
+        sRoot = settings.STATIC_ROOT      # Typically /home/userX/project_static/
+        mUrl = settings.MEDIA_URL         # Typically /media/
+        mRoot = settings.MEDIA_ROOT       # Typically /home/userX/project_static/media/
+
+        if uri.startswith(mUrl):
+            path = os.path.join(mRoot, uri.replace(mUrl, ""))
+        elif uri.startswith(sUrl):
+            path = os.path.join(sRoot, uri.replace(sUrl, ""))
+        else:
+            return uri
+
+            # make sure that file exists
+        if not os.path.isfile(path):
+            raise Exception(
+                    'media URI must start with %s or %s' % (sUrl, mUrl)
+                    )
+        return path
+
+    def get(self, request, *args, **kwargs):
+
+        ventas = Ventas.objects.filter(id=self.kwargs['id']).select_related('cuit')
+    
+        data = {
+            "datos": ventas
+        }
+        
+        data["pagos"] = formaPago.objects.filter(id_venta=self.kwargs['id']).select_related('tipoDebito').select_related('tipoCredito')
+
+        data["formPago"] = formPago()
+
+        detalle = detalleVenta.objects.filter(id_venta=self.kwargs['id']).select_related('id_producto')
+        
+        iva = detalleVenta.objects.filter(id_venta=self.kwargs['id']).aggregate(Sum('iva'))
+        subTotal = detalleVenta.objects.filter(id_venta=self.kwargs['id']).aggregate(Sum('subTotal'))
+        total = detalleVenta.objects.filter(id_venta=self.kwargs['id']).aggregate(Sum('total'))
+
+        
+        data["iva"] = iva
+        data["subTotal"] = subTotal
+        data["total"] = total
+        data['id_venta'] = self.kwargs['id']
+        data["detalles"] = detalle
+        
+        data['direccion'] = 'Ruta E53 km 18'
+        data['localidad'] = 'Río Ceballos'
+        data['provincia'] = 'Córdoba'
+        data['icono'] = '{}{}'.format(settings.MEDIA_URL, 'cedal.png')
+
+        template = get_template('ventas/pdfVentas.html')
+        
+        html = template.render(data)
+        response = HttpResponse(content_type='application/pdf')
+        #response['Content-Disposition'] = 'attachment; filename="reporte.pdf"'
+        pisaStatus = pisa.CreatePDF(html, dest=response, link_callback=self.link_callback)
+        if pisaStatus.err:
+            return HttpResponse("asdads" + html + 'asddd')
+        
+        return response

@@ -1,10 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm, UserChangeForm, UserCreationForm
-from django.db.models.base import Model
-from django.forms import fields
 from django.contrib.auth.models import Group
-from django.forms.models import ModelChoiceField, ModelChoiceIterator, ModelMultipleChoiceField
-from django.forms.widgets import Select, SelectMultiple
+
 
 from user.models import Users
 

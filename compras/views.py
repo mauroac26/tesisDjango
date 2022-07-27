@@ -1,7 +1,8 @@
 from django.http.response import HttpResponseForbidden
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 
 #import pandas as pd
+from django.core import serializers
 from compras.utils import render_pdf
 from .forms import comprasForm, detalleComprasForm
 from producto.forms import productoForm, compraProductoForm
@@ -20,7 +21,7 @@ from datetime import datetime
 from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-
+import pandas as pd
 # Create your views here.
 
 @login_required
@@ -86,7 +87,7 @@ def productoAutocomplete(request):
                 
                 signer_json = {}
                 signer_json['id'] = n.id
-                signer_json['label'] = '<li class="list-group-item d-flex justify-content-between align-items-center"><div class="col-sm-4">'+str(n.nombre)+'</div><span class="badge '+str(color)+' badge-pill text-white">'+str(n.stock)+'</span><span class="float-right">$'+str(n.precio_venta)+'</span></li>'
+                signer_json['label'] = '<li style="font-size: 13px;" class="list-group-item d-flex justify-content-between align-items-center"><div class="col-sm-4">'+str(n.nombre)+'</div><span class="badge '+str(color)+' badge-pill text-white">'+str(n.stock)+'</span><span class="float-right">$'+str(n.precio_venta)+'</span></li>'
                 signer_json['value'] = n.nombre
                 signer_json['stock'] = n.stock
                 signer_json['codigo'] = n.codigo
@@ -124,7 +125,7 @@ def cargarCompra(request):
         data['tipoComprobante'] = request.POST.cleaned_data['tipoComprobante']
         data['fecha'] = request.POST.get('fecha')
         
-        print(request.POST.cleaned_data['tipoComprobante'])
+  
         # compra = comprasForm(data)
 
         # if compra.is_valid(): 
@@ -285,9 +286,7 @@ def detallesCompra(request, id):
         "datos": compras
     }
     
-    data["pagos"] = formaPago.objects.filter(id_compra=id).select_related('tipoDebito').select_related('tipoCredito')
 
-    data["formPago"] = formPago()
 
     detalle = detalleCompra.objects.filter(id_compra=id).select_related('id_producto')
     
@@ -295,126 +294,18 @@ def detallesCompra(request, id):
     subTotal = detalleCompra.objects.filter(id_compra=id).aggregate(Sum('subTotal'))
     total = detalleCompra.objects.filter(id_compra=id).aggregate(Sum('total'))
     
-    
-    for d in data["datos"]:
-        comprobante = d.comprobante
+
     data["iva"] = iva
     data["subTotal"] = subTotal
     data["total"] = total
-    
+    data["id"] = id
     data["detalles"] = detalle
 
-    if request.method == "POST":
-        
-        efectivo = float(request.POST.get('efectivo'))
-        credito = float(request.POST.get('credito'))
-        debito = float(request.POST.get('debito'))
-        cuotas = request.POST.get('cuotas')
-        tipoCredito = request.POST.get('tipoCredito')
-        tipoDebito = request.POST.get('tipoDebito')
-
-        sumaTotal = efectivo + credito + debito
-
-        if sumaTotal == float(data['total']["total__sum"]):
-            
-            data['id_compra'] = id
-            data['efectivo'] = efectivo
-            data['credito'] = credito
-            data['debito'] = debito
-            data['cuotas'] = cuotas
-            data['tipoCredito'] = tipoCredito
-            data['tipoDebito'] = tipoDebito
-
-            data['id_compra'] = id
-            
-
-            pago = formPago(data)
-        
-            if pago.is_valid(): 
-                pago.save()
-                
-                messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
-            
-            if efectivo > 0:
-                
-                caja = {}
-                caja['descripcion'] = "Compra comprobante N° " + comprobante
-                caja['operacion'] = 1
-                caja['monto'] = efectivo 
-
-                formulario = cajaForm(caja)
-
-                if formulario.is_valid():
-                    post = formulario.save(commit=False)
-            
-                    ultimo_saldo = Caja.objects.latest('fecha').saldo
-                    
-                    post.saldo = float(ultimo_saldo) - float(efectivo)
-            
-                    fecha = datetime.now()
-                    post.fecha = fecha
-                    post.save()
-            else:
-                data["formPago"] = formPago() 
-        else:
-            messages.add_message(request, messages.ERROR, "El monto seleccionado es diferente al monto total de la compra")
-            return render(request, 'compras/detalleCompra.html', data)
         
 
     return render(request, 'compras/detalleCompra.html', data)
 
 
-
-# def cargarFormaPago(request):
-    
-#     if request.is_ajax():
-#         data = {}
-
-#         ultima_compra = Compras.objects.order_by('id', 'fecha').last()
-#         efectivo = request.GET['efectivo']
-#         credito = request.GET['credito']
-#         debito = request.GET['debito']
-#         cuotas = request.GET['cuotas']
-#         tipoCredito = request.GET['tipoCredito']
-#         tipoDebito = request.GET['tipoDebito']
-  
-#         data['id_compra'] = ultima_compra
-#         data['efectivo'] = efectivo
-#         data['credito'] = credito
-#         data['debito'] = debito
-#         data['cuotas'] = cuotas
-#         data['tipoCredito'] = tipoCredito
-#         data['tipoDebito'] = tipoDebito
-        
-#         formulario = formPago(data)
-#         if formulario.is_valid():
-            
-#             formulario.save()
-        
-        
-#         if efectivo > "":
-            
-#             ultimo_saldo = Caja.objects.latest('fecha').saldo
-            
-#             #fecha = Compras.objects.latest('fecha').fecha
-           
-#             saldo = float(ultimo_saldo) - float(efectivo)
-            
-#             caja = {} 
-            
-#             caja['fecha'] = datetime.now()
-#             caja['descripcion'] = "Compra comprobante N°"
-#             caja['operacion'] = 1
-#             caja['monto'] = efectivo 
-#             caja['saldo'] = saldo
-
-#             formulario = cajaForm(caja)
-            
-#             if formulario.is_valid():
-            
-#                 formulario.save()
-            
-#     return JsonResponse({"error": "Error"}, status=400)
 
 
 @login_required
@@ -445,3 +336,213 @@ def reporteCompras(request):
 #     df = pd.DataFrame(compra)
 #     df.to_excel("cedal/static/excel/sdf.xlsx", encoding="UTF-8", index=False)
 #     #return HttpResponse(df)
+
+# import xlwt
+
+# def reporteComprasExcel(request):
+#     hoy = datetime.now()
+#     response = HttpResponse(content_type='application/ms-excel')
+#     response['Content-Disposition'] = 'attachment; filename='f'compras{hoy}.xls'''
+
+#     wb = xlwt.Workbook(encoding='utf-8')
+#     ws = wb.add_sheet('Compras')
+
+#     # Sheet header, first row
+#     row_num = 0
+
+#     font_style = xlwt.XFStyle()
+#     font_style.font.bold = True
+
+#     columns = ['Comprobante', 'nombre', 'fecha', 'Total', ]
+
+#     for col_num in range(len(columns)):
+#         ws.write(row_num, col_num, columns[col_num], font_style)
+
+#     # Sheet body, remaining rows
+#     font_style = xlwt.XFStyle()
+
+#     rows = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha').annotate(Sum('total')).values_list("id_compra__comprobante", "id_compra__cuit__nombre", "id_compra__fecha", "total")
+#     for row in rows:
+#         row_num += 1
+#         for col_num in range(len(row)):
+#             ws.write(row_num, col_num, row[col_num], font_style)
+
+#     wb.save(response)
+#     return response
+
+
+def pago(request):
+    compra = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha', 'id_compra__estado').annotate(Sum('total'))
+
+    compratotal = list()
+
+    data = {
+        "compras": compra
+    }
+
+    for d in data["compras"]:
+        pago = formaPago.objects.filter(id_compra=d['id_compra__id']).annotate(Sum('total'))
+        saldo = 0
+        for p in pago:
+            saldo = float(p.total__sum) + saldo
+            
+        total = float(d['total__sum']) - saldo
+        signer_json = {}
+        signer_json['id'] = d['id_compra__id']
+        signer_json['comprobante'] = d['id_compra__comprobante']
+        signer_json['fecha'] = d['id_compra__fecha']
+        signer_json['nombre'] = d['id_compra__cuit__nombre']
+        signer_json['total'] = d['total__sum']
+        signer_json['saldo'] = total
+        signer_json['estado'] = d['id_compra__estado']
+        
+        compratotal.append(signer_json)
+
+    data = {
+        "compras": compratotal
+    }
+
+
+    
+    
+    
+
+    return render(request, 'compras/pagos.html', data)
+
+
+def registroPago(request):
+    data= {
+        "formPago": formPago()
+        }
+
+    if request.method == "POST":
+
+        total = float(request.POST.get('total'))
+        cuotas = request.POST.get('cuotas')
+        tipoCredito = request.POST.get('tipoCredito')
+        tipoDebito = request.POST.get('tipoDebito')
+        id_compra = request.POST.get('id_compra')
+        saldo = detalleCompra.objects.annotate(Sum('total')).values('total__sum', 'id_compra__comprobante').filter(id_compra=id_compra)
+
+        for c in saldo:
+            comprobante = c['id_compra__comprobante']
+            deuda = c['total__sum']
+
+        
+            
+        if total <= float(deuda):
+            
+            data['id_compra'] = id_compra
+            data['total'] = total
+            data['cuotas'] = cuotas
+            data['tipoCredito'] = tipoCredito
+            data['tipoDebito'] = tipoDebito
+            
+            pago = formPago(data)
+        
+            if pago.is_valid(): 
+                pago.save()
+
+                compra = Compras.objects.get(id=id_compra)
+                pago = formaPago.objects.filter(id_compra=id_compra).annotate(Sum('total'))
+                tot = 0.0
+                for p in pago:
+                    tot = float(p.total__sum) + float(tot)
+                    
+                
+                if float(tot) == float(deuda):
+                    compra.estado = 'Pagado'
+                    compra.save()
+                
+            
+                if tipoCredito == '':
+
+                    caja = {}
+                    caja['descripcion'] = "Compra comprobante N° " + comprobante
+                    caja['operacion'] = 1
+                    caja['monto'] = total 
+
+                    formulario = cajaForm(caja)
+
+                if formulario.is_valid():
+                    post = formulario.save(commit=False)
+            
+                    ultimo_saldo = Caja.objects.latest('fecha').saldo
+                    
+                    post.saldo = float(ultimo_saldo) - float(total)
+            
+                    fecha = datetime.now()
+                    post.fecha = fecha
+                    post.save()
+                    messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
+                    return redirect(to='pago')
+            else:
+                data["formPago"] = formPago() 
+        else:
+            messages.add_message(request, messages.ERROR, "El monto seleccionado es diferente al monto total de la compra")
+            return render(request, 'compras/detalleCompra.html', data) 
+    return render(request, 'compras/registroPago.html', data)
+
+
+def compraAdeudada(request):
+    if 'term' in request.GET:
+        
+        compras = detalleCompra.objects.annotate(Sum('total')).values('total__sum', 'id_compra__cuit__nombre', 'id_compra__fecha','id_compra').filter(id_compra__cuit__nombre__icontains=request.GET.get("term"), id_compra__estado = 'Adeudado')
+        
+        nombre = list()
+        if compras:
+            for n in compras:
+                pago = formaPago.objects.filter(id_compra=n['id_compra']).annotate(Sum('total'))
+                saldo = 0.0
+                for p in pago:
+                    saldo = float(p.total__sum) + float(saldo)
+            
+                total = float(n['total__sum']) - float(saldo)
+                
+                # fecha = n['id_compra__fecha']
+                # fecha1 = datetime.datetime.strptime(fecha, '%Y-%m-%dT%H:%MZ').strftime("%d-%m-%Y")
+                dicCompras = {}
+                dicCompras['id'] = n['id_compra']
+                dicCompras['label'] = '<li style="font-size: 11px;" class="list-group-item d-flex justify-content-between align-items-center"><div class="col-sm-5">'+str(n['id_compra__cuit__nombre'])+'</div><span>'+str(n['id_compra__fecha'])+'</span><span>$'+str(n['total__sum'])+'</span></li>'
+                dicCompras['value'] = f'{n["id_compra__cuit__nombre"]} / {n["id_compra__fecha"]} / {n["total__sum"]}'
+                dicCompras['total'] = float(total)
+                
+                nombre.append(dicCompras)
+            return JsonResponse(nombre, safe=False)
+        else:
+            dicCompras = {}
+            dicCompras['n'] = 1
+            dicCompras['label'] = '<li style="font-size: 11px;" class="list-group-item align-items-center"><div class="col-sm-7"><span>No se encuentas compras adeudadas</span></div></li>'
+            nombre.append(dicCompras)
+            return JsonResponse(nombre, safe=False)
+
+
+def detallePago(request):
+    # pago = formaPago.objects.filter(id_compra=id).values('id_compra__comprobante', 'total', 'cuotas', 'tipoCredito')
+
+    #data['pago'] = pago
+    return render(request, 'compras/detallePago.html')
+
+
+def reporteCompra(request):
+    return render(request, 'compras/reporteCompras.html')
+
+
+def eliminarCompra(request, id):
+    compra = get_object_or_404(Compras, pk=id)
+    
+    if compra:
+        compra.delete()
+        return redirect(to='compras')
+    
+
+def eliminarPago(request, id):
+    pago = formaPago.objects.filter(id_compra=id)
+    
+    if pago:
+        pago.delete()
+        return redirect(to='pago')
+    
+    
+
+
