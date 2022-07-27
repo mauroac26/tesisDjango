@@ -1,8 +1,8 @@
 from django import forms
-from .models import Caja
+from .models import movCaja
 
 class cajaForm(forms.ModelForm):
 
     class Meta:
-        model = Caja
+        model = movCaja
         fields = ["descripcion", "operacion", "monto"]

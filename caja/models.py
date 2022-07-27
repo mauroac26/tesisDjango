@@ -11,7 +11,7 @@ opciones_mov = [
 ]
 
 
-class Caja(models.Model):
+class movCaja(models.Model):
     fecha = models.DateTimeField()
     descripcion = models.CharField(max_length=50)
     operacion = models.IntegerField(choices=opciones_mov, default=0)

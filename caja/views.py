@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render
 from .forms import cajaForm
-from .models import Caja
+from .models import movCaja
 from datetime import datetime, date, timedelta
 # Create your views here.
 
@@ -18,7 +18,7 @@ def index(request):
         if formulario.is_valid():
             #operacion = request.POST.get("operacion", "")
             operacion = formulario.cleaned_data['operacion']
-            filtro = Caja.objects.all()
+            filtro = movCaja.objects.all()
             post = formulario.save(commit=False)
             monto = float(formulario.cleaned_data['monto'])
             
@@ -28,7 +28,7 @@ def index(request):
                 else:
                     post.saldo = -monto
             else:
-                ultimo_saldo = Caja.objects.latest('fecha').saldo
+                ultimo_saldo = movCaja.objects.latest('fecha').saldo
                 if operacion == 0:
                     
                     post.saldo = monto + float(ultimo_saldo)
@@ -41,7 +41,7 @@ def index(request):
             
             #data["mensaje"] = ultimo_saldo
     hoy = datetime.now()
-    caja = Caja.objects.filter(fecha__range=[hoy - timedelta(days=1), hoy + timedelta(days=1)])
+    caja = movCaja.objects.filter(fecha__range=[hoy - timedelta(days=1), hoy + timedelta(days=1)])
     #caja = Caja.objects.all()
     data["cajaIngreso"] = caja
 
