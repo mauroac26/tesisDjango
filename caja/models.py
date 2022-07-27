@@ -1,3 +1,4 @@
+
 from django.db import models
 from datetime import datetime
 from django.utils import timezone
@@ -16,6 +17,7 @@ class Caja(models.Model):
     operacion = models.IntegerField(choices=opciones_mov, default=0)
     monto = models.DecimalField(max_digits=8, decimal_places=2)
     saldo = models.DecimalField(max_digits=8, decimal_places=2)
+
 
 def __str__(self):
     return self.fecha

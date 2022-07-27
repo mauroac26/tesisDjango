@@ -10,7 +10,7 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Fromas de pago</h1>
+    <h1 class="h3 mb-2 text-gray-800">Formas de pago</h1>
     
 
     <!-- DataTales Example -->
@@ -61,8 +61,9 @@
                         {% else %}
                         <td><span class="badge badge-success">{{c.estado}}</span></td>
                         {% endif %}
-                        <td class="text-center"><a href="" class="btn btn-primary btn-sm " role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalle"><i class="far fa-file-alt"></i></a>
-                        <a class="btn btn-sm btn-danger ml-3" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                        <td class="text-center"><button class="btn btn-primary btn-sm " aria-hidden="true"  data-toggle="modal" data-target="#modalDetallePago" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalle"><i class="far fa-file-alt"></i></button>
+        
+                        <a class="btn btn-sm btn-danger ml-3" href="{% url 'eliminarPago' c.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
                         </td>
                     </tr>
                        {% endfor %}
@@ -74,14 +75,61 @@
         </div>
     </div>
 
+    <!-- Modal -->
+<div class="modal fade" id="modalDetallePago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Detalle Pago</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered table-striped table-hover display" id="tablaDetallePago" width="100%" >
+                    <thead>
+                        <tr>
+                            <th>Comprobante</th>
+                            <th>Fecha </th>
+                            <th>Valor</th>
+                            <th>Detalle</th>
+                            <th>Acciones</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                       {% for c in compras %}
+                       
+                       <tr>
+                        <td>{{c.comprobante}}</td>
+                        <td>{{c.fecha}}</td>
+                        <td >{{c.nombre}}</td>
+                        <td>${{c.total}}</td>
+                        <td>${{c.saldo}}</td>
+                        {% if c.estado == 'Adeudado' %}
+                        <td><span class="badge badge-danger">{{c.estado}}</span></td>
+                        {% else %}
+                        <td><span class="badge badge-success">{{c.estado}}</span></td>
+                        {% endif %}
+                        <td class="text-center"><button class="btn btn-primary btn-sm " aria-hidden="true"  data-toggle="modal" data-target="#modalDetallePago" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalle"><i class="far fa-file-alt"></i></button>
+        
+                        <a class="btn btn-sm btn-danger ml-3" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                        </td>
+                    </tr>
+                       {% endfor %}
+                      
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 </div>
-<!-- /.container-fluid -->
 
-
-<!-- Scroll to Top Button-->
-<!-- <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a> -->
 
 {% endblock %}
 
@@ -90,10 +138,41 @@
 <script>
     $(document).ready(function() {
     table("tablaPago");
+    
 
 
     });
 </script>
 
+<script>
+    $('#tablaDetallePago').DataTable({
+        "searching": false,
+        "bPaginate": false,
+        "bFilter": false,
+        "bInfo": false,
+      
+      "language": {
+       
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+      },
+      responsive: "true",
+      
+    });
+
+</script>
 
 {% endblock %}

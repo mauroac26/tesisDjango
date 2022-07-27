@@ -9,10 +9,10 @@ from django.contrib.auth.models import User
 
 class formPago(forms.ModelForm):
     
-    efectivo = forms.DecimalField(min_value=0, initial=0.00)
-    credito = forms.DecimalField(min_value=0, initial=0.00)
-    debito = forms.DecimalField(min_value=0, initial=0.00)
-    cuotas = forms.IntegerField(min_value=0, initial=0)
+    # efectivo = forms.DecimalField(min_value=0, initial=0.00)
+    # credito = forms.DecimalField(min_value=0, initial=0.00)
+    # debito = forms.DecimalField(min_value=0, initial=0.00)
+    # cuotas = forms.IntegerField(min_value=0, initial=0)
 
     # def clean_efectivo(self):
     #     efectivo = self.cleaned_data["efectivo"]
@@ -21,12 +21,13 @@ class formPago(forms.ModelForm):
         fields = '__all__'
 
         widgets = {
-            #'efectivo': forms.TextInput(attrs={'class': 'form-control form-control-sm' }),
+            'id_compra': forms.TextInput(attrs={'id': 'id_compra'}),
+            'total': forms.TextInput(attrs={'id': 'total','class': 'form-control form-control-sm' }),
             # 'credito' : forms.TextInput(attrs={'id': 'credito', 'readonly': True, 'value':0.00}),
             # 'debito' : forms.TextInput(attrs={'id': 'debito', 'readonly': True, 'value':0.00}),
-            # 'cuotas' : forms.TextInput(attrs={'id': 'cuotas', 'readonly': True, 'value':0}),
-            'tipoCredito' : forms.Select(attrs={'id': 'tipoCredito'}),
-            'tipoDebito': forms.Select(attrs={'id': 'tipoDebito'})
+            'cuotas' : forms.TextInput(attrs={'id': 'cuotas', 'class': 'form-control form-control-sm' }),
+            'tipoCredito' : forms.Select(attrs={'id': 'tipoCredito', 'class': 'form-control form-control-sm' }),
+            'tipoDebito': forms.Select(attrs={'id': 'tipoDebito', 'class': 'form-control form-control-sm' })
         }
 
         # efectivo = forms.DecimalField(min_value=0, initial=0)

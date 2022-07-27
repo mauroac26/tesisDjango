@@ -13,18 +13,31 @@
     <h1 class="h3 text-gray-800">Registrar Pago</h1>
     <div class="card border-primary shadow mb-4">
         
-        <div class="card body">
-            <div class="row">
+        <div class="card body ">
+            <div class="row ml-1 ">
                 <div class="col-md-5">
-                   <label for="provDeuda">Cuentas Adeudadas</label> 
-                    <input type="text" name="provDeuda" id="provDeuda" class="form-control form-control-sm">
-                
+                   <label for="provDeuda"><b>Cuentas Adeudadas</b></label> 
+                   <div class="input-group  input-group-sm">
+                    <input type="text" name="provDeuda" id="provDeuda" class="form-control form-control-sm" placeholder="Ingresar proveedor">
+                   </div>
                 </div>
             </div>
-
-            <div>
-                Elige las siguientes opciones:<br>
-            <div class="form-check form-check-inline justify-content-center">
+            <div class="row mt-2 ml-1">
+                <div class="col-md-5">
+                    <b>Elige las siguientes opciones:</b><br>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="chEfectivo" value="1" checked>
+                    <label class="form-check-label" for="chEfectivo">Efectivo</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="chDebito" value="2">
+                    <label class="form-check-label" for="chDebito">Debito</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="chCredito" value="3">
+                    <label class="form-check-label" for="chCredito">Credito</label>
+                  </div>
+            <!-- <div class="form-check form-check-inline justify-content-center">
                 <input class="form-check-input>" type="checkbox" id="chEfectivo" value="1">
                 <label class="form-check-label" for="chEfectivo">Efectivo</label>
               </div>
@@ -35,54 +48,67 @@
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" id="chDebito" value="3">
                 <label class="form-check-label" for="chDebito">Débito</label>
-              </div>
+              </div> -->
             </div>
-            <p>Total a pagar $<label id="lebTotal"></label></p>
-          
+            </div>
+            <div class="row mt-2 ml-1">
+                <div class="col-md-5">
+                   <label for="total">Deuda:</label><span id="deuda" class="badge badge-secondary ml-1">--</span>
+                   <!-- <div class="input-group  input-group-sm">
+                   <div class="input-group-prepend">
+                    <div class="input-group-text" id="subPrepend">$</div>
+                  </div>
+                    <input type="text" name="total" id="total" aria-describedby="subPrepend" class="form-control form-control-sm">
+                </div> -->
+                </div>
+            
+            </div>
                   
                     <form id="form-pago" action="#" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <div class="row mt-3 d-none" id="divEfectivo" >
-                            <div class="col-4 col-md-4 " >
+                        <div class="row mt-2 ml-1">
+                            <div class="col-md-2" id="divEfectivo" >
                                
                                 {{ formPago.total|as_crispy_field }}
                                 
                               </div>
-
-                              
-                        </div>
-
-                              <div class="row mt-3">
-                              
-        
-                              <div class="col-4 d-none" id="divTipoCredito" >
+                        
+                              <div class="col-md-2 d-none" id="divTipoCredito" >
                             
                               {{ formPago.tipoCredito|as_crispy_field }}
                              
                             </div>
 
-                            <div class="col-4 d-none" id="divCuotas">
+                            <div class="col-md-1 d-none" id="divCuotas" >
                       
                               {{ formPago.cuotas|as_crispy_field }}
                               
                             </div>
-                        </div>
-
+                        
+                            <div class="col-md-1 d-none" >
                       
+                                {{ formPago.id_compra|as_crispy_field }}
+                                
+                              </div>
+                           
 
-                        <div class="row mt-3" >
+                        
                             
       
-                            <div class="col-4 d-none" id="divTipoDebito" >
+                            <div class="col-md-4 d-none" id="divTipoDebito" >
                           
                             {{ formPago.tipoDebito|as_crispy_field }}
                            
                           </div>
-                      </div>
-                      <div class="d-flex justify-content-end">
-                        <button class="btn btn-primary" id="btn-pago" type="submit">confirmar</button>
+                        </div>
+                        <div class="row mt-2 ml-1">
+                      <div class="col-md-1 ">
+                        <button class="btn btn-sm btn-primary" id="btn-pago" type="submit">Confirmar</button>
                     </div>
-                  
+                    <div class="col-md-1">
+                        <button class="btn btn-sm btn-danger" type="reset">Cancelar</button>
+                    </div>
+                </div>
               </form>
             
         </div>
@@ -98,6 +124,7 @@
 
 {% block js %}
 <script>
+    var total;
 $(function() {
     let condicion;
 
@@ -110,6 +137,12 @@ $(function() {
     
                $("#provDeuda").val('');
                event.preventDefault();
+            }else{
+                $("#provDeuda").val(ui.item.value);
+                
+                total = ui.item.total;
+               $("#deuda").text('$'+total);
+               $("#id_compra").val(ui.item.id);
             }
             
             
@@ -128,6 +161,68 @@ $(function() {
     });
 
 </script>
+
+<script>
+    var total = $('#lebTotal').html();
+     $( '#chEfectivo').on( 'click', function() {
+        var divTipoCredito = document.getElementById('divTipoCredito');
+    
+    
+            divTipoCredito.className = 'col-md-4 d-none';
+               divCuotas.className = 'col-md-4 d-none';
+              //  document.getElementById('efectivo').readOnly = false;
+              //document.getElementById('efectivo').value = {{total.total__sum}};
+    
+   })
+  
+   $( '#chCredito').on( 'click', function() {
+           
+    
+    var divTipoCredito = document.getElementById('divTipoCredito');
+    var divCuotas = document.getElementById('divCuotas');
+    
+
+    divTipoCredito.className = 'col-md-2 d-block';
+    divCuotas.className = 'col-md-2 d-block';
+    
+
+   })
+  
+   $( '#chDebito').on( 'click', function() {
+    
+    var divTipoDebito = document.getElementById('divTipoDebito');
+  
+       
+            
+               divTipoDebito.className = 'col-md-4 d-block';
+               
+   })
+  </script>
+
+<script>
+  
+    $( '#btn-pago').on( 'click', function(e) {
+        deuda = $("#total").val();
+      e.preventDefault()
+          Swal.fire({
+              "title": "Estas seguro",
+              "text": "El total a pagar es:" + " $" + deuda,
+              "icon":"question",
+              "showCancelButton": true,
+              "cancelButtonText":"No, Cancelar",
+              "confirmButtonText":"Si, confirmar",
+          })
+          .then(function(result){
+              if(result.isConfirmed){
+            
+                $( "#form-pago" ).submit();
+                
+              }
+            });
+    });
+  </script>
+
+
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 {% endblock %}

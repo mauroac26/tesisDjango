@@ -54,7 +54,7 @@
                         <td >{{c.id_compra__cuit__nombre}}</td>
                         <td>${{c.total__sum}}</td>
                         <td class="text-center"><a href="{% url 'detallesCompra' c.id_compra__id %}" class="btn btn-primary btn-sm " role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalle"><i class="far fa-file-alt"></i></a>
-                        <!-- <a class="btn-sm btn-danger ml-3" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a> -->
+                            <!-- <a class="btn-sm btn-danger ml-2" href="{% url 'eliminarCompra' c.id_compra__id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a></td> -->
                         </td>
                     </tr>
                        {% endfor %}
