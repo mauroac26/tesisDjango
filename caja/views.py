@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render
-from .forms import cajaForm
+from .forms import movCajaForm
 from .models import movCaja
 from datetime import datetime, date, timedelta
 # Create your views here.
@@ -10,11 +10,11 @@ from datetime import datetime, date, timedelta
 def index(request):
 
     data = {
-        "form": cajaForm()
+        "form": movCajaForm()
     }
      
     if request.method == "POST":
-        formulario = cajaForm(data=request.POST)
+        formulario = movCajaForm(data=request.POST)
         if formulario.is_valid():
             #operacion = request.POST.get("operacion", "")
             operacion = formulario.cleaned_data['operacion']

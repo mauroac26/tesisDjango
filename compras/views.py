@@ -15,7 +15,7 @@ from django.http import HttpResponse
 from django.core.cache import cache
 from cedal.models import formaPago
 from cedal.form import formPago
-from caja.forms import cajaForm
+from caja.forms import movCajaForm
 from caja.models import movCaja
 from datetime import datetime
 from django.db.models import Sum
@@ -404,7 +404,7 @@ def registroPago(request):
                     caja['operacion'] = 1
                     caja['monto'] = total 
 
-                    formulario = cajaForm(caja)
+                    formulario = movCajaForm(caja)
 
                 if formulario.is_valid():
                     post = formulario.save(commit=False)

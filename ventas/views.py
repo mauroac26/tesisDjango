@@ -5,7 +5,7 @@ from django.db.models.aggregates import Sum
 #from django.db.models.aggregates import Sum
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
-from caja.forms import cajaForm
+from caja.forms import movCajaForm
 from caja.models import movCaja
 from cedal.form import formPago
 from cedal.models import formaPago
@@ -242,7 +242,7 @@ def detallesVenta(request, id):
                 caja['operacion'] = 0
                 caja['monto'] = efectivo 
 
-                formulario = cajaForm(caja)
+                formulario = movCajaForm(caja)
 
                 if formulario.is_valid():
                     post = formulario.save(commit=False)
