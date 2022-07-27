@@ -47,3 +47,10 @@ def index(request):
 
     return render(request, 'caja/caja.html', data)
 
+
+def aperturaCaja(request):
+    pass
+
+
+
+
