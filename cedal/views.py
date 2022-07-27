@@ -3,6 +3,7 @@ import json
 from json.encoder import JSONEncoder
 from django.contrib import messages
 from django.shortcuts import redirect, render
+
 from django.db.models import Sum, Count
 from cedal.models import tarjetaCredito, tarjetaDebito
 from django.http import JsonResponse
@@ -10,6 +11,7 @@ from produccion.models import Pedido
 from producto.models import Marca
 from user.models import Users
 from ventas.models import detalleVenta, Ventas
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required, permission_required
 # Create your views here.
@@ -85,7 +87,6 @@ def graficoClientes(request):
 def configuracion(request):
     return render(request, 'cedal/configuracion.html')
 
-
 @login_required
 def credito(request):
     
@@ -126,6 +127,7 @@ def altaTarjeta(request):
         else:
             messages.add_message(request, messages.ERROR, "Error al guardar los datos")
 
+
     return render(request, 'cedal/altaTarjetas.html')
     
 
@@ -143,3 +145,4 @@ def cantidadPedidos(request):
         #         pedidos = Pedido.objects.filter(estado='Pendiente').count()
                
         # return JsonResponse({"data": pedidos})
+

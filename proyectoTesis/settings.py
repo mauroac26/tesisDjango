@@ -105,14 +105,16 @@ WSGI_APPLICATION = 'proyectoTesis.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'cedal',
+        'NAME': 'cadal',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
+
         'PORT': '',
         'OPTIONS': {
             'sql_mode': 'traditional',
         }
+
     }
 }
 

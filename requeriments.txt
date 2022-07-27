@@ -1,6 +1,0 @@
-django == 3.1.2
-django-crispy-forms
-django-admin-interface
-pillow
-xhtml2pdf
-pandas
