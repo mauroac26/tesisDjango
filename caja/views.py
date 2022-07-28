@@ -94,13 +94,17 @@ def aperturaCaja(request):
 
 def cierreCaja(request):
     id = Caja.objects.order_by('id', 'total', 'estado').last()
-    id.estado = False
-    id.save()
-    hoy = datetime.now()
-    movimiento = movCaja(fecha=hoy, descripcion='Cierre de caja', operacion=0, monto=0, saldo = id.total, id_caja=id)
-    movimiento.save()
-    messages.add_message(request, messages.SUCCESS, "La caja se cerro correctamente")
-    return redirect(to='caja')
+    if id:
+        id.estado = False
+        id.save()
+        hoy = datetime.now()
+        movimiento = movCaja(fecha=hoy, descripcion='Cierre de caja', operacion=0, monto=0, saldo = id.total, id_caja=id)
+        movimiento.save()
+        messages.add_message(request, messages.SUCCESS, "La caja se cerro correctamente")
+        return redirect(to='caja')
+    else:
+        messages.add_message(request, messages.ERROR, "No se encuentra abierta la caja")
+        return redirect(to='caja')
     
 
 
