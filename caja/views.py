@@ -113,7 +113,7 @@ def consultaCaja(request):
     }
 
     if request.method == "POST":
-        formulario = movCajaForm(data=request.POST.get['id_caja'])
+        formulario = request.POST.get('id_caja')
         print(formulario)
         
 
