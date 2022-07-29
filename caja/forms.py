@@ -7,7 +7,10 @@ class movCajaForm(forms.ModelForm):
         model = movCaja
         fields = ["descripcion", "operacion", "monto", "id_caja"]
         widgets = {
-            'id_caja': forms.Select(attrs={'class': 'form-control form-control-sm'}, choices=Caja.objects.order_by('id'))
+            'id_caja': forms.Select(attrs={'class': 'form-control form-control-sm'})
+        }
+        labels = {
+            "id_caja": "Elegir caja:"
         }
 
 

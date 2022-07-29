@@ -113,9 +113,10 @@ def consultaCaja(request):
     }
 
     if request.method == "POST":
-        formulario = request.POST.get('id_caja')
-        print(formulario)
+        id = request.POST.get('id_caja')
         
+        caja = movCaja.objects.filter(id_caja=id)
+        data['caja'] = caja
 
     return render(request, 'caja/consultaCaja.html', data)
 
