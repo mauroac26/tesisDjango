@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import redirect, render
-from .forms import movCajaForm
+from .forms import cajaForm, movCajaForm
 from .models import Caja, movCaja
 from datetime import datetime, date, timedelta
 from django.contrib import messages
@@ -105,7 +105,19 @@ def cierreCaja(request):
     else:
         messages.add_message(request, messages.ERROR, "No se encuentra abierta la caja")
         return redirect(to='caja')
-    
+
+
+def consultaCaja(request):
+    data = {
+        "form": movCajaForm()
+    }
+
+    if request.method == "POST":
+        formulario = movCajaForm(data=request.POST.get['id_caja'])
+        print(formulario)
+        
+
+    return render(request, 'caja/consultaCaja.html', data)
 
 
 

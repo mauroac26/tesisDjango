@@ -15,6 +15,9 @@ class Caja(models.Model):
     total = models.DecimalField(max_digits=8, decimal_places=2)
     estado = models.BooleanField(default=True)
 
+    def __str__(self):
+        return self.nombre
+
 
 class movCaja(models.Model):
     fecha = models.DateTimeField()
