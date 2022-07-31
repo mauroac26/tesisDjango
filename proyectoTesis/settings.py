@@ -105,7 +105,7 @@ WSGI_APPLICATION = 'proyectoTesis.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'cadal',
+        'NAME': 'cedal',
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
@@ -117,6 +117,8 @@ DATABASES = {
 
     }
 }
+
+DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

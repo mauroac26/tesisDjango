@@ -5,8 +5,8 @@ from django.db.models.aggregates import Sum
 #from django.db.models.aggregates import Sum
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
-from caja.forms import cajaForm
-from caja.models import Caja
+from caja.forms import movCajaForm
+from caja.models import movCaja
 from cedal.form import formPago
 from cedal.models import formaPago
 from clientes.models import Clientes
@@ -242,12 +242,12 @@ def detallesVenta(request, id):
                 caja['operacion'] = 0
                 caja['monto'] = efectivo 
 
-                formulario = cajaForm(caja)
+                formulario = movCajaForm(caja)
 
                 if formulario.is_valid():
                     post = formulario.save(commit=False)
             
-                    ultimo_saldo = Caja.objects.latest('fecha').saldo
+                    ultimo_saldo = movCaja.objects.latest('fecha').saldo
                     
                     post.saldo = float(ultimo_saldo) + float(efectivo)
             

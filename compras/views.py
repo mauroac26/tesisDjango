@@ -15,8 +15,8 @@ from django.http import HttpResponse
 from django.core.cache import cache
 from cedal.models import formaPago
 from cedal.form import formPago
-from caja.forms import cajaForm
-from caja.models import Caja
+from caja.forms import movCajaForm
+from caja.models import movCaja
 from datetime import datetime
 from django.db.models import Sum
 from django.contrib import messages
@@ -52,19 +52,6 @@ def altaCompra(request):
     data["formPago"] = formPago()
 
     
-    # if request.method == "POST":
-    #     formulario = comprasForm(data=request.POST)
-    #     if formulario.is_valid(): 
-    #         formulario.save()
-            
-    #         return redirect(to='compras')
-            
-    #     else:
-    #         data["formCompra"] = formulario
-        
-    # def get(self, request, **kwargs):
-    #     if not self.request.user.has_perm('compras.add_compras'):
-    #         return HttpResponseForbidden()
 
     return render(request, 'compras/altaCompra.html', data)
 
@@ -102,7 +89,7 @@ def productoAutocomplete(request):
             return JsonResponse(nombre, safe=False)
 
     
-    #return render(request, 'compras/altaCompra.html')
+
 
 import json
 def cargarCompra(request):
@@ -126,56 +113,11 @@ def cargarCompra(request):
         data['fecha'] = request.POST.get('fecha')
         
   
-        # compra = comprasForm(data)
-
-        # if compra.is_valid(): 
-        #     compra.save()
-        #     return HttpResponse('Success')
-        '''
-        detalle = {}
-        
-        detalle['cantidad'] = request.GET['cantidad']
-        
-        detalle['id_producto'] = request.GET['id_producto']
-        cache.set(detalle)
-        cache.set(detalle)
-       '''
        
       
 
    
-    # if request.method == "POST":
-    #      print("chau")
-        #print(cache.get_many(['cantidad', 'id_producto']))
-         
-
-    #     compra = comprasForm(data=request.POST)
-        
-    #     if compra.is_valid(): 
-    #         compra.save()
-            
-    #         det = {}
-    #         det= cache.get_many(['cantidad', 'id_producto'])
-    #         print(det)
-            # detalle = {}
-            
-            # detalle = cache.get_many(['cantidad', 'id_producto'])
-            # print(detalle)
-            # ultima_compra = Compras.objects.order_by('id', 'fecha').last()
-            
-           
-            
-            # for n in detalle:
-            #     detalle['id_compra'] = ultima_compra
-            
-            # detalleCompra = detalleComprasForm(detalle)
-
-            # if detalleCompra.is_valid():
-            #    detalleCompra.save()
-            # return redirect(to='compras')
-            
-        # else:
-        #     data["formCompra"] = compra
+   
 
     return render(request, 'compras/altaCompra.html', data)
        
@@ -194,7 +136,7 @@ def proveedorAutocomplete(request):
             
                 
                 signer_json = {}
-            # signer_json['id'] = n.id
+            
                 signer_json['label'] = n.nombre
                 signer_json['condicion'] = n.condicion
                 signer_json['cuit'] = n.cuit
@@ -208,7 +150,7 @@ def proveedorAutocomplete(request):
             signer_json['label'] = '<li class="list-group-item align-items-center"><div class="col-sm-4"><span class="badge badge-pill badge-danger">Dar alta proveedor</span></div></li>'
             nombre.append(signer_json)
             return JsonResponse(nombre, safe=False)
-    #return render(request, 'compras/altaCompra.html')
+
 
 
 
@@ -462,12 +404,12 @@ def registroPago(request):
                     caja['operacion'] = 1
                     caja['monto'] = total 
 
-                    formulario = cajaForm(caja)
+                    formulario = movCajaForm(caja)
 
                 if formulario.is_valid():
                     post = formulario.save(commit=False)
             
-                    ultimo_saldo = Caja.objects.latest('fecha').saldo
+                    ultimo_saldo = movCaja.objects.latest('fecha').saldo
                     
                     post.saldo = float(ultimo_saldo) - float(total)
             
