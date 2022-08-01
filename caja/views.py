@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import redirect, render
-from .forms import cajaForm, movCajaForm
+from .forms import cajaForm, movCajaForm, selectCaja
 from .models import Caja, movCaja
 from datetime import datetime, date, timedelta
 from django.contrib import messages
@@ -109,7 +109,7 @@ def cierreCaja(request):
 
 def consultaCaja(request):
     data = {
-        "form": movCajaForm()
+        "form": selectCaja()
     }
 
     if request.method == "POST":

@@ -5,13 +5,8 @@ class movCajaForm(forms.ModelForm):
 
     class Meta:
         model = movCaja
-        fields = ["descripcion", "operacion", "monto", "id_caja"]
-        widgets = {
-            'id_caja': forms.Select(attrs={'class': 'form-control form-control-sm'})
-        }
-        labels = {
-            "id_caja": "Elegir caja:"
-        }
+        fields = ["descripcion", "operacion", "monto"]
+       
 
 
 
@@ -22,3 +17,14 @@ class cajaForm(forms.ModelForm):
         fields = '__all__'
 
 
+class selectCaja(forms.ModelForm):
+
+    class Meta:
+        model = movCaja
+        fields = ['id_caja']
+        widgets = {
+            'id_caja': forms.Select(attrs={'class': 'form-control form-control-sm'})
+        }
+        labels = {
+            "id_caja": "Elegir caja:"
+        }
