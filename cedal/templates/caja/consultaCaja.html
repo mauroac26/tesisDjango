@@ -29,9 +29,12 @@
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-6 col-md-6">
+                                <label for="movCaja"><b>Cuentas Adeudadas</b></label> 
+                   <div class="input-group  input-group-sm">
+                    <input type="text" name="movCaja" id="movCaja" class="form-control form-control-sm" placeholder="Ingresar la caja">
+                   </div>
                                 
-                                
-                                {{ form.id_caja|as_crispy_field}}
+                                <!-- {{ form.id_caja|as_crispy_field}} -->
                                 
         
                             </div>
@@ -107,7 +110,45 @@
 
 {% block js %}
 
+<script>
+    
+$(function() {
 
+    
+    $("#movCaja").autocomplete({
+    
+        source:  "{% url 'movimientoCaja' %}",
+        
+        select: function(event, ui){
+            
+            if (ui.item.n == 1){
+               
+    
+               $("#movCaja").val('');
+               event.preventDefault();
+            }else{
+                alert(ui.item.id)
+                $("#movCaja").val(ui.item.value);
+            //    $("#id_compra").val(ui.item.id);
+            }
+            
+            
+        
+}
+
+}).data('ui-autocomplete')._renderItem = function(ul, item) {
+        
+        
+        return $("<li>").append(item.label).appendTo(ul);
+        
+        
+    };
+
+  
+    
+    });
+
+</script>
 
 
 <script>
@@ -115,4 +156,7 @@
     table("tablaCaja");
     });
 </script>
+
+
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 {% endblock %}
