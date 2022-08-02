@@ -108,17 +108,20 @@ def cierreCaja(request):
         return redirect(to='caja')
 
 
+
 def consultaCaja(request):
     
-    data = {
-        "form": selectCaja()
-    }
-
-    if request.method == "POST":
-        id = request.POST.get('id_caja')
-        
+    # data = {
+    #     "form": selectCaja()
+    # }
+    data={}
+    if request.is_ajax():
+        id = request.POST.get('id')
+      
         caja = movCaja.objects.filter(id_caja=id)
+        print(caja)
         data['caja'] = caja
+        return render(request, 'caja/consultaCaja.html', data)
 
     return render(request, 'caja/consultaCaja.html', data)
 
@@ -128,7 +131,7 @@ def movimientoCaja(request):
     
         caja = Caja.objects.filter(nombre__icontains=request.GET.get("term")).values('id', 'nombre')
         
-        print(caja)
+       
         nombre = list()
         if caja:
             for c in caja:

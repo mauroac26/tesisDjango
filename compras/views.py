@@ -21,7 +21,7 @@ from datetime import datetime
 from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-import pandas as pd
+
 # Create your views here.
 
 @login_required
