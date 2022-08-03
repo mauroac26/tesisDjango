@@ -76,7 +76,7 @@
                 
                     <tbody>
                         
-                       {% for c in caja %}
+                       <!-- {% for c in caja %}
                        <tr>
                         <td>{{c.fecha}}</td>
                         <td>{{c.descripcion}}</td>
@@ -90,7 +90,7 @@
                         <td>${{c.saldo}}</td>
                         
                     </tr>
-                       {% endfor %}
+                       {% endfor %} -->
                     </tbody>
                 </table>
             </div>
@@ -135,11 +135,89 @@ var id = 0;
                    url: "{% url 'consultaCaja' %}",
                   data: {id: id,
                     'csrfmiddlewaretoken': '{{ csrf_token }}',
-                          }
-      
+                          },    
+                dataType: 'json',
+                  
               
     
-                });
+                
+                    success: function(response){
+                        $('#tablaCaja tbody').html('');
+                   
+                        
+                        
+                
+                    
+                        $.each(response, function() {
+  $.each(this, function(name, value) {
+    let fila = '<tr>';
+                        fila += '<td>' + value.fecha + '</td>';
+                        fila += '<td>' + value.descripcion + '</td>';
+                        if(value.operacion == 0){
+                            fila += '<td>' + value.monto + '</td>';
+                            fila += '<td>' + '$0,00' + '</td>';
+                        }else{
+                            fila += '<td>' + '$0,00' + '</td>';
+                            fila += '<td>' + value.monto + '</td>';
+
+                        }
+                        
+                       
+                        fila += '<td>' + value.saldo + '</td>';
+                        fila += '</tr>';
+                        $('#tablaCaja tbody').append(fila);
+  });
+});
+$('#tablaCaja').DataTable({
+   
+      
+      "language": {
+       
+        "emptyTable": "No hay información",
+        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+        "lengthMenu": "Mostrar _MENU_ Entradas",
+        "loadingRecords": "Cargando...",
+        "processing": "Procesando...",
+        "search": "Buscar:",
+        "zeroRecords": "Sin resultados encontrados",
+        "paginate": {
+            "first": "Primero",
+            "last": "Ultimo",
+            "next": "Siguiente",
+            "previous": "Anterior"
+        }
+      },
+      responsive: "true",
+      dom: 'Bfrtilp',
+      buttons:[
+        {
+          extend: 'excelHtml5',
+          text: '<i class="fas fa-file-excel fa-1x"></i>',
+          titleAttr: 'Exportar a Excel',
+          className: 'btn btn-success btn-sm'
+        },
+        {
+          extend: 'pdfHtml5',
+          text: '<i class="fas fa-file-pdf fa-1x"></i>',
+          titleAttr: 'Exportar a PDF',
+          className: 'btn btn-primary btn-sm'
+        },
+        {
+          extend: 'print',
+          text: '<i class="fas fa-print fa-1x"></i>',
+          titleAttr: 'Exportar a Imprimir',
+          className: 'btn btn-secondary btn-sm'
+        
+
+        }
+      ]
+    });
+
+                    
+                }
+            });
             }
             
             
@@ -161,11 +239,11 @@ var id = 0;
 </script>
 
 
-<script>
+<!-- <script>
     $(document).ready(function() {
     table("tablaCaja");
     });
-</script>
+</script> -->
 
 
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>

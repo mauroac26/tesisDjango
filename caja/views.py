@@ -116,12 +116,12 @@ def consultaCaja(request):
     # }
     data={}
     if request.is_ajax():
-        id = request.POST.get('id')
+        
+        id = request.POST['id']
       
-        caja = movCaja.objects.filter(id_caja=id)
-        print(caja)
-        data['caja'] = caja
-        return render(request, 'caja/consultaCaja.html', data)
+        caja = movCaja.objects.filter(id_caja=id).values()
+        
+        return JsonResponse({"data": list(caja)})
 
     return render(request, 'caja/consultaCaja.html', data)
 
