@@ -111,17 +111,24 @@ def cierreCaja(request):
 
 def consultaCaja(request):
     
-    # data = {
-    #     "form": selectCaja()
-    # }
-    data={}
-    if request.is_ajax():
+    data = {
+        "form": selectCaja()
+    }
+    # data={}
+    if request.method == "POST":
+    # if request.is_ajax():
         
-        id = request.POST['id']
-      
-        caja = movCaja.objects.filter(id_caja=id).values()
-        
-        return JsonResponse({"data": list(caja)})
+        # id = request.POST['id']
+        id = request.POST.get('id_caja')
+
+        caja = movCaja.objects.filter(id_caja=id)
+        first = movCaja.objects.filter(id_caja=id).first()
+        last = movCaja.objects.filter(id_caja=id).last()
+        data['caja']= caja
+        data['first'] = first.fecha
+        data['last'] = last.fecha
+        data['id'] = id
+        # return JsonResponse({"data": list(caja)})
 
     return render(request, 'caja/consultaCaja.html', data)
 
