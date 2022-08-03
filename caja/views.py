@@ -69,7 +69,11 @@ def aperturaCaja(request):
            messages.add_message(request, messages.ERROR, "La caja ya se encuentra abierta")
            return redirect(to='caja')
         else:
-            caja = Caja(nombre='Caja2',total=id.total, estado=True)
+            id = Caja.objects.order_by('id').last()
+           
+            idCaja = int(id.id) + 1
+            
+            caja = Caja(nombre=f'Caja{idCaja}',total=id.total, estado=True)
             caja.save()
             id = Caja.objects.order_by('id').last()
             hoy = datetime.now()
@@ -124,9 +128,13 @@ def consultaCaja(request):
         caja = movCaja.objects.filter(id_caja=id)
         first = movCaja.objects.filter(id_caja=id).first()
         last = movCaja.objects.filter(id_caja=id).last()
+        
         data['caja']= caja
         data['first'] = first.fecha
-        data['last'] = last.fecha
+        if caja.count() == 1:
+            data['last'] = 'La caja aun se encuentra abierta'
+        else:
+            data['last'] = last.fecha
         data['id'] = id
         # return JsonResponse({"data": list(caja)})
 
