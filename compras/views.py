@@ -365,28 +365,13 @@ def registroPago(request):
         
         if total <= float(deuda):
             
-            data['id_compra'] = id_compra
-            data['total'] = total
-            data['tipoPago'] = tipoPago
-            pago = formPagoCompra(data)
+                
+            id = Caja.objects.order_by('id', 'total', 'estado').last()
             
-            if pago.is_valid(): 
-                pago.save()
-
-                compra = Compras.objects.get(id=id_compra)
-                pago = formaPagoCompra.objects.filter(id_compra=id_compra).annotate(Sum('total'))
-                tot = 0.0
-                for p in pago:
-                    tot = float(p.total__sum) + float(tot)
-                    
-                
-                if float(tot) == float(deuda):
-                    compra.estado = 'Pagado'
-                    compra.save()
-                
-                id = Caja.objects.order_by('id', 'estado').last()
-                
-                if tipoPago == '1' and id.estado == True:
+            if tipoPago == '1':
+                if id.estado:
+                    cargarPago(id_compra, total, tipoPago, deuda)
+                    #Registra el monto pagado en movimientos de la caja si es en efectivo y la caja se encuentra abierta
                     fecha = datetime.now()
                     caja = {}
                     caja['descripcion'] = "Compra comprobante N° " + comprobante
@@ -396,25 +381,56 @@ def registroPago(request):
                     caja['saldo'] = deuda
                     caja['fecha'] = fecha
                     formulario = movimientoCajaForm(caja)
-                    print(saldo)
-                if formulario.is_valid():
-                    post = formulario.save(commit=False)
-            
-                    ultimo_saldo = movCaja.objects.latest('fecha').saldo
+                        
+                    if formulario.is_valid():
+                        post = formulario.save(commit=False)
                     
-                    post.saldo = float(ultimo_saldo) - float(total)
-            
-                    # fecha = datetime.now()
-                    # post.fecha = fecha
-                    post.save()
-                    messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
-                    return redirect(to='pago')
+                        ultimo_saldo = movCaja.objects.latest('fecha').saldo
+                            
+                        post.saldo = float(ultimo_saldo) - float(total)
+        
+                        post.save()
+                        messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
+                        return redirect(to='pago')
+                    else:
+                       data["formPago"] = formulario
+                else:
+                    messages.add_message(request, messages.ERROR, "No se puede realizar el pago, la caja se encuentra cerrada")
+                    return redirect(to='registroPago')
             else:
-                data["formPago"] = formPagoCompra() 
+                cargarPago(id_compra, total, tipoPago, deuda)
+                return redirect(to='pago')
+                
         else:
             messages.add_message(request, messages.ERROR, "El monto seleccionado es diferente al monto total de la compra")
-            return render(request, 'compras/detalleCompra.html', data) 
+            data["formPago"] = formPagoCompra() 
     return render(request, 'compras/registroPago.html', data)
+
+
+def cargarPago(id_compra, total, tipoPago, deuda):
+    #Registra el pago en formaPagoCompra 
+    data = {}
+    data['id_compra'] = id_compra
+    data['total'] = total
+    data['tipoPago'] = tipoPago
+    pago = formPagoCompra(data)
+            
+    if pago.is_valid(): 
+        pago.save()
+        #una vez registrado el pago compara si quedan deudas entre el monto pagado y el saldo total de la compra
+        compra = Compras.objects.get(id=id_compra)
+        pago = formaPagoCompra.objects.filter(id_compra=id_compra).annotate(Sum('total'))
+        tot = 0.0
+        for p in pago:
+            tot = float(p.total__sum) + float(tot)
+                    
+        #si es igual el total y la deuda el estado de la compra pasa a pagado sino sigue estando en adeudado
+        print(tot)
+        print(deuda)
+        if float(tot) == float(deuda):
+            compra.estado = 'Pagado'
+            compra.save()
+    
 
 
 def compraAdeudada(request):
