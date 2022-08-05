@@ -16,7 +16,7 @@ class Caja(models.Model):
     estado = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.nombre
+        return str(self.id)
 
 
 class movCaja(models.Model):

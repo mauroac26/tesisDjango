@@ -1,22 +1,16 @@
-from django.http.response import HttpResponseForbidden
+
 from django.shortcuts import get_object_or_404, render, redirect
 
-#import pandas as pd
-from django.core import serializers
 from compras.utils import render_pdf
-from .forms import comprasForm, detalleComprasForm
-from producto.forms import productoForm, compraProductoForm
-from .models import Compras, detalleCompra
-from proveedores.forms import proveedorCompraForm
+from .forms import comprasForm, detalleComprasForm, formPagoCompra
+from producto.forms import compraProductoForm
+from .models import Compras, detalleCompra, formaPagoCompra
 from producto.models import Producto
 from django.http import JsonResponse
 from proveedores.models import proveedores
 from django.http import HttpResponse
-from django.core.cache import cache
-from cedal.models import formaPago
-from cedal.form import formPago
-from caja.forms import movCajaForm
-from caja.models import movCaja
+from caja.forms import movCajaForm, movimientoCajaForm
+from caja.models import Caja, movCaja
 from datetime import datetime
 from django.db.models import Sum
 from django.contrib import messages
@@ -49,7 +43,7 @@ def altaCompra(request):
 
     data["formCompra"] = comprasForm()
 
-    data["formPago"] = formPago()
+    data["formPago"] = formPagoCompra()
 
     
 
@@ -216,7 +210,7 @@ def cargarDetalleCompra(request):
 
     return JsonResponse({"error": "Error"}, status=400)
 
-from decimal import Decimal
+
 
 @login_required
 @permission_required('compras.view_detallecompra', login_url='compras')
@@ -323,7 +317,7 @@ def pago(request):
     }
 
     for d in data["compras"]:
-        pago = formaPago.objects.filter(id_compra=d['id_compra__id']).annotate(Sum('total'))
+        pago = formaPagoCompra.objects.filter(id_compra=d['id_compra__id']).annotate(Sum('total'))
         saldo = 0
         for p in pago:
             saldo = float(p.total__sum) + saldo
@@ -354,39 +348,33 @@ def pago(request):
 
 def registroPago(request):
     data= {
-        "formPago": formPago()
+        "formPago": formPagoCompra()
         }
 
     if request.method == "POST":
 
         total = float(request.POST.get('total'))
-        cuotas = request.POST.get('cuotas')
-        tipoCredito = request.POST.get('tipoCredito')
-        tipoDebito = request.POST.get('tipoDebito')
         id_compra = request.POST.get('id_compra')
+        tipoPago = request.POST.get('tipoPago')
         saldo = detalleCompra.objects.annotate(Sum('total')).values('total__sum', 'id_compra__comprobante').filter(id_compra=id_compra)
-
         for c in saldo:
             comprobante = c['id_compra__comprobante']
             deuda = c['total__sum']
 
         
-            
+        
         if total <= float(deuda):
             
             data['id_compra'] = id_compra
             data['total'] = total
-            data['cuotas'] = cuotas
-            data['tipoCredito'] = tipoCredito
-            data['tipoDebito'] = tipoDebito
+            data['tipoPago'] = tipoPago
+            pago = formPagoCompra(data)
             
-            pago = formPago(data)
-        
             if pago.is_valid(): 
                 pago.save()
 
                 compra = Compras.objects.get(id=id_compra)
-                pago = formaPago.objects.filter(id_compra=id_compra).annotate(Sum('total'))
+                pago = formaPagoCompra.objects.filter(id_compra=id_compra).annotate(Sum('total'))
                 tot = 0.0
                 for p in pago:
                     tot = float(p.total__sum) + float(tot)
@@ -396,16 +384,19 @@ def registroPago(request):
                     compra.estado = 'Pagado'
                     compra.save()
                 
-            
-                if tipoCredito == '':
-
+                id = Caja.objects.order_by('id', 'estado').last()
+                
+                if tipoPago == '1' and id.estado == True:
+                    fecha = datetime.now()
                     caja = {}
                     caja['descripcion'] = "Compra comprobante N° " + comprobante
                     caja['operacion'] = 1
-                    caja['monto'] = total 
-
-                    formulario = movCajaForm(caja)
-
+                    caja['monto'] = total
+                    caja['id_caja'] = id.id
+                    caja['saldo'] = deuda
+                    caja['fecha'] = fecha
+                    formulario = movimientoCajaForm(caja)
+                    print(saldo)
                 if formulario.is_valid():
                     post = formulario.save(commit=False)
             
@@ -413,13 +404,13 @@ def registroPago(request):
                     
                     post.saldo = float(ultimo_saldo) - float(total)
             
-                    fecha = datetime.now()
-                    post.fecha = fecha
+                    # fecha = datetime.now()
+                    # post.fecha = fecha
                     post.save()
                     messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
                     return redirect(to='pago')
             else:
-                data["formPago"] = formPago() 
+                data["formPago"] = formPagoCompra() 
         else:
             messages.add_message(request, messages.ERROR, "El monto seleccionado es diferente al monto total de la compra")
             return render(request, 'compras/detalleCompra.html', data) 
@@ -434,7 +425,7 @@ def compraAdeudada(request):
         nombre = list()
         if compras:
             for n in compras:
-                pago = formaPago.objects.filter(id_compra=n['id_compra']).annotate(Sum('total'))
+                pago = formaPagoCompra.objects.filter(id_compra=n['id_compra']).annotate(Sum('total'))
                 saldo = 0.0
                 for p in pago:
                     saldo = float(p.total__sum) + float(saldo)
@@ -479,7 +470,7 @@ def eliminarCompra(request, id):
     
 
 def eliminarPago(request, id):
-    pago = formaPago.objects.filter(id_compra=id)
+    pago = formaPagoCompra.objects.filter(id_compra=id)
     
     if pago:
         pago.delete()

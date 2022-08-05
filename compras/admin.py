@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from compras.models import Compras, detalleCompra
+from compras.models import Compras, detalleCompra, formaPagoCompra
 
 # Register your models here.
 
@@ -14,3 +14,4 @@ class CompraAdmin(admin.ModelAdmin):
 
 admin.site.register(Compras, CompraAdmin)
 admin.site.register(detalleCompra, detalleCompraAdmin)
+admin.site.register(formaPagoCompra)

@@ -7,7 +7,11 @@ class movCajaForm(forms.ModelForm):
         model = movCaja
         fields = ["descripcion", "operacion", "monto"]
        
+class movimientoCajaForm(forms.ModelForm):
 
+    class Meta:
+        model = movCaja
+        fields = '__all__'
 
 
 class cajaForm(forms.ModelForm):

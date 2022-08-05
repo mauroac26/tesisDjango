@@ -22,44 +22,11 @@
                    </div>
                 </div>
             </div>
-            <div class="row mt-2 ml-1">
-                <div class="col-md-5">
-                    <b>Elige las siguientes opciones:</b><br>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="chEfectivo" value="1" checked>
-                    <label class="form-check-label" for="chEfectivo">Efectivo</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="chDebito" value="2">
-                    <label class="form-check-label" for="chDebito">Debito</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="chCredito" value="3">
-                    <label class="form-check-label" for="chCredito">Credito</label>
-                  </div>
-            <!-- <div class="form-check form-check-inline justify-content-center">
-                <input class="form-check-input>" type="checkbox" id="chEfectivo" value="1">
-                <label class="form-check-label" for="chEfectivo">Efectivo</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="chCredito" value="2">
-                <label class="form-check-label" for="chCredito">Crédito</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="chDebito" value="3">
-                <label class="form-check-label" for="chDebito">Débito</label>
-              </div> -->
-            </div>
-            </div>
+            
+
             <div class="row mt-2 ml-1">
                 <div class="col-md-5">
                    <label for="total">Deuda:</label><span id="deuda" class="badge badge-secondary ml-1">--</span>
-                   <!-- <div class="input-group  input-group-sm">
-                   <div class="input-group-prepend">
-                    <div class="input-group-text" id="subPrepend">$</div>
-                  </div>
-                    <input type="text" name="total" id="total" aria-describedby="subPrepend" class="form-control form-control-sm">
-                </div> -->
                 </div>
             
             </div>
@@ -67,39 +34,42 @@
                     <form id="form-pago" action="#" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="row mt-2 ml-1">
+                          <div class="col-md-5">
+                              <b>Elige las siguientes opciones:</b><br>
+                          <div class="form-check form-check-inline" id="tipo">
+                              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="chEfectivo" value="1" checked>
+                              <label class="form-check-label" for="chEfectivo">Efectivo</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="chTransferencia" value="2">
+                              <label class="form-check-label" for="chTransferencia">Transferencia</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="inlineRadioOptions" id="chCheques" value="3">
+                              <label class="form-check-label" for="chCheques">Cheques</label>
+                            </div>
+                      </div>
+                      </div>
+                        <div class="row mt-2 ml-1">
+                          <div class="col-md-2" id="divEfectivo" >
+                               
+                            {{ formPago.tipoPago|as_crispy_field }}
+                            
+                          </div>
+
                             <div class="col-md-2" id="divEfectivo" >
                                
                                 {{ formPago.total|as_crispy_field }}
                                 
                               </div>
                         
-                              <div class="col-md-2 d-none" id="divTipoCredito" >
-                            
-                              {{ formPago.tipoCredito|as_crispy_field }}
-                             
-                            </div>
-
-                            <div class="col-md-1 d-none" id="divCuotas" >
-                      
-                              {{ formPago.cuotas|as_crispy_field }}
-                              
-                            </div>
                         
                             <div class="col-md-1 d-none" >
                       
                                 {{ formPago.id_compra|as_crispy_field }}
                                 
                               </div>
-                           
-
-                        
-                            
-      
-                            <div class="col-md-4 d-none" id="divTipoDebito" >
                           
-                            {{ formPago.tipoDebito|as_crispy_field }}
-                           
-                          </div>
                         </div>
                         <div class="row mt-2 ml-1">
                       <div class="col-md-1 ">
@@ -165,36 +135,36 @@ $(function() {
 <script>
     var total = $('#lebTotal').html();
      $( '#chEfectivo').on( 'click', function() {
-        var divTipoCredito = document.getElementById('divTipoCredito');
+        var divTransferencia = document.getElementById('divTransferencia');
     
     
-            divTipoCredito.className = 'col-md-4 d-none';
-               divCuotas.className = 'col-md-4 d-none';
+            divTransferencia.className = 'col-md-4 d-none';
+               divCheques.className = 'col-md-4 d-none';
               //  document.getElementById('efectivo').readOnly = false;
               //document.getElementById('efectivo').value = {{total.total__sum}};
     
    })
   
-   $( '#chCredito').on( 'click', function() {
+   $( '#chTransferencia').on( 'click', function() {
            
     
-    var divTipoCredito = document.getElementById('divTipoCredito');
-    var divCuotas = document.getElementById('divCuotas');
+    var divTransferencia = document.getElementById('divTransferencia');
+    // var divCheques = document.getElementById('divCheques');
     
 
-    divTipoCredito.className = 'col-md-2 d-block';
-    divCuotas.className = 'col-md-2 d-block';
+    divTransferencia.className = 'col-md-2 d-block';
+    // divCheques.className = 'col-md-2 d-block';
     
 
    })
   
-   $( '#chDebito').on( 'click', function() {
+   $( '#chCheques').on( 'click', function() {
     
-    var divTipoDebito = document.getElementById('divTipoDebito');
+    var divCheques = document.getElementById('divCheques');
   
        
             
-               divTipoDebito.className = 'col-md-4 d-block';
+    divCheques.className = 'col-md-4 d-block';
                
    })
   </script>

@@ -1,6 +1,6 @@
 from django import forms
 from datetime import date
-from .models import Compras, detalleCompra
+from .models import Compras, detalleCompra, formaPagoCompra
 from django.forms import ValidationError
 
 tipo_Comprobante = [
@@ -39,3 +39,22 @@ class detalleComprasForm(forms.ModelForm):
         model = detalleCompra
         fields = '__all__'
 
+
+class formPagoCompra(forms.ModelForm):
+    
+    # efectivo = forms.DecimalField(min_value=0, initial=0.00)
+    # credito = forms.DecimalField(min_value=0, initial=0.00)
+    # debito = forms.DecimalField(min_value=0, initial=0.00)
+    # cuotas = forms.IntegerField(min_value=0, initial=0)
+
+    # def clean_efectivo(self):
+    #     efectivo = self.cleaned_data["efectivo"]
+    class Meta:
+        model = formaPagoCompra
+        fields = ['id_compra', 'total', 'tipoPago']
+
+        widgets = {
+            'id_compra': forms.TextInput(attrs={'id': 'id_compra'}),
+            'total': forms.TextInput(attrs={'id': 'total','class': 'form-control form-control-sm' }),
+            'tipoPago': forms.Select(attrs={'id': 'tipoPago','class': 'form-control form-control-sm'})
+        }

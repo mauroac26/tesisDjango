@@ -39,3 +39,18 @@ def __str__(self):
 
 # class ExcelFileUpload(models.Model):
 #     excel = models.FileField(upload_to="excel")
+
+tipo_Pago = [
+    [1, "Efectivo"],
+    [2, "Transferencia"],
+    [3, "Cheques"]
+]
+
+class formaPagoCompra(models.Model):
+    total = models.DecimalField(max_digits=8, decimal_places=2 , null=True, blank=True, verbose_name='Monto')
+    tipoPago =  models.IntegerField(choices=tipo_Pago, verbose_name="Tipo Pago")
+    id_compra =  models.ForeignKey(Compras, on_delete=models.CASCADE, null=True, blank=True)
+    
+
+def __str__(self):
+    return self.id
