@@ -370,30 +370,34 @@ def registroPago(request):
             
             if tipoPago == '1':
                 if id.estado:
-                    cargarPago(id_compra, total, tipoPago, deuda)
-                    #Registra el monto pagado en movimientos de la caja si es en efectivo y la caja se encuentra abierta
-                    fecha = datetime.now()
-                    caja = {}
-                    caja['descripcion'] = "Compra comprobante N° " + comprobante
-                    caja['operacion'] = 1
-                    caja['monto'] = total
-                    caja['id_caja'] = id.id
-                    caja['saldo'] = deuda
-                    caja['fecha'] = fecha
-                    formulario = movimientoCajaForm(caja)
-                        
-                    if formulario.is_valid():
-                        post = formulario.save(commit=False)
-                    
-                        ultimo_saldo = movCaja.objects.latest('fecha').saldo
+                    if id.total >= total:
+                        cargarPago(id_compra, total, tipoPago, deuda)
+                        #Registra el monto pagado en movimientos de la caja si es en efectivo y la caja se encuentra abierta
+                        fecha = datetime.now()
+                        caja = {}
+                        caja['descripcion'] = "Compra comprobante N° " + comprobante
+                        caja['operacion'] = 1
+                        caja['monto'] = total
+                        caja['id_caja'] = id.id
+                        caja['saldo'] = deuda
+                        caja['fecha'] = fecha
+                        formulario = movimientoCajaForm(caja)
                             
-                        post.saldo = float(ultimo_saldo) - float(total)
-        
-                        post.save()
-                        messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
-                        return redirect(to='pago')
+                        if formulario.is_valid():
+                            post = formulario.save(commit=False)
+                        
+                            ultimo_saldo = movCaja.objects.latest('fecha').saldo
+                                
+                            post.saldo = float(ultimo_saldo) - float(total)
+            
+                            post.save()
+                            messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
+                            return redirect(to='pago')
+                        else:
+                            data["formPago"] = formulario
                     else:
-                       data["formPago"] = formulario
+                        messages.add_message(request, messages.ERROR, "El total a pagar en efectivo es menor al saldo de la caja")
+                    return redirect(to='registroPago')
                 else:
                     messages.add_message(request, messages.ERROR, "No se puede realizar el pago, la caja se encuentra cerrada")
                     return redirect(to='registroPago')
