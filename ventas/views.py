@@ -2,7 +2,7 @@ from datetime import datetime
 from django.contrib import messages
 from django.db.models.aggregates import Sum
 #from django.contrib.auth.decorators import login_required, permission_required
-#from django.db.models.aggregates import Sum
+
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
 from caja.forms import movCajaForm
@@ -16,11 +16,10 @@ from ventas.forms import detalleVentaForm, ventasForm
 from compras.utils import render_pdf
 from django.views.generic import View
 
-from ventas.models import Ventas, detalleVenta
+from ventas.models import Ventas, detalleVenta, formaPagoVenta
 
 from xhtml2pdf import pisa
 from django.template.loader import get_template
-from io import BytesIO
 import os
 from django.conf import settings
 
@@ -361,3 +360,42 @@ class VentasPdf(View):
             return HttpResponse("asdads" + html + 'asddd')
         
         return response
+
+
+def pagoVenta(request):
+    venta = detalleVenta.objects.values('id_venta__id', 'id_venta__comprobante', 'id_venta__cuit__nombre', 'id_venta__fecha', 'id_venta__estado').annotate(Sum('total'))
+
+    ventaTotal = list()
+
+    data = {
+        "ventas": venta
+    }
+
+    for d in data["ventas"]:
+        pago = formaPagoVenta.objects.filter(id_venta=d['id_venta__id']).annotate(Sum('total'))
+        saldo = 0
+        for p in pago:
+            saldo = float(p.total__sum) + saldo
+            
+        total = float(d['total__sum']) - saldo
+        signer_json = {}
+        signer_json['id'] = d['id_venta__id']
+        signer_json['comprobante'] = d['id_venta__comprobante']
+        signer_json['fecha'] = d['id_venta__fecha']
+        signer_json['nombre'] = d['id_venta__cuit__nombre']
+        signer_json['total'] = d['total__sum']
+        signer_json['saldo'] = total
+        signer_json['estado'] = d['id_venta__estado']
+        
+        ventaTotal.append(signer_json)
+
+    data = {
+        "ventas": ventaTotal
+    }
+
+
+    
+    
+    
+
+    return render(request, 'ventas/pagoVenta.html', data)
