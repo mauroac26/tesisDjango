@@ -460,34 +460,32 @@ def registroPagoVenta(request):
             
             if tipoPago == '1':
                 if id.estado:
-                    if id.total >= total:
-                        cargarPagoVenta(id_venta, total, tipoPago, deuda)
-                        #Registra el monto pagado en movimientos de la caja si es en efectivo y la caja se encuentra abierta
-                        fecha = datetime.now()
-                        caja = {}
-                        caja['descripcion'] = "Venta comprobante N° " + comprobante
-                        caja['operacion'] = 0
-                        caja['monto'] = total
-                        caja['id_caja'] = id.id
-                        caja['saldo'] = deuda
-                        caja['fecha'] = fecha
-                        formulario = movimientoCajaForm(caja)
+                    
+                    cargarPagoVenta(id_venta, total, tipoPago, deuda)
+                    #Registra el monto pagado en movimientos de la caja si es en efectivo y la caja se encuentra abierta
+                    fecha = datetime.now()
+                    caja = {}
+                    caja['descripcion'] = "Venta comprobante N° " + comprobante
+                    caja['operacion'] = 0
+                    caja['monto'] = total
+                    caja['id_caja'] = id.id
+                    caja['saldo'] = deuda
+                    caja['fecha'] = fecha
+                    formulario = movimientoCajaForm(caja)
                             
-                        if formulario.is_valid():
-                            post = formulario.save(commit=False)
+                    if formulario.is_valid():
+                        post = formulario.save(commit=False)
                         
-                            ultimo_saldo = movCaja.objects.latest('fecha').saldo
+                        ultimo_saldo = movCaja.objects.latest('fecha').saldo
                                 
-                            post.saldo = float(ultimo_saldo) + float(total)
+                        post.saldo = float(ultimo_saldo) + float(total)
             
-                            post.save()
-                            messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
-                            return redirect(to='pagoVenta')
-                        else:
-                            data["formPago"] = formulario
+                        post.save()
+                        messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
+                        return redirect(to='pagoVenta')
                     else:
-                        messages.add_message(request, messages.ERROR, "El total a pagar en efectivo es menor al saldo de la caja")
-                        return redirect(to='registroPagoVenta')
+                        data["formPago"] = formulario
+                    
                 else:
                     messages.add_message(request, messages.ERROR, "No se puede realizar el pago, la caja se encuentra cerrada")
                     return redirect(to='registroPagoVenta')
@@ -496,7 +494,7 @@ def registroPagoVenta(request):
                 return redirect(to='pagoVenta')
                 
         else:
-            messages.add_message(request, messages.ERROR, "El monto seleccionado es diferente al monto total de la compra")
+            messages.add_message(request, messages.ERROR, "El monto seleccionado es mayor al monto total de la compra")
             return redirect(to='registroPagoVenta') 
     return render(request, 'ventas/registroPagoVenta.html', data)
 
