@@ -4,15 +4,15 @@ from django.db.models.aggregates import Sum
 #from django.contrib.auth.decorators import login_required, permission_required
 
 from django.http.response import HttpResponse, JsonResponse
-from django.shortcuts import render
-from caja.forms import movCajaForm
-from caja.models import movCaja
+from django.shortcuts import render, redirect
+from caja.forms import movCajaForm, movimientoCajaForm
+from caja.models import Caja, movCaja
 from cedal.form import formPago
 from cedal.models import formaPago
 from clientes.models import Clientes
 from producto.forms import ventaProductoForm
 from producto.models import Producto
-from ventas.forms import detalleVentaForm, ventasForm
+from ventas.forms import detalleVentaForm, formPagoVenta, ventasForm
 from compras.utils import render_pdf
 from django.views.generic import View
 
@@ -399,3 +399,126 @@ def pagoVenta(request):
     
 
     return render(request, 'ventas/pagoVenta.html', data)
+
+
+def ventaAdeudada(request):
+    if 'term' in request.GET:
+        
+        ventas = detalleVenta.objects.annotate(Sum('total')).values('total__sum', 'id_venta__cuit__nombre', 'id_venta__fecha','id_venta').filter(id_venta__cuit__nombre__icontains=request.GET.get("term"), id_venta__estado = 'Adeudado')
+        
+        nombre = list()
+        if ventas:
+            for n in ventas:
+                pago = formaPagoVenta.objects.filter(id_venta=n['id_venta']).annotate(Sum('total'))
+                saldo = 0.0
+                for p in pago:
+                    saldo = float(p.total__sum) + float(saldo)
+            
+                total = float(n['total__sum']) - float(saldo)
+                
+                # fecha = n['id_venta__fecha']
+                # fecha1 = datetime.datetime.strptime(fecha, '%Y-%m-%dT%H:%MZ').strftime("%d-%m-%Y")
+                dicventas = {}
+                dicventas['id'] = n['id_venta']
+                dicventas['label'] = '<li style="font-size: 11px;" class="list-group-item d-flex justify-content-between align-items-center"><div class="col-sm-5">'+str(n['id_venta__cuit__nombre'])+'</div><span>'+str(n['id_venta__fecha'])+'</span><span>$'+str(n['total__sum'])+'</span></li>'
+                dicventas['value'] = f'{n["id_venta__cuit__nombre"]} / {n["id_venta__fecha"]} / {n["total__sum"]}'
+                dicventas['total'] = float(total)
+                
+                nombre.append(dicventas)
+            return JsonResponse(nombre, safe=False)
+        else:
+            dicventas = {}
+            dicventas['n'] = 1
+            dicventas['label'] = '<li style="font-size: 11px;" class="list-group-item align-items-center"><div class="col-sm-7"><span>No se encuentas ventas adeudadas</span></div></li>'
+            nombre.append(dicventas)
+            return JsonResponse(nombre, safe=False)
+
+
+def registroPagoVenta(request):
+    data= {
+        "formPago": formPagoVenta()
+        }
+
+    if request.method == "POST":
+
+        total = float(request.POST.get('total'))
+        id_venta = request.POST.get('id_venta')
+        tipoPago = request.POST.get('tipoPago')
+        tarjeta = request.POST.get('tipoCredito')
+        cuotas = request.POST.get('cuotas')
+        saldo = detalleVenta.objects.annotate(Sum('total')).values('total__sum', 'id_venta__comprobante').filter(id_venta=id_venta)
+        for c in saldo:
+            comprobante = c['id_venta__comprobante']
+            deuda = c['total__sum']
+        
+        
+        
+        if total <= float(deuda):
+            
+                
+            id = Caja.objects.order_by('id', 'total', 'estado').last()
+            
+            if tipoPago == '1':
+                if id.estado:
+                    if id.total >= total:
+                        cargarPagoVenta(id_venta, total, tipoPago, deuda)
+                        #Registra el monto pagado en movimientos de la caja si es en efectivo y la caja se encuentra abierta
+                        fecha = datetime.now()
+                        caja = {}
+                        caja['descripcion'] = "Compra comprobante N° " + comprobante
+                        caja['operacion'] = 1
+                        caja['monto'] = total
+                        caja['id_caja'] = id.id
+                        caja['saldo'] = deuda
+                        caja['fecha'] = fecha
+                        formulario = movimientoCajaForm(caja)
+                            
+                        if formulario.is_valid():
+                            post = formulario.save(commit=False)
+                        
+                            ultimo_saldo = movCaja.objects.latest('fecha').saldo
+                                
+                            post.saldo = float(ultimo_saldo) - float(total)
+            
+                            post.save()
+                            messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
+                            return redirect(to='pagoVenta')
+                        else:
+                            data["formPago"] = formulario
+                    else:
+                        messages.add_message(request, messages.ERROR, "El total a pagar en efectivo es menor al saldo de la caja")
+                    return redirect(to='registroPagoVenta')
+                else:
+                    messages.add_message(request, messages.ERROR, "No se puede realizar el pago, la caja se encuentra cerrada")
+                    return redirect(to='registroPagoVenta')
+            else:
+                cargarPagoVenta(id_venta, total, tipoPago, deuda)
+                return redirect(to='pagoVenta')
+                
+        else:
+            messages.add_message(request, messages.ERROR, "El monto seleccionado es diferente al monto total de la compra")
+            data["formPago"] = formaPagoVenta() 
+    return render(request, 'ventas/registroPagoVenta.html', data)
+
+
+def cargarPagoVenta(id_venta, total, tipoPago, deuda):
+    #Registra el pago en formaPagoCompra 
+    data = {}
+    data['id_venta'] = id_venta
+    data['total'] = total
+    data['tipoPago'] = tipoPago
+    pago = formPagoVenta(data)
+            
+    if pago.is_valid(): 
+        pago.save()
+        #una vez registrado el pago compara si quedan deudas entre el monto pagado y el saldo total de la compra
+        venta = Ventas.objects.get(id=id_venta)
+        pago = formaPagoVenta.objects.filter(id_venta=id_venta).annotate(Sum('total'))
+        tot = 0.0
+        for p in pago:
+            tot = float(p.total__sum) + float(tot)
+                    
+        #si es igual el total y la deuda el estado de la venta pasa a pagado sino sigue estando en adeudado
+        if float(tot) == float(deuda):
+            venta.estado = 'Pagado'
+            venta.save()

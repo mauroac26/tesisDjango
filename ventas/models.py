@@ -52,10 +52,16 @@ class tarjetaCredito(models.Model):
         return self.nombre
 
 
+tipo_Pago = [
+    [1, "Efectivo"],
+    [2, "Credito"],
+    [3, "Debito"]
+]
+
 class formaPagoVenta(models.Model):
     total = models.DecimalField(max_digits=8, decimal_places=2 , null=True, blank=True, verbose_name='Monto')
     tipoCredito = models.ForeignKey(tarjetaCredito, on_delete=models.PROTECT, null=True, blank=True, verbose_name='Seleccionar Tarjeta')
-    tipoDebito = models.ForeignKey(tarjetaDebito, on_delete=models.PROTECT, null=True, blank=True)
+    tipoPago =  models.IntegerField(choices=tipo_Pago, verbose_name="Tipo Pago")
     cuotas = models.IntegerField(null=True, blank=True)
     estado = models.CharField(max_length=150, default='Adeudado')
     id_venta =  models.ForeignKey(Ventas, on_delete=models.CASCADE, null=True, blank=True)

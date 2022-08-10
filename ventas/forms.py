@@ -46,10 +46,12 @@ class formPagoVenta(forms.ModelForm):
 
     class Meta:
         model = formaPagoVenta
-        fields = ['id_venta', 'total', 'cuotas', 'tipoDebito', 'tipoCredito']
+        fields = ['id_venta', 'total', 'cuotas', 'tipoPago', 'tipoCredito']
 
         widgets = {
-            'id_compra': forms.TextInput(attrs={'id': 'id_compra'}),
+            'id_venta': forms.TextInput(attrs={'id': 'id_venta'}),
             'total': forms.TextInput(attrs={'id': 'total','class': 'form-control form-control-sm' }),
-            'tipoPago': forms.Select(attrs={'id': 'tipoPago','class': 'form-control form-control-sm'})
+            'tipoPago': forms.Select(attrs={'id': 'tipoPago','class': 'form-control form-control-sm'}),
+            'tipoCredito': forms.Select(attrs={'id': 'tipoCredito','class': 'form-control form-control-sm'}),
+            'cuotas': forms.TextInput(attrs={'id': 'cuotas','class': 'form-control form-control-sm'}),
         }

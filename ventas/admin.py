@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Ventas, detalleVenta, formaPagoVenta
+from .models import Ventas, detalleVenta, formaPagoVenta, tarjetaCredito
 # Register your models here.
 
 class VentasAdmin(admin.ModelAdmin):
@@ -8,3 +8,4 @@ class VentasAdmin(admin.ModelAdmin):
 admin.site.register(Ventas, VentasAdmin)
 admin.site.register(detalleVenta)
 admin.site.register(formaPagoVenta)
+admin.site.register(tarjetaCredito)
