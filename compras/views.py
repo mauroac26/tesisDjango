@@ -429,8 +429,6 @@ def cargarPago(id_compra, total, tipoPago, deuda):
             tot = float(p.total__sum) + float(tot)
                     
         #si es igual el total y la deuda el estado de la compra pasa a pagado sino sigue estando en adeudado
-        print(tot)
-        print(deuda)
         if float(tot) == float(deuda):
             compra.estado = 'Pagado'
             compra.save()
