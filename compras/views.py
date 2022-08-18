@@ -1,4 +1,6 @@
 
+
+
 from django.shortcuts import get_object_or_404, render, redirect
 
 from compras.utils import render_pdf
@@ -493,6 +495,16 @@ def eliminarPago(request, id):
     if pago:
         pago.delete()
         return redirect(to='pago')
+
+
+def detalleFormaPago(request):
+    
+    if request.is_ajax():
+        id = request.POST.get("id")
+        pago = formaPagoCompra.objects.filter(id_compra=id)
+        print(pago)
+        return JsonResponse(pago, safe=False)
+
     
     
 

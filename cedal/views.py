@@ -146,3 +146,6 @@ def cantidadPedidos(request):
                
         # return JsonResponse({"data": pedidos})
 
+
+
+

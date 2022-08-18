@@ -471,7 +471,7 @@ def registroPagoVenta(request):
                     caja['id_caja'] = id.id
                     caja['saldo'] = deuda
                     caja['fecha'] = fecha
-                    formulario = movimientoCajaForm(caja)
+                    formulario = movimientoCajaForm(caja) 
                             
                     if formulario.is_valid():
                         post = formulario.save(commit=False)
