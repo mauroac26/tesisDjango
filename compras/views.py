@@ -370,7 +370,7 @@ def registroPago(request):
                 
             id = Caja.objects.order_by('id', 'total', 'estado').last()
             
-            if tipoPago == '1':
+            if tipoPago == 'Efectivo':
                 if id.estado:
                     if id.total >= total:
                         cargarPago(id_compra, total, tipoPago, deuda)
@@ -417,6 +417,7 @@ def cargarPago(id_compra, total, tipoPago, deuda):
     #Registra el pago en formaPagoCompra 
     data = {}
     data['id_compra'] = id_compra
+    # data['fecha'] = datetime.now()
     data['total'] = total
     data['tipoPago'] = tipoPago
     pago = formPagoCompra(data)
@@ -502,7 +503,7 @@ def detalleFormaPago(request):
     if request.is_ajax():
         id = request.POST.get("id")
         pago = formaPagoCompra.objects.filter(id_compra=id).values('id_compra__comprobante','total', 'tipoPago')
-        print(pago)
+        
         return JsonResponse({"data": list(pago)})
 
     
