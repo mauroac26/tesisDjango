@@ -501,9 +501,9 @@ def detalleFormaPago(request):
     
     if request.is_ajax():
         id = request.POST.get("id")
-        pago = formaPagoCompra.objects.filter(id_compra=id)
+        pago = formaPagoCompra.objects.filter(id_compra=id).values('id_compra__comprobante','total', 'tipoPago')
         print(pago)
-        return JsonResponse(pago, safe=False)
+        return JsonResponse({"data": list(pago)})
 
     
     

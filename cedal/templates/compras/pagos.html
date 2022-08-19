@@ -62,6 +62,7 @@
                         <td><span class="badge badge-success">{{c.estado}}</span></td>
                         {% endif %}
                         <td class="text-center"><button class="btn btn-primary btn-sm " onclick="prueba({{c.id}});" aria-hidden="true"  data-toggle="modal" data-target="#modalDetallePago" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalle"><i class="far fa-file-alt"></i></button>
+                           
         
                         <a class="btn btn-sm btn-danger ml-3" href="{% url 'eliminarPago' c.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
                         </td>
@@ -70,7 +71,7 @@
                       
                     </tbody>
                 </table>
-               
+                
             </div>
         </div>
     </div>
@@ -141,29 +142,35 @@
     
                 
                      success: function(response){
-                        alert(response);
-//                         $('#tablaDetallePago tbody').html('');
-                       
+                        
+                         $('#tablaDetallePago tbody').html('');
+                    var pe = response.data;
+                    
+                 $.each(pe, function(i, item){
+                    
+                    let fila = '<tr>';
+                        fila += '<td></td>';
+                        fila += '<td>'+ item.id_compra__comprobante +'</td>';
+                        fila += '<td>' + item.total + '</td>';
+                        fila += '<td>' + item.tipoPago + '</td>';
+                        fila += '</tr>';
+                        $('#tablaDetallePago tbody').append(fila);            
+            
+                
+                 });
                         
                         
                 
                     
-//                          $.each(response, function() {
-//   $.each(this, function(name, value) {
+//                         $.each(response, function() {
+//                        $.each(this, function(name, value) {
+//                         alert(value.total)
+//                         alert(value.tipoPago)
 //                         let fila = '<tr>';
-//                         fila += '<td>' + value.fecha + '</td>';
-//                         fila += '<td>' + value.descripcion + '</td>';
-//                         if(value.operacion == 0){
-//                             fila += '<td>' + value.monto + '</td>';
-//                             fila += '<td>' + '$0,00' + '</td>';
-//                         }else{
-//                             fila += '<td>' + '$0,00' + '</td>';
-//                             fila += '<td>' + value.monto + '</td>';
-
-//                         }
-                        
-                       
-//                         fila += '<td>' + value.saldo + '</td>';
+//                         fila += '<td></td>';
+//                         fila += '<td></td>';
+//                         fila += '<td>' + value.total + '</td>';
+//                         fila += '<td>' + value.tipoPago + '</td>';
 //                         fila += '</tr>';
 //                         $('#tablaDetallePago tbody').append(fila);
 // });
