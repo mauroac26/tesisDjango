@@ -446,6 +446,8 @@ def registroPagoVenta(request):
         tipoPago = request.POST.get('tipoPago')
         tarjeta = request.POST.get('tipoCredito')
         cuotas = request.POST.get('cuotas')
+        print(tarjeta)
+        print(cuotas)
         saldo = detalleVenta.objects.annotate(Sum('total')).values('total__sum', 'id_venta__comprobante').filter(id_venta=id_venta)
         for c in saldo:
             comprobante = c['id_venta__comprobante']
@@ -461,7 +463,7 @@ def registroPagoVenta(request):
             if tipoPago == '1':
                 if id.estado:
                     
-                    cargarPagoVenta(id_venta, total, tipoPago, deuda)
+                    cargarPagoVenta(id_venta, total, tipoPago, deuda, tarjeta, cuotas)
                     #Registra el monto pagado en movimientos de la caja si es en efectivo y la caja se encuentra abierta
                     fecha = datetime.now()
                     caja = {}
@@ -490,7 +492,7 @@ def registroPagoVenta(request):
                     messages.add_message(request, messages.ERROR, "No se puede realizar el pago, la caja se encuentra cerrada")
                     return redirect(to='registroPagoVenta')
             else:
-                cargarPagoVenta(id_venta, total, tipoPago, deuda)
+                cargarPagoVenta(id_venta, total, tipoPago, deuda, tarjeta, cuotas)
                 return redirect(to='pagoVenta')
                 
         else:
@@ -499,12 +501,15 @@ def registroPagoVenta(request):
     return render(request, 'ventas/registroPagoVenta.html', data)
 
 
-def cargarPagoVenta(id_venta, total, tipoPago, deuda):
+def cargarPagoVenta(id_venta, total, tipoPago, deuda, tarjeta, cuotas):
     #Registra el pago en formaPagoCompra 
     data = {}
     data['id_venta'] = id_venta
+    data['fecha'] = datetime.now()
     data['total'] = total
     data['tipoPago'] = tipoPago
+    data['cuotas'] = cuotas
+    data['tipoCredito'] = tarjeta
     pago = formPagoVenta(data)
             
     if pago.is_valid(): 
@@ -520,3 +525,12 @@ def cargarPagoVenta(id_venta, total, tipoPago, deuda):
         if float(tot) == float(deuda):
             venta.estado = 'Pagado'
             venta.save()
+
+
+def detalleFormaPagoVenta(request):
+    
+    if request.is_ajax():
+        id = request.POST.get("id")
+        pago = formaPagoVenta.objects.filter(id_venta=id).values('id_venta__comprobante','total', 'tipoPago', 'fecha', 'cuotas', 'tipoCredito_id__nombre')
+        
+        return JsonResponse({"data": list(pago)})
