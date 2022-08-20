@@ -71,7 +71,7 @@
 
     <!-- Modal -->
 <div class="modal fade" id="modalDetallePago" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">Detalle Pago</h5>
@@ -138,10 +138,16 @@
                     let fila = '<tr>';
                         fila += '<td>'+item.fecha+'</td>';
                         fila += '<td>'+ item.id_venta__comprobante +'</td>';
-                        fila += '<td>' + item.total + '</td>';
-                        fila += '<td>' + item.tipoPago + '</td>';
-                        fila += '<td>' + item.tipoCredito_id__nombre + '</td>';
+                        fila += '<td>'  + '$' + item.total + '</td>';
+                        fila += '<td>' + item.tipoPago + '</td>'
+                        if (item.tipoPago == "Efectivo"){
+                            fila += '<td style="text-align: center;">--------</td>';
+                        fila += '<td style="text-align: center;">--------</td>';
+                        }else{
+                            fila += '<td>' + item.tipoCredito_id__nombre + '</td>';
                         fila += '<td>' + item.cuotas + '</td>';
+                        }
+                        
                         fila += '</tr>';
                         $('#tablaDetallePago tbody').append(fila);            
             

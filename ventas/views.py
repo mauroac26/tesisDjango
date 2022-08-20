@@ -460,7 +460,7 @@ def registroPagoVenta(request):
                 
             id = Caja.objects.order_by('id', 'total', 'estado').last()
             
-            if tipoPago == '1':
+            if tipoPago == 'Efectivo':
                 if id.estado:
                     
                     cargarPagoVenta(id_venta, total, tipoPago, deuda, tarjeta, cuotas)

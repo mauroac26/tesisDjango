@@ -153,10 +153,10 @@ var divCuotas = document.getElementById('divCuotas');
 
 $('#tipoPago').change(function(e) {
 
-        if ($(this).val() === "1") {
+        if ($(this).val() === "Efectivo") {
             divCredito.className = 'col-md-2 d-none';
             divCuotas.className = 'col-md-2 d-none';
-        }else if ($(this).val() === "2") {
+        }else if ($(this).val() === "Credito") {
             divCredito.className = 'col-md-2 d-block';
             divCuotas.className = 'col-md-2 d-block';
         } else{
