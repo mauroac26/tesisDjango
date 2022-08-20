@@ -29,8 +29,7 @@ class Producto(models.Model):
         return self.nombre
 
 
-class prueba(models.Model):
-    nombre = models.CharField(max_length = 150)
+
     
     
     
