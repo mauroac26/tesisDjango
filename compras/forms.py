@@ -51,7 +51,7 @@ class formPagoCompra(forms.ModelForm):
     #     efectivo = self.cleaned_data["efectivo"]
     class Meta:
         model = formaPagoCompra
-        fields = ['id_compra', 'total', 'tipoPago']
+        fields = ['id_compra', 'total', 'tipoPago', 'fecha']
 
         widgets = {
             'id_compra': forms.TextInput(attrs={'id': 'id_compra'}),

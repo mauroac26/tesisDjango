@@ -27,3 +27,11 @@ class Producto(models.Model):
 
     def __str__(self):
         return self.nombre
+
+
+class prueba(models.Model):
+    nombre = models.CharField(max_length = 150)
+    
+    
+    
+    

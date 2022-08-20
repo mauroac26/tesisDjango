@@ -47,7 +47,7 @@ tipo_Pago = [
 ]
 
 class formaPagoCompra(models.Model):
-    
+    fecha = models.DateField()
     total = models.DecimalField(max_digits=8, decimal_places=2 , null=True, blank=True, verbose_name='Monto')
     tipoPago =  models.CharField(max_length=150, choices=tipo_Pago, verbose_name="Tipo Pago")
     id_compra =  models.ForeignKey(Compras, on_delete=models.CASCADE, null=True, blank=True)
@@ -55,3 +55,5 @@ class formaPagoCompra(models.Model):
 
 def __str__(self):
     return self.id
+
+
