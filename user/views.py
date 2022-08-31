@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404, redirect, render
 
-from user.forms import UserRegisterForm, cambiarPasswordForm, editarPerfilForm, editarUserForm
+from user.forms import UserRegisterForm, cambiarPasswordForm, editarPerfilForm, editarUserForm, resetPasswordForm
 from user.models import Users
 
 # Create your views here.
@@ -114,3 +114,25 @@ def cambiarPassword(request):
         form = cambiarPasswordForm(request.user)
 
     return render(request, 'registration/cambiarPassword.html', {'form': form})
+
+
+@login_required
+def resetPassword(request, id):
+    usuarios = get_object_or_404(Users, pk=id)
+    
+
+    if request.method == 'POST':
+        
+        form = resetPasswordForm(request.POST)
+        if form.is_valid():
+            user = Users.objects.get(id=id)
+            user.set_password(request.POST['password'])
+            user.save()
+            #update_session_auth_hash(request, user)
+            messages.add_message(request, messages.SUCCESS, "La contraseña se modificó exitosamente")
+            return redirect(to='usuarios')
+        
+    else:
+        form = resetPasswordForm()
+
+    return render(request, 'registration/resetPassword.html', {'form': form})

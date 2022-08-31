@@ -41,7 +41,7 @@
                         <td>{{u.email}}</td>
                         <td>{{u.groups__name}}</td>
                         <td class="text-center">
-                            <a class="btn-sm btn-info"  href="#"    role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Reestablece Contraseña"><i class="fas fa-key"></i></a>
+                            <a class="btn-sm btn-info"  href="{% url 'resetPassword' u.id %}"    role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Reestablece Contraseña"><i class="fas fa-key"></i></a>
                             <a class="btn-sm btn-success ml-3" href="{% url 'editarUsuario' u.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
                             <a class="btn-sm btn-danger ml-3" onclick="eliminarUsuario({{u.id}});"  href="#"    role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
                         </td>
