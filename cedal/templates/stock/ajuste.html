@@ -1,0 +1,223 @@
+{% extends 'Header/header.html' %}
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Ajuste de Stock{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Ajuste de stock</h1>
+    <div class="card shadow mb-4"></div>
+        <div class="card-body">
+            <form action="" id="form-compra" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-12 col-md-6 offset-md-3">
+                        Nombre Producto
+                        <input type="text" name="nombreProducto" id="nombreProducto" class="form-control form-control-sm">
+                        
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    
+
+                    <div class="col-12 col-md-6 offset-md-3">
+                        Stock Actual
+                        <input type="text" name="" id="stock" class="form-control form-control-sm" disabled>
+                        
+                      </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-12 col-md-6 offset-md-3">
+                        Stock Nuevo
+                      <input type="text" name="stockNuevo" id="stockNuevo" class="form-control form-control-sm" required>
+                    
+                    </div>
+
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-12 col-md-6 offset-md-3">
+                        Observaciones
+                      <input type="textarea" name="detalle" id="detalle" class="form-control form-control-sm">
+                     
+                    </div>
+
+                </div>
+               <div class="row">
+                <div class="col-12 col-md-6 offset-md-3 d-flex justify-content-end mt-2">
+                <button onclick="cargarTabla();" class="btn btn-primary btn-sm" type="button">Añadir</button>
+                
+            </div>
+        </div>
+            {{mensaje}}
+            </form>
+          
+        </div>
+      
+    
+
+    <div class="row">
+        <div class="col-md-12 pt-3">
+            <div class="table-responsive" style="height: 160px;">
+                <table class="table table-hover table-bordered table-sm table-striped text-white" id="tablaDetalle">
+                    <thead class="bg-primary">
+                        
+                        <th>Producto</th>
+                        <th>Stock Actual</th>
+                        <th>Stock Nuevo</th>
+                        <th>Diferencia</th>
+                        <th>Accion</th>
+                    </thead>
+                    <tbody style="overflow-y: scroll;">
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+  </div>
+
+{{mensaje}}
+{% endblock %}
+
+
+
+{% block js %}
+
+
+<script>
+    
+$(function() {
+    var p = 0;
+    $("#nombreProducto").autocomplete({
+        
+        source:  "{% url 'productoAuto' %}",
+        
+        select: function(event, ui){
+            p = ui.item.n;
+            if (ui.item.n == 1){
+               
+                // window.location = "{% url 'altaProducto' %}";
+                $("#nombreProducto").val('');
+                event.preventDefault();
+            }else{
+                $("#stock").val(ui.item.stock); 
+                $("#precio").val(ui.item.precio);
+                $("#nombreProducto").val(ui.item.value);
+            
+            
+                idProducto = ui.item.id
+            }
+            
+            
+}
+}).data('ui-autocomplete')._renderItem = function(ul, item) {
+        
+        
+                return $("<li>").append(item.label).appendTo(ul);
+                
+                
+            };
+  
+    
+    });
+  
+ 
+</script>
+
+<script>
+    var stockNuevo = 0;
+    var diferencia = 0;
+    var i = 0;
+    function cargarTabla(){
+
+        
+        stock = $('#stock').val();
+        nombre = $('#nombreProducto').val();
+        stockNuevo = $('#stockNuevo').val();
+        
+        diferencia = stock - stockNuevo;
+        
+        i += 1;
+
+        fila = '<tr id=fila' + i +' class="text-dark"><td data-producto =' + idProducto +' style="text-align: right;">'+ nombre +'</td>' +
+                '<td style="text-align: right;">' + stock + '</td>'+
+                '<td>' + stockNuevo + '</td>'+
+                '<td>' + diferencia + '</td>'+
+                '<td class="row justify-content-center"><div><button  class="btn btn-danger " style="padding:1px;" type="button"  id="btn_del'+i+'" onclick="eliminarFC('+i+', )" ><i class="fas fa-times-circle"></i></button></div></td>'+
+                '</tr>';
+             
+                $('#tablaDetalle').append(fila);
+                      
+
+        }
+
+//  var objProducto = {}
+
+//          function cargarDetalle(){
+           
+
+//                 var tipoComprobante = $('#tipoComprobante option:selected').text();
+//                 var comprobante = $('#comprobante').val();
+//                 var fecha = $('#fecha').val();
+//                 var cuit = $('#cuit').val();
+//                 var iva = $('#iva').val();
+//                 var total = $('#total').val();
+//                 var subTotal = $('#subTotal').val();
+                
+//                 $.ajax({
+//                   type: "post",
+//                    url: "{% url 'cargarCompra' %}",
+//                   data: {tipoComprobante: '' + tipoComprobante + '',
+//                          comprobante: '' + comprobante + '',
+//                          iva: iva,
+//                          fecha:  '' + fecha + '',
+//                          cuit: '' + cuit + '',
+//                          total: total,
+//                          subTotal: subTotal
+//                           },
+//                 success: function(result) {
+//                           alert('Data Has been saved')
+//      }
+      
+              
+    
+//    });
+              
+//}         
+      
+   //}
+</script>
+
+
+<!-- Page level custom scripts -->
+
+<script>
+    function eliminarFC(id){
+    
+
+
+        $('#fila' + id).remove();
+        
+    }
+</script>
+
+
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  
+  
+{% endblock %}
