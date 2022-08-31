@@ -73,6 +73,6 @@ class resetPasswordForm(forms.Form):
         confirmPassword = cleaned['confirmPassword']
 
         if password != confirmPassword:
-            raise forms.ValidationError('Los password deben ser iguales')
+            raise forms.ValidationError('Las contraseña deben ser iguales')
         return cleaned
         

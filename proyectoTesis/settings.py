@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'ventas',
     'django.contrib.humanize',
     'produccion',
-
+    'stock',
 ]
 
 X_FRAME_OPTIONS='SAMEORIGIN'
