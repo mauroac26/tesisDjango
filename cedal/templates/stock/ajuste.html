@@ -13,7 +13,7 @@
     <h1 class="h3 mb-2 text-gray-800">Ajuste de stock</h1>
     <div class="card shadow mb-4"></div>
         <div class="card-body">
-            <form action="" id="form-compra" method="post" enctype="multipart/form-data">
+            <form action="" id="form-ajuste" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-12 col-md-6 offset-md-3">
@@ -52,13 +52,20 @@
                 </div>
                <div class="row">
                 <div class="col-12 col-md-6 offset-md-3 d-flex justify-content-end mt-2">
-                <button onclick="cargarTabla();" class="btn btn-primary btn-sm" type="button">Añadir</button>
+                    <button class="btn btn-primary btn-sm" type="submit">Confirmar</button>
+                
                 
             </div>
         </div>
             {{mensaje}}
             </form>
-          
+            <div class="row">
+                <div class="col-12 col-md-6 offset-md-3 d-flex justify-content-end mt-2">
+                   
+                <button onclick="cargarTabla();" class="btn btn-primary btn-sm" type="button">Añadir</button>
+                
+            </div>
+        </div>
         </div>
       
     
@@ -211,6 +218,82 @@ $(function() {
 </script>
 
 
+<script>
+    /*
+        On submiting the form, send the POST ajax
+        request to server and after successfull submission
+        display the object.
+    */
+    $("#form-ajuste").submit(function (e) {
+        
+        // preventing from page reload and default actions
+        e.preventDefault();
+        detalle = $('#detalle').val();
+        //var serializedData = $(this).serialize();
+        Swal.fire({
+            "title": "Confirma el ajuste de stock?",
+            "text": "",
+            "icon":"question",
+            "showCancelButton": true,
+            "cancelButtonText":"No, Cancelar",
+            "confirmButtonText":"Si, confirmar",
+        })
+        .then(function(result){
+            if(result.isConfirmed){
+               
+                // serialize the data for sending the form data.
+        
+        // carga la compra realizada
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'cargarAjuste' %}",
+            data: {'detalle': detalle,
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+        },
+            success: function (response) {
+
+                let filaTablaAC = $('#tablaDetalle tr').length;
+               
+               for (f = 1; f <= filaTablaAC; f++) {
+
+                var cantidadTabla = document.getElementById('tablaDetalle').rows[f].cells[2].innerText;            
+                var idp = $('#tablaDetalle tr:eq('+f+')').find("td:first-child").data('producto');   
+                //var total = document.getElementById('tablaAltaCompra').rows[f].cells[6].innerText; 
+                
+            // carga detalle de la compra
+                $.ajax({
+            type: 'get',
+            url: "{% url 'cargarDetalleAjuste' %}",
+            data: {'id_producto': idp,
+                   'stockNuevo': cantidadTabla,
+                   'csrfmiddlewaretoken': '{{ csrf_token }}',
+        },
+            success: function (response) {
+                
+            },
+            error: function (response) {
+                // alert the error if any error occured
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+    }
+    
+   
+          
+            },
+            error: function (response) {
+                // alert the error if any error occured
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+            }
+
+        })
+        })
+        
+        
+    
+</script>
 
 
 

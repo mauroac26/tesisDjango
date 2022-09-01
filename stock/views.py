@@ -4,7 +4,7 @@ from producto.models import Producto
 from stock.forms import ajusteForm, detalleAjusteForm
 from django.http import HttpResponse
 from datetime import datetime
-from stock.models import ajusteStock
+from stock.models import ajusteStock, stock
 
 from django.contrib import messages
 # Create your views here.
@@ -57,14 +57,14 @@ def cargarAjuste(request):
         data = {}
 
         usuario = request.user.username
-        detalle = request.GET['detalle']
-        
+        detalle = request.POST['detalle']
+
     
         data['fecha'] = datetime.now()
         data['detalle'] = detalle
         data['usuario'] = usuario
         # get the form data
-        form = ajusteForm(request.POST)
+        form = ajusteForm(data)
         # save the data and after fetch the object in instance
         if form.is_valid():
             form.save()
@@ -73,7 +73,7 @@ def cargarAjuste(request):
             
 
     # some error occured
-    return JsonResponse({"error": "ingresar comprobante valido"}, status=400)
+    return JsonResponse({"error": "Error"}, status=400)
 
 
 def cargarDetalleAjuste(request):
@@ -87,10 +87,11 @@ def cargarDetalleAjuste(request):
     
         data['id_ajuste'] = ultimo_ajuste
         data['id_producto'] = id_producto
-        data['stockNuevo'] = cantidad
+        data['stock_nuevo'] = cantidad
         
         
         formulario = detalleAjusteForm(data)
+        print(formulario)
         if formulario.is_valid():
             
             formulario.save()
