@@ -232,11 +232,42 @@
                 </div> -->
                 <!-- <a class="nav-link" href="{% url 'produccion' %}" > -->
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseStock" aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-clipboard"></i>
+                    <span>Stock</span>
+                </a>
+
+                <div id="collapseStock" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-secondary text-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'movimientoStock' %}">Movimientos de stock</a>
+                        
+                        
+                        <a class="collapse-item" href="{% url 'altaAjuste' %}" >Ajuste de stock<span id="badgePedidos" class="ml-2 d-none"></span></a> 
+                        
+                        
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <!-- <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Components</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Custom Components:</h6>
+                        <a class="collapse-item" href="buttons.html">Buttons</a>
+                        <a class="collapse-item" href="cards.html">Cards</a>
+                    </div>
+                </div> -->
+                <!-- <a class="nav-link" href="{% url 'produccion' %}" > -->
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProduccion" aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-pallet"></i>
                     <span>Producción</span>
                 </a>
 
-                <div id="collapseStock" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseProduccion" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-secondary text-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="{% url 'produccion' %}">Retiro Mercaderia</a>
                         

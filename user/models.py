@@ -1,6 +1,7 @@
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+#from simple_history.models import HistoricalRecords
 
 from proyectoTesis.settings import MEDIA_URL, STATIC_URL
 # Create your models here.
@@ -13,6 +14,8 @@ class Users(AbstractUser):
     # nivel = models.IntegerField(choices=nivel, null=True)
     #nivel = models.ChainedManyToManyField(Group, null=True)
     imagen = models.ImageField(upload_to='usuarios', null=True, blank=True)
+    #history = HistoricalRecords()
+
 
     def get_imagen(self):
         if self.imagen:

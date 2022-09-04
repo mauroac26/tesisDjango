@@ -9,6 +9,11 @@ from stock.models import ajusteStock, stock
 from django.contrib import messages
 # Create your views here.
 
+def movimientoStock(request):
+
+    return render(request, 'stock/stock.html')
+
+
 def altaAjuste(request):
 
     # data = {
@@ -34,19 +39,19 @@ def productoAuto(request):
                 else:
                     color = "badge-danger"
                 
-                signer_json = {}
-                signer_json['id'] = n.id
-                signer_json['label'] = '<li style="font-size: 13px;" class="list-group-item d-flex justify-content-between align-items-center"><div class="col-sm-4">'+str(n.nombre)+'</div><span class="badge '+str(color)+' badge-pill text-white">'+str(n.stock)+'</span><span class="float-right">$'+str(n.precio_venta)+'</span></li>'
-                signer_json['value'] = n.nombre
-                signer_json['stock'] = n.stock
-                signer_json['precio'] = n.precio_compra
-                nombre.append(signer_json)
+                dicProductos = {}
+                dicProductos['id'] = n.id
+                dicProductos['label'] = '<li style="font-size: 13px;" class="list-group-item d-flex justify-content-between align-items-center"><div class="col-sm-4">'+str(n.nombre)+'</div><span class="badge '+str(color)+' badge-pill text-white">'+str(n.stock)+'</span><span class="float-right">$'+str(n.precio_venta)+'</span></li>'
+                dicProductos['value'] = n.nombre
+                dicProductos['stock'] = n.stock
+                dicProductos['precio'] = n.precio_compra
+                nombre.append(dicProductos)
             return JsonResponse(nombre, safe=False)
         else:
-            signer_json = {}
-            signer_json['n'] = 1
-            signer_json['label'] = '<li class="list-group-item align-items-center"><div class="col-sm-4"><span class="badge badge-pill badge-danger">Dar alta producto</span></div></li>'
-            nombre.append(signer_json)
+            dicProductos = {}
+            dicProductos['n'] = 1
+            dicProductos['label'] = '<li class="list-group-item align-items-center"><div class="col-sm-4"><span class="badge badge-pill badge-danger">Dar alta producto</span></div></li>'
+            nombre.append(dicProductos)
             return JsonResponse(nombre, safe=False)
 
 
