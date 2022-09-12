@@ -1,5 +1,5 @@
 from django.contrib import admin
-
+from simple_history.admin import SimpleHistoryAdmin
 from compras.models import Compras, detalleCompra, formaPagoCompra
 
 # Register your models here.
@@ -12,6 +12,6 @@ class CompraAdmin(admin.ModelAdmin):
     list_display = ["id", "comprobante", "fecha"]
     list_filter = ["fecha"]
 
-admin.site.register(Compras, CompraAdmin)
+admin.site.register(Compras, SimpleHistoryAdmin)
 admin.site.register(detalleCompra, detalleCompraAdmin)
 admin.site.register(formaPagoCompra)

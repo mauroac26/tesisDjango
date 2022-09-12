@@ -1,4 +1,5 @@
 from django.db import models
+from base.models import BaseModel
 from clientes.models import Clientes
 from producto.models import Producto
 # Create your models here.
@@ -9,7 +10,7 @@ tipo_Comprobante = [
     ["Nota Credito", "Nota Credito"]
 ]
 
-class Ventas(models.Model):
+class Ventas(BaseModel):
     comprobante = models.CharField(max_length=50, unique=True)
     cuit = models.ForeignKey(Clientes, on_delete=models.CASCADE)
     fecha = models.DateField()
@@ -17,6 +18,8 @@ class Ventas(models.Model):
     estado = models.CharField(max_length=150, default='Adeudado')
 
     class Meta:
+        verbose_name = 'Venta'
+        verbose_name_plural = 'Ventas '
         ordering = ('-fecha',)
 
 

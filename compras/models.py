@@ -1,4 +1,5 @@
 from django.db import models
+from base.models import BaseModel
 from proveedores.models import proveedores
 from producto.models import Producto
 # Create your models here.
@@ -8,7 +9,7 @@ tipo_Comprobante = [
     ["Recibo", "Recibo"],
     ["Nota Credito", "Nota Credito"]
 ]
-class Compras(models.Model):
+class Compras(BaseModel):
     comprobante = models.CharField(max_length=50, unique=True)
     cuit = models.ForeignKey(proveedores, on_delete=models.CASCADE)
     fecha = models.DateField()
@@ -16,6 +17,8 @@ class Compras(models.Model):
     estado = models.CharField(max_length=150, default='Adeudado')
 
     class Meta:
+        verbose_name = 'Compra'
+        verbose_name_plural = 'Compras'
         ordering = ('-fecha',)
 
 
