@@ -45,8 +45,13 @@
                          <td>{{s.tipoMovimiento}}</td>
                          <td>{{s.producto}}</td>
                          <td>{{s.cantidad}}</td>
+                         
                          <td>{{s.stockActual}}</td>
+                         {% if s.detalle == None %}
+                         <td></td>
+                         {% else %}
                          <td>{{s.detalle}}</td>
+                         {% endif %}
                          <td>{{s.usuario}}</td>
                          
                          
