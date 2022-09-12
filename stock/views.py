@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from producto.models import Producto
-from stock.forms import ajusteForm, detalleAjusteForm
+from stock.forms import ajusteForm, detalleAjusteForm, stockForm
 from django.http import HttpResponse
 from datetime import datetime
 from stock.models import ajusteStock, stock
@@ -11,7 +11,13 @@ from django.contrib import messages
 
 def movimientoStock(request):
 
-    return render(request, 'stock/stock.html')
+    stocks = stock.objects.all()
+
+    data = {
+        "stock": stocks
+    }
+
+    return render(request, 'stock/stock.html', data)
 
 
 def altaAjuste(request):
@@ -85,30 +91,62 @@ def cargarDetalleAjuste(request):
 
     if request.is_ajax():
         data = {}
+        
 
         ultimo_ajuste = ajusteStock.objects.order_by('id', 'fecha').last()
+        
         id_producto = request.GET['id_producto']
         cantidad = request.GET['stockNuevo']
-    
+
+        producto = Producto.objects.get(id=id_producto)
+        
+        tipoMov = "Ajuste"
+        fecha = ultimo_ajuste.fecha
+        detalle = ultimo_ajuste.detalle
+        
+        nombreProducto = producto.nombre
+        stockProducto = producto.stock
+        usuario = request.user.username
+
         data['id_ajuste'] = ultimo_ajuste
         data['id_producto'] = id_producto
         data['stock_nuevo'] = cantidad
         
         
         formulario = detalleAjusteForm(data)
-        print(formulario)
+        
         if formulario.is_valid():
             
             formulario.save()
 
             if id_producto:
-                producto = Producto.objects.get(id=id_producto)
+                
                 producto.stock = cantidad
                 producto.save()
-            messages.add_message(request, messages.SUCCESS, "La compra se confirmó exitosamente")
+                
+                cargarStock(tipoMov, fecha, detalle, cantidad, nombreProducto, stockProducto, usuario)
+            messages.add_message(request, messages.SUCCESS, "El ajuste de stock se realizo exitosamente")
 
             return HttpResponse(True)
             
         
 
     return JsonResponse({"error": "Error"}, status=400)
+
+
+def cargarStock(tipo, fecha, detalle, cantidad, producto, stock, usuario):
+    productos = {}
+
+    productos['tipoMovimiento'] = tipo
+    productos['fecha'] = fecha
+    productos['detalle'] = detalle
+    productos['cantidad'] = cantidad
+    productos['producto'] = producto
+    productos['stockActual'] = stock
+    productos['usuario'] = usuario
+
+    formulario = stockForm(productos)
+
+    if formulario.is_valid():
+        formulario.save()
+

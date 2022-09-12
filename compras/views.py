@@ -17,6 +17,7 @@ from datetime import datetime
 from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from stock.views import cargarStock
 
 # Create your views here.
 
@@ -24,7 +25,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 @permission_required('compras.view_compras', login_url='index')
 def index(request):
 
-
+ 
     compra = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha').annotate(Sum('total'))
 
 
@@ -185,6 +186,7 @@ def cargarDetalleCompra(request):
         neto = float(total) / 1.21
         iva = float(neto) * 0.21
         
+        producto = Producto.objects.get(id=id_producto)
 
         data['id_compra'] = ultima_compra
         data['id_producto'] = id_producto
@@ -193,6 +195,12 @@ def cargarDetalleCompra(request):
         data['subTotal'] = "{0:.2f}".format(neto)
         data['total'] = total
         
+        tipoMov = "Compra"
+        fecha = ultima_compra.fecha
+        detalle = ""
+        nombreProducto = producto.nombre
+        
+        usuario = request.user.username
         
         formulario = detalleComprasForm(data)
         if formulario.is_valid():
@@ -200,10 +208,11 @@ def cargarDetalleCompra(request):
             formulario.save()
 
             if id_producto:
-                producto = Producto.objects.get(id=id_producto)
-                stock = int(producto.stock) + int(cantidad)
-                producto.stock = stock
+                
+                stockProducto = int(producto.stock) + int(cantidad)
+                producto.stock = stockProducto
                 producto.save()
+                cargarStock(tipoMov, fecha, detalle, cantidad, nombreProducto, stockProducto, usuario)
             messages.add_message(request, messages.SUCCESS, "La compra se confirmó exitosamente")
 
             return HttpResponse(True)

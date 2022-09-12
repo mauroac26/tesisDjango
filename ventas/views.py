@@ -12,6 +12,7 @@ from cedal.models import formaPago
 from clientes.models import Clientes
 from producto.forms import ventaProductoForm
 from producto.models import Producto
+from stock.views import cargarStock
 from ventas.forms import detalleVentaForm, formPagoVenta, ventasForm
 from compras.utils import render_pdf
 from django.views.generic import View
@@ -147,6 +148,7 @@ def cargarDetalleVenta(request):
         neto = float(total) / 1.21
         iva = float(neto) * 0.21
         
+        producto = Producto.objects.get(id=id_producto)
 
         data['id_venta'] = ultima_venta
         data['id_producto'] = id_producto
@@ -155,6 +157,12 @@ def cargarDetalleVenta(request):
         data['subTotal'] = "{0:.2f}".format(neto)
         data['total'] = total
         
+        tipoMov = "Venta"
+        fecha = ultima_venta.fecha
+        detalle = ""
+        nombreProducto = producto.nombre
+        
+        usuario = request.user.username
         
         formulario = detalleVentaForm(data)
         if formulario.is_valid():
@@ -162,10 +170,11 @@ def cargarDetalleVenta(request):
             formulario.save()
 
             if id_producto:
-                producto = Producto.objects.get(id=id_producto)
-                stock = int(producto.stock) - int(cantidad)
-                producto.stock = stock
+                
+                stockProducto = int(producto.stock) - int(cantidad)
+                producto.stock = stockProducto
                 producto.save()
+                cargarStock(tipoMov, fecha, detalle, cantidad, nombreProducto, stockProducto, usuario)
             messages.add_message(request, messages.SUCCESS, "La venta se confirmó exitosamente")
 
             return HttpResponse(True)

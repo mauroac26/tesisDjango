@@ -24,11 +24,14 @@
         
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover" id="tablaStock" width="100%" cellspacing="0">
+                <table class="table table-bordered table-striped table-hover table-sm" id="tablaStock" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Fecha</th>
                             <th>Movimiento</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Stock Actual</th>
                             <th>Descripcion</th>
                             <th>Usuario</th>
                     
@@ -36,7 +39,20 @@
                     </thead>
                     <tbody>
                        
-                      
+                        {% for s in stock %}
+                        <tr>
+                         <td>{{s.fecha}}</td>
+                         <td>{{s.tipoMovimiento}}</td>
+                         <td>{{s.producto}}</td>
+                         <td>{{s.cantidad}}</td>
+                         <td>{{s.stockActual}}</td>
+                         <td>{{s.detalle}}</td>
+                         <td>{{s.usuario}}</td>
+                         
+                         
+                     </tr>
+                        {% endfor %}
+
                     </tbody>
                 </table>
                

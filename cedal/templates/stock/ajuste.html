@@ -269,7 +269,7 @@ $(function() {
                    'csrfmiddlewaretoken': '{{ csrf_token }}',
         },
             success: function (response) {
-                window.location = "{% url 'altaAjuste' %}";
+                window.location = "{% url 'movimientoStock' %}";
             },
             error: function (response) {
                 // alert the error if any error occured

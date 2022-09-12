@@ -1,6 +1,6 @@
 from django import forms
 
-from stock.models import ajusteStock, detalleAjuste
+from stock.models import ajusteStock, detalleAjuste, stock
 
 class ajusteForm(forms.ModelForm):
     
@@ -13,6 +13,13 @@ class detalleAjusteForm(forms.ModelForm):
 
     class Meta:
         model = detalleAjuste
+        fields = '__all__'
+
+
+class stockForm(forms.ModelForm):
+
+    class Meta:
+        model = stock
         fields = '__all__'
 
 # class ajusteForm(forms.ModelForm):

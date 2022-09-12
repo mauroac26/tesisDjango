@@ -1,5 +1,7 @@
 from django.db import models
 
+from base.models import BaseModel
+
 # Create your models here.
 class Categoria(models.Model):
     descripcion = models.CharField(max_length=50)
@@ -10,6 +12,11 @@ class Categoria(models.Model):
 
 class Marca(models.Model):
     descripcion = models.CharField(max_length=50)
+
+    class Meta:
+        
+        verbose_name = 'Marca'
+        verbose_name_plural = 'Marcas'
 
     def __str__(self):
         return self.descripcion
