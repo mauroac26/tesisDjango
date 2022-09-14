@@ -17,9 +17,9 @@ class stock(models.Model):
     
 
 
+
 class ajusteStock(BaseModel):
-    fecha = models.DateField()
-    detalle = models.CharField(max_length = 150, verbose_name="Observaciones", null=True)
+    fecha = models.DateTimeField()
     usuario  = models.CharField(max_length=150, verbose_name="Usuarios")
 
     class Meta:
@@ -30,12 +30,22 @@ class ajusteStock(BaseModel):
 
     def __str__(self):
         return str(self.id)
-    
+
+
+motivo = [
+    ["Vencido", "Vencido"],
+    ["Devolucion", "Devolucion"],
+    ["Mal estado", "Mal estado"]
+]
+
 
 class detalleAjuste(models.Model):
     id_ajuste = models.ForeignKey(ajusteStock, on_delete=models.CASCADE)
     id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    stock_nuevo  = models.IntegerField(default=1)
+    cantidad  = models.IntegerField(default=1)
+    motivo = models.CharField(choices=motivo, max_length=150)
+    detalle = models.CharField(max_length = 150, verbose_name="Observaciones", null=True)
 
-    
+    def __str__(self):
+        return str(self.id_ajuste)
     

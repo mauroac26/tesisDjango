@@ -13,7 +13,14 @@ class detalleAjusteForm(forms.ModelForm):
 
     class Meta:
         model = detalleAjuste
-        fields = '__all__'
+        fields = ['id_ajuste', 'id_producto', 'cantidad', 'motivo', 'detalle']
+
+        widgets = {
+            'cantidad': forms.TextInput(attrs={'id': 'cantidad', 'class': 'form-control form-control-sm'}),
+            'motivo' : forms.Select(attrs={'id': 'motivo', 'class': 'form-control form-control-sm' }),
+            'detalle': forms.TextInput(attrs={'id': 'detalle','class': 'form-control form-control-sm' })
+        }
+
 
 
 class stockForm(forms.ModelForm):

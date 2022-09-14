@@ -22,12 +22,12 @@ def movimientoStock(request):
 
 def altaAjuste(request):
 
-    # data = {
-    #     "form": ajusteForm()
-    # }
+    data = {
+        "form": detalleAjusteForm()
+    }
     
 
-    return render(request, 'stock/ajuste.html')
+    return render(request, 'stock/ajuste.html', data)
 
 def productoAuto(request):
    
@@ -68,11 +68,11 @@ def cargarAjuste(request):
         data = {}
 
         usuario = request.user.username
-        detalle = request.POST['detalle']
+        
 
     
         data['fecha'] = datetime.now()
-        data['detalle'] = detalle
+        
         data['usuario'] = usuario
         # get the form data
         form = ajusteForm(data)
@@ -96,13 +96,14 @@ def cargarDetalleAjuste(request):
         ultimo_ajuste = ajusteStock.objects.order_by('id', 'fecha').last()
         
         id_producto = request.GET['id_producto']
-        cantidad = request.GET['stockNuevo']
-
+        cantidad = int(request.GET['cantidad'])
+        detalle = request.GET['detalle']
+        motivo = request.GET['motivo']
+        
         producto = Producto.objects.get(id=id_producto)
         
         tipoMov = "Ajuste"
         fecha = ultimo_ajuste.fecha
-        detalle = ultimo_ajuste.detalle
         
         nombreProducto = producto.nombre
         stockProducto = producto.stock
@@ -110,7 +111,9 @@ def cargarDetalleAjuste(request):
 
         data['id_ajuste'] = ultimo_ajuste
         data['id_producto'] = id_producto
-        data['stock_nuevo'] = cantidad
+        data['detalle'] = detalle
+        data['cantidad'] = cantidad
+        data['motivo'] = motivo
         
         
         formulario = detalleAjusteForm(data)
@@ -120,11 +123,15 @@ def cargarDetalleAjuste(request):
             formulario.save()
 
             if id_producto:
-                
-                producto.stock = cantidad
+                if motivo == 'Devolucion':
+                    stock_actual = producto.stock + cantidad
+                else:
+                    stock_actual = producto.stock - cantidad
+
+                producto.stock = stock_actual
                 producto.save()
                 
-                cargarStock(tipoMov, fecha, detalle, cantidad, nombreProducto, stockProducto, usuario)
+                cargarStock(tipoMov, fecha, detalle, cantidad, nombreProducto, stock_actual, usuario)
             messages.add_message(request, messages.SUCCESS, "El ajuste de stock se realizo exitosamente")
 
             return HttpResponse(True)

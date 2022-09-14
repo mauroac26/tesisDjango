@@ -1,9 +1,9 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
-from .forms import cajaForm, movCajaForm, selectCaja
+from .forms import movCajaForm, selectCaja
 from .models import Caja, movCaja
-from datetime import datetime, date, timedelta
+from datetime import datetime
 from django.contrib import messages
 # Create your views here.
 
