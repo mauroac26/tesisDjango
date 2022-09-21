@@ -1,3 +1,5 @@
+from datetime import date
+from tkinter import Widget
 from unicodedata import category
 from django import forms
 from .models import Marca, Categoria, Producto
@@ -31,9 +33,14 @@ class productoForm(forms.ModelForm):
         model = Producto
         fields = '__all__'
 
+        widgets = {
+            'vencimiento' : forms.DateInput(attrs={"type": "date", 'id': 'vencimiento'})
+        }
+
     
     def __init__(self, *args, **kwargs):
         super(productoForm, self).__init__(*args, **kwargs)
+        self.fields['vencimiento'].required = False
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control form-control-sm'
 
