@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required, permission_required
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
-from .forms import cajaForm, movCajaForm
+from .forms import movCajaForm, selectCaja
 from .models import Caja, movCaja
-from datetime import datetime, date, timedelta
+from datetime import datetime
 from django.contrib import messages
 # Create your views here.
 
@@ -68,7 +69,11 @@ def aperturaCaja(request):
            messages.add_message(request, messages.ERROR, "La caja ya se encuentra abierta")
            return redirect(to='caja')
         else:
-            caja = Caja(nombre='Caja2',total=id.total, estado=True)
+            id = Caja.objects.order_by('id').last()
+           
+            idCaja = int(id.id) + 1
+            
+            caja = Caja(nombre=f'Caja{idCaja}',total=id.total, estado=True)
             caja.save()
             id = Caja.objects.order_by('id').last()
             hoy = datetime.now()
@@ -107,18 +112,60 @@ def cierreCaja(request):
         return redirect(to='caja')
 
 
-def consultaCaja(request):
-    data = {
-        "form": movCajaForm()
-    }
 
+def consultaCaja(request):
+    
+    data = {
+        "form": selectCaja()
+    }
+    # data={}
     if request.method == "POST":
-        id = request.POST.get('id_caja')
+    # if request.is_ajax():
         
+        # id = request.POST['id']
+        id = request.POST.get('id_caja')
+
         caja = movCaja.objects.filter(id_caja=id)
-        data['caja'] = caja
+        first = movCaja.objects.filter(id_caja=id).first()
+        last = movCaja.objects.filter(id_caja=id).last()
+        
+        data['caja']= caja
+        data['first'] = first.fecha
+        if caja.count() == 1:
+            data['last'] = 'La caja aun se encuentra abierta'
+        else:
+            data['last'] = last.fecha
+        data['id'] = id
+        # return JsonResponse({"data": list(caja)})
 
     return render(request, 'caja/consultaCaja.html', data)
+
+
+def movimientoCaja(request):
+    if 'term' in request.GET:
+    
+        caja = Caja.objects.filter(nombre__icontains=request.GET.get("term")).values('id', 'nombre')
+        
+       
+        nombre = list()
+        if caja:
+            for c in caja:
+                id = c['id']
+                mov = movCaja.objects.filter(id_caja=id).latest('fecha')
+                dicCompras = {}
+                dicCompras['id'] = c['id']
+                dicCompras['label'] = '<li style="font-size: 11px;" class="list-group-item d-flex justify-content-between align-items-center"><div class="col-sm-5">'+str(c['nombre'])+'</div><span>'+str(mov.fecha)+'</span></li>'
+                dicCompras['value'] = f'{c["nombre"]} / {mov.fecha}'
+                
+                
+                nombre.append(dicCompras)
+            return JsonResponse(nombre, safe=False)
+        else:
+            dicCompras = {}
+            dicCompras['n'] = 1
+            dicCompras['label'] = '<li style="font-size: 11px;" class="list-group-item align-items-center"><div class="col-sm-7"><span>No se moviemientos</span></div></li>'
+            nombre.append(dicCompras)
+            return JsonResponse(nombre, safe=False)
 
 
 

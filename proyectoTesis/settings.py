@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'ventas',
     'django.contrib.humanize',
     'produccion',
-
+    'stock',
+    'simple_history',
 ]
 
 X_FRAME_OPTIONS='SAMEORIGIN'
@@ -69,6 +70,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'proyectoTesis.urls'

@@ -1,7 +1,7 @@
 from datetime import date
 from django import forms
 
-from ventas.models import Ventas, detalleVenta
+from ventas.models import Ventas, detalleVenta, formaPagoVenta
 
 
 tipo_Comprobante = [
@@ -39,3 +39,19 @@ class detalleVentaForm(forms.ModelForm):
     class Meta:
         model = detalleVenta
         fields = '__all__'
+
+
+
+class formPagoVenta(forms.ModelForm):
+
+    class Meta:
+        model = formaPagoVenta
+        fields = ['id_venta', 'total', 'cuotas', 'tipoPago', 'tipoCredito', 'fecha']
+
+        widgets = {
+            'id_venta': forms.TextInput(attrs={'id': 'id_venta'}),
+            'total': forms.TextInput(attrs={'id': 'total','class': 'form-control form-control-sm' }),
+            'tipoPago': forms.Select(attrs={'id': 'tipoPago','class': 'form-control form-control-sm'}),
+            'tipoCredito': forms.Select(attrs={'id': 'tipoCredito','class': 'form-control form-control-sm'}),
+            'cuotas': forms.TextInput(attrs={'id': 'cuotas','class': 'form-control form-control-sm'}),
+        }

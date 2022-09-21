@@ -1,9 +1,5 @@
 from django import forms
-import django
-from django.forms import fields, widgets
 from .models import formaPago, tarjetaCredito, tarjetaDebito
-from .validators import minValueValidator
-from compras.models import detalleCompra
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 

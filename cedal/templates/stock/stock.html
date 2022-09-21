@@ -1,0 +1,83 @@
+{% extends 'Header/header.html' %}
+{% load static %}
+
+{% block title %}Stock{% endblock %}
+
+{% block content %}
+
+
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Stock</h1>
+    
+
+    <!-- DataTales Example -->
+    
+    <div class="card shadow mb-4">
+        
+        <div class="card-header py-3">
+           
+            
+        </div>
+        
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover table-sm" id="tablaStock" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Movimiento</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Stock Actual</th>
+                            <th>Descripcion</th>
+                            <th>Usuario</th>
+                    
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                        {% for s in stock %}
+                        <tr>
+                         <td>{{s.fecha}}</td>
+                         <td>{{s.tipoMovimiento}}</td>
+                         <td>{{s.producto}}</td>
+                         <td>{{s.cantidad}}</td>
+                         
+                         <td>{{s.stockActual}}</td>
+                         {% if s.detalle == None %}
+                         <td></td>
+                         {% else %}
+                         <td>{{s.detalle}}</td>
+                         {% endif %}
+                         <td>{{s.usuario}}</td>
+                         
+                         
+                     </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+               
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+
+
+<script>
+    $(document).ready(function() {
+    table("tablaStock");
+    });
+</script>
+
+
+{% endblock %}

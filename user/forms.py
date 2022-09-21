@@ -50,4 +50,29 @@ class editarPerfilForm(UserChangeForm):
 class cambiarPasswordForm(PasswordChangeForm):
     model = Users
     fields = '__all__'
+
+
+
+class resetPasswordForm(forms.Form):
+    password = forms.CharField(label='Contraseña nueva', widget=forms.PasswordInput(attrs={
+        'placeholder': 'Ingrese una contraseña',
+        'class': 'form-control form-control-sm',
+        'autocomplete': 'off',
+        'size': '25'
+    }))
+
+    confirmPassword = forms.CharField(label='Confirmación de contraseña nueva', widget=forms.PasswordInput(attrs={
+        'placeholder': 'Repetir contraseña',
+        'class': 'form-control form-control-sm',
+        'autocomplete': 'off'
+    }))
+
+    def clean(self):
+        cleaned = super().clean()
+        password = cleaned['password']
+        confirmPassword = cleaned['confirmPassword']
+
+        if password != confirmPassword:
+            raise forms.ValidationError('Las contraseña deben ser iguales')
+        return cleaned
         

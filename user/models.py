@@ -1,6 +1,7 @@
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from simple_history.models import HistoricalRecords
 
 from proyectoTesis.settings import MEDIA_URL, STATIC_URL
 # Create your models here.
@@ -13,11 +14,21 @@ class Users(AbstractUser):
     # nivel = models.IntegerField(choices=nivel, null=True)
     #nivel = models.ChainedManyToManyField(Group, null=True)
     imagen = models.ImageField(upload_to='usuarios', null=True, blank=True)
+    history = HistoricalRecords()
+    
 
     def get_imagen(self):
         if self.imagen:
             return '{}{}'.format(MEDIA_URL, self.imagen)
         return '{}{}'.format(STATIC_URL, 'cedal/img/undraw_profile.svg')
+
+    @property
+    def _history_user(self):
+        return self.changed_by
+
+    @_history_user.setter
+    def _history_user(self, value):
+        self.changed_by = value
     
     # def has_perm(self, perm, obj = None):
     #     return True
