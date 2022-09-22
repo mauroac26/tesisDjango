@@ -2,7 +2,12 @@
 {% load static %}
 
 {% load crispy_forms_tags %}
-
+<style  type="text/css">
+#alertCantidad{
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+</style>
 {% block title %}Alta Venta{% endblock %}
 
 {% block content %}
@@ -54,7 +59,12 @@
                       <input type="text" name="cantidad" id="cantidad" class="form-control">
                     
                     </div>
-
+                    <div id="alertCantidad" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>La cantidad seleccionada es mayor al stock del producto</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
                 </div>
                
                 <div class="d-flex justify-content-end">
@@ -250,6 +260,7 @@ $(function() {
     var i = 0;
     function cargarTabla(){
         
+
         
         cantidad = $('#cantidad').val();
         nombre = $('#nombreProducto').val();
@@ -264,6 +275,16 @@ $(function() {
             $('#nombreProducto').val("");
             $('#precio').val("");
             $('#codigo').val("");
+
+        }else if (cantidad > stock ){
+            Swal.fire(
+  'Error',
+  'La cantidad seleccionada es mayor al stock del producto',
+  'error'
+)
+            // $('#alertCantidad').show();
+        
+            $('#cantidad').val("");
         }else{
 
         
@@ -511,7 +532,10 @@ $(function() {
 
 <script>
     $(document).ready(function() {
+        
+        $('#alertCantidad').hide();
     table("tablaAltaVenta");
+    
     });
   </script>
 

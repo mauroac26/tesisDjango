@@ -15,7 +15,11 @@ class stock(models.Model):
     stockActual = models.IntegerField()
     usuario  = models.CharField(max_length=150, verbose_name="Usuarios")
     
-
+    class Meta:
+        verbose_name = 'Stock'
+        verbose_name_plural = 'Stocks'
+        ordering = ('-fecha',)
+        # get_latest_by = 'fecha'
 
 
 class ajusteStock(BaseModel):

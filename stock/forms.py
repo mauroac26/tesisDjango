@@ -17,8 +17,8 @@ class detalleAjusteForm(forms.ModelForm):
 
         widgets = {
             'cantidad': forms.TextInput(attrs={'id': 'cantidad', 'class': 'form-control form-control-sm'}),
-            'motivo' : forms.Select(attrs={'id': 'motivo', 'class': 'form-control form-control-sm' }),
-            'detalle': forms.TextInput(attrs={'id': 'detalle','class': 'form-control form-control-sm' })
+            'motivo' : forms.Select(attrs={'id': 'motivo',  'class': 'form-control form-control-sm' }),
+            'detalle': forms.Textarea(attrs={'id': 'detalle', 'class': 'form-control form-control-sm', 'rows': 3 })
         }
 
 

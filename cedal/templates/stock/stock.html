@@ -46,7 +46,16 @@
                          <td>{{s.producto}}</td>
                          <td>{{s.cantidad}}</td>
                          
-                         <td>{{s.stockActual}}</td>
+                         {% if s.stockActual <= 4 and s.stockActual > 0 %}
+                        <td class="bg-warning text-white">{{s.stockActual}}</td>
+                        {% elif s.stockActual <= 0 %}
+                       
+                        <td class="bg-danger  text-white ">Sin stock</td>
+                         
+                        
+                        {% else %}
+                        <td>{{s.stockActual}}</td>
+                        {% endif %}
                          {% if s.detalle == None %}
                          <td></td>
                          {% else %}

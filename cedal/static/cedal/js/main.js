@@ -5,7 +5,7 @@ function table(tabla){
           // "language": {
           //   "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
           // }
-          
+          "ordering": false,
           "language": {
            
             "emptyTable": "No hay información",
