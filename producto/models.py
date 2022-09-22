@@ -22,7 +22,7 @@ class Marca(models.Model):
         return self.descripcion
 
 
-class Producto(models.Model):
+class Producto(BaseModel):
     codigo = models.CharField(max_length=10)
     nombre = models.CharField(max_length=50)
     precio_compra = models.DecimalField(max_digits=8, decimal_places=2, null=True)
