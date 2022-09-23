@@ -1,7 +1,7 @@
 from datetime import datetime, date
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
-from .forms import marcaForm, categoriaForm, productoForm
+from .forms import marcaForm, categoriaForm, productoForm, promocionForm
 from .models import Marca, Categoria, Producto
 
 from django.contrib.auth.decorators import login_required, permission_required
@@ -203,17 +203,18 @@ def vencimiento(request):
             
             resultados = hoy - fecha
 
-            prodVencidos = {}
-            prodVencidos['id'] = v['id']
-            prodVencidos['codigo'] = v['codigo']
-            prodVencidos['nombre'] = v['nombre']
-            prodVencidos['dias'] = resultados.days
+            if resultados.days >= 355:
+                prodVencidos = {}
+                prodVencidos['id'] = v['id']
+                prodVencidos['codigo'] = v['codigo']
+                prodVencidos['nombre'] = v['nombre']
+                prodVencidos['dias'] = resultados.days
             
                 
             
             
 
-        resultado.append(prodVencidos)
+                resultado.append(prodVencidos)
 
     
     data = {
@@ -224,7 +225,23 @@ def vencimiento(request):
 
             
         
+def promocion(request, id):
+    producto = get_object_or_404(Producto, pk=id)
+    
+    data = {
+        'form': promocionForm(instance=producto),
+        'nombre': producto.nombre
+    }
 
+    if request.method == "POST":
+        formulario = promocionForm(data=request.POST, instance=producto)
+        if formulario.is_valid():
+            formulario.save()
+            messages.add_message(request, messages.SUCCESS, "Se añadió el descuento correctamente")
+            return redirect(to='productos')
+        data["form"] = promocionForm()
+            
+    return render(request, 'producto/promocion.html', data)
 
     
 

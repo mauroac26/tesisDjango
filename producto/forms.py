@@ -72,3 +72,15 @@ class  ventaProductoForm(forms.ModelForm):
             'codigo': forms.TextInput(attrs={'id': 'codigo', 'name': 'codigo'}),
             'stock': forms.TextInput(attrs={'id': 'stock', 'name': 'stock'}),
         }
+
+
+class promocionForm(forms.ModelForm):
+
+    class Meta:
+        model = Producto
+        fields = ['descuento']
+
+    def __init__(self, *args, **kwargs):
+        super(promocionForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control form-control-sm'

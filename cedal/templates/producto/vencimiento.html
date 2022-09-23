@@ -25,7 +25,7 @@
                         <tr>
                             <th>Código</th>
                             <th>Nombre</th>
-                            <th>Dias por vencerse</th>
+                            <th>Días por vencerse</th>
                             <th>Acción</th>
                         </tr>
                     </thead>
@@ -35,18 +35,21 @@
                         <tr>
                          <td>{{p.codigo}}</td>
                          <td>{{p.nombre}}</td>
-                         {% if p.dias > 360 %}
+                         {% if p.dias > 365 %}
                          <td class="bg-danger text-center text-white">{{p.dias}} - Producto Vencido</td>
-                         {% elif p.dias > 310 and p.dias <= 360 %}
-                         <td class="bg-warning text-center  text-white">{{p.dias}} - Producto por vencerse</td>
                          {% else %}
+                         <td class="bg-warning text-center  text-white">{{p.dias}} - Producto por vencerse</td>
                          
-                         <td class="text-center">{{p.dias}}</td>
+                        
                          {% endif %}
                          <td>
                             <div class="row justify-content-center">
-                             <a class="btn-sm btn-success ml-1" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Promoción">Promoción</a>
-                         </div>
+                                {% if p.dias > 365 %}
+                             <a class="btn-sm btn-primary ml-1" href="{% url 'altaAjuste'%}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Ajuste Stock">Ajuste Stock</a>
+                             {% else %}
+                             <a class="btn-sm btn-success ml-1" href="{% url 'promocion' p.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Promoción">Promoción</a>
+                             {% endif %}
+                            </div>
                          </td>
                      
                      </tr>
