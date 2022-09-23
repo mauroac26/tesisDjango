@@ -1,3 +1,4 @@
+from datetime import datetime, date
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
 from .forms import marcaForm, categoriaForm, productoForm
@@ -185,5 +186,46 @@ def eliminarCategoria(request, id):
         messages.add_message(request, messages.SUCCESS, "La categoria se eliminó exitosamente")
         return redirect(to='categorias')
 
+
+
+def vencimiento(request):
+    
+    hoy =  date(datetime.now().year, datetime.now().month, datetime.now().day)
+    resultado = list()
+    producto = Producto.objects.values('id', 'codigo', 'nombre', 'vencimiento')
+
+    for v in producto:
+        
+        if v['vencimiento'] != None:
+            vencimiento = v['vencimiento']
+            
+            fecha = date(vencimiento.year, vencimiento.month, vencimiento.day)
+            
+            resultados = hoy - fecha
+
+            prodVencidos = {}
+            prodVencidos['id'] = v['id']
+            prodVencidos['codigo'] = v['codigo']
+            prodVencidos['nombre'] = v['nombre']
+            prodVencidos['dias'] = resultados.days
+            
+                
+            
+            
+
+        resultado.append(prodVencidos)
+
+    
+    data = {
+        'producto': resultado
+    }
+
+    return render(request, 'producto/vencimiento.html', data)
+
+            
+        
+
+
+    
 
 

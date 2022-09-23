@@ -7,6 +7,11 @@ class proveedorForm(forms.ModelForm):
         model = proveedores
         fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        super(proveedorForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control form-control-sm'
+
 
 class editarProvForm(forms.ModelForm):
 

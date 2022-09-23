@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from django.contrib import messages
 from django.db.models.aggregates import Sum
 #from django.contrib.auth.decorators import login_required, permission_required
@@ -19,7 +19,7 @@ from django.views.generic import View
 
 from ventas.models import Ventas, detalleVenta, formaPagoVenta
 
-from xhtml2pdf import pisa
+
 from django.template.loader import get_template
 import os
 from django.conf import settings
@@ -32,7 +32,7 @@ def index(request):
 
 
     venta = detalleVenta.objects.values('id_venta__id', 'id_venta__comprobante', 'id_venta__cuit__nombre', 'id_venta__fecha').annotate(Sum('total'))
-
+    
     #venta = Ventas.objects.all()
     data = {
         "ventas": venta
@@ -87,9 +87,13 @@ def productoVentaAutocomplete(request):
 
         producto = Producto.objects.filter(nombre__icontains=request.GET.get("term"))
         nombre = list()
+        hoy =  date(datetime.now().year, datetime.now().month, datetime.now().day)
         if producto:
             
             for n in producto:
+                vencimiento = n.vencimiento
+                fecha = date(vencimiento.year, vencimiento.month, vencimiento.day)
+                resultado = hoy - fecha
                 if n.stock > n.stock_min:
                     color = "badge-success"
                 elif n.stock <= n.stock_min:
@@ -104,6 +108,8 @@ def productoVentaAutocomplete(request):
                 signer_json['stock'] = n.stock
                 signer_json['codigo'] = n.codigo
                 signer_json['precio'] = n.precio_venta
+                signer_json['descuento'] = n.descuento
+                signer_json['vencimiento'] = resultado.days
                 nombre.append(signer_json)
             return JsonResponse(nombre, safe=False)
         else:

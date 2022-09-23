@@ -33,6 +33,10 @@ class ventasForm(forms.ModelForm):
             'tipoComprobante': forms.Select(attrs={'id': 'tipoComprobante'} )
         }
 
+    def __init__(self, *args, **kwargs):
+        super(ventasForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control form-control-sm'
 
 class detalleVentaForm(forms.ModelForm):
 
@@ -41,6 +45,10 @@ class detalleVentaForm(forms.ModelForm):
         fields = '__all__'
 
 
+    def __init__(self, *args, **kwargs):
+            super(detalleVentaForm, self).__init__(*args, **kwargs)
+            for visible in self.visible_fields():
+                visible.field.widget.attrs['class'] = 'form-control form-control-sm'
 
 class formPagoVenta(forms.ModelForm):
 

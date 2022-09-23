@@ -2,14 +2,14 @@
 {% load static %}
 
 {% load crispy_forms_tags %}
-<style  type="text/css">
-#alertCantidad{
-  opacity: 0;
-  transition: opacity 0.5s;
-}
-</style>
-{% block title %}Alta Venta{% endblock %}
 
+{% block title %}Alta Venta{% endblock %}
+<!-- <style type="text/css" >
+    .swal2-popup {
+  max-height: 300px !important;
+  max-width: 300px !important;
+}
+</style> -->
 {% block content %}
 
 <div class="container-fluid">
@@ -28,27 +28,31 @@
                 <div class="row">
                     <div class="col-md-9">
                         Nombre
-                        <input type="text" name="nombreProducto" id="nombreProducto" class="form-control">
+                        <input type="text" name="nombreProducto" id="nombreProducto" class="form-control form-control-sm">
                         
                     </div>
                    
                     <div class="col-md-3 ">
                         Código
-                        <input type="text" name="" id="codigo" class="form-control" disabled>
+                        <input type="text" name="" id="codigo" class="form-control form-control-sm" disabled>
                         
                       </div>
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-md-6 ">
+                    <div class="col-md-4 ">
                         Precio Venta
-                        <input type="text" name="" id="precio" class="form-control">
+                        <input type="text" name="" id="precio" class="form-control form-control-sm">
                        
                     </div>
-
-                    <div class="col-md-6 ">
+                    <div class="col-md-4 ">
+                        Descuento(%)
+                        <input type="text" name="" id="descuento" class="form-control form-control-sm" disabled>
+                        
+                      </div>
+                    <div class="col-md-4 ">
                         Stock Actual
-                        <input type="text" name="" id="stock" class="form-control" disabled>
+                        <input type="text" name="" id="stock" class="form-control form-control-sm" disabled>
                         
                       </div>
                 </div>
@@ -56,19 +60,19 @@
                 <div class="row">
                     <div class="col-md-6 ">
                         Cantidad
-                      <input type="text" name="cantidad" id="cantidad" class="form-control">
+                      <input type="text" name="cantidad" id="cantidad" class="form-control form-control-sm">
                     
                     </div>
-                    <div id="alertCantidad" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <!-- <div id="alertCantidad" class="alert alert-danger alert-dismissible fade show" role="alert">
                         <strong>La cantidad seleccionada es mayor al stock del producto</strong>
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                         </button>
-                      </div>
+                      </div> -->
                 </div>
                
                 <div class="d-flex justify-content-end">
-                <button onclick="cargarTabla();" class="btn btn-primary" type="button">Añadir</button>
+                <button onclick="cargarTabla();" class="btn btn-primary btn-sm" type="button">Añadir</button>
                
             </div>
             {{mensaje}}
@@ -136,22 +140,27 @@
                       </div>
 
                       <div class="col-md-4">
-                       
+                        
                         {{ formVenta.comprobante|as_crispy_field }}
+                        
                         <!-- <input type="data" name="comprobante" id="comprobante"  class="form-control  font-weight-bold text-center " > -->
-                      </div>
+                        <!-- <div class="was-validated">
+                            Numero de comprabante exiatente.
+                          </div>  -->
+                    </div>
 
                       <div class="col-md-4 ">
                     
                       {{ formVenta.tipoComprobante|as_crispy_field }}
                       <!-- <input type="data" name="comprobante" id="comprobante"  class="form-control  font-weight-bold text-center " > -->
+                      
                     </div>
                 </div>
                 
                 <div class="row">
                     <div class="col-md-4 mt-2">
                         Razon Social
-                        <input type="text" name="nombreCliente" id="nombreCliente" class="form-control">
+                        <input type="text" name="nombreCliente" id="nombreCliente" class="form-control form-control-sm">
                       
                       </div>
                        
@@ -162,15 +171,15 @@
                       
                       <div class="col-md-4 mt-2 ">
                         Condicion
-                        <input type="text" name="condicion" id="condicion" class="form-control" disabled>
+                        <input type="text" name="condicion" id="condicion" class="form-control form-control-sm" disabled>
                       
                       </div>
                 </div>
-                <div class="row justify-content-end">
+                <div class="d-flex justify-content-end">
                
-                <div class="col-md-4 mt-1">
-                    <button class="btn btn-primary" type="submit">Confirmar Venta</button>
-                </div>
+                
+                    <button class="btn btn-primary btn-sm" type="submit">Confirmar Venta</button>
+              
                </div> 
                 
             </form>
@@ -190,6 +199,7 @@
                         <th>Nombre</th>
                         <th>cantidad</th>
                         <th>P.Unitario</th>
+                        <th>Desc.(%)</th>
                         <th>Iva</th>
                         <th>sub total neto</th>
                         <th>sub total</th>
@@ -229,13 +239,32 @@ $(function() {
                 $("#nombreProducto").val('');
                 event.preventDefault();
             }else{
-                $("#stock").val(ui.item.stock); 
+                
+                if (ui.item.vencimiento > 360){
+                    Swal.fire({
+            "title": "Error",
+            "text": "El producto se encuentra vencido",
+            "icon":"error",
+            
+        })
+        .then(function(result){
+            if(result.isConfirmed){
+                $("#nombreProducto").val("");
+            }
+            })
+        
+        
+                }else{
+                    $("#stock").val(ui.item.stock); 
                 $("#codigo").val(ui.item.codigo);
                 $("#precio").val(ui.item.precio);
+                $("#descuento").val(ui.item.descuento);
                 $("#nombreProducto").val(ui.item.value);
                 $("#cantidad").val(1); 
             
                 idProducto = ui.item.id
+                }
+                
             }
             
             
@@ -267,6 +296,7 @@ $(function() {
         precio = $('#precio').val();
         codigo = $('#codigo').val();
         stock = $('#stock').val();
+        descuento = $('#descuento').val();
 
         if (stock <= 0) {
             alert('No hay stock');
@@ -274,29 +304,39 @@ $(function() {
             $('#cantidad').val("");
             $('#nombreProducto').val("");
             $('#precio').val("");
+            $('#descuento').val("");
             $('#codigo').val("");
 
         }else if (cantidad > stock ){
-            Swal.fire(
-  'Error',
-  'La cantidad seleccionada es mayor al stock del producto',
-  'error'
-)
+            Swal.fire({
+                title:'Error',
+                text: 'La cantidad seleccionada es mayor al stock del producto',
+                icon: 'error'
+  
+            })
             // $('#alertCantidad').show();
         
             $('#cantidad').val("");
         }else{
 
-        
-        total = cantidad * precio;
+        if (descuento == ""){
+            total = cantidad * precio;
         neto = total / 1.21;
         iva = neto.toFixed(2) * 0.21;
+        }else{
+        procentaje = descuento / 100;
+        total = precio - ((cantidad * precio) * procentaje);
+        neto = total / 1.21;
+        iva = neto.toFixed(2) * 0.21;
+        }
+        
         
         i += 1;
 
         fila = '<tr id=fila' + i +' class="text-dark"><td data-producto =' + idProducto +' style="text-align: right;">' + codigo + '</td><td>' + nombre + 
                 '<td>' + cantidad +'</td>'+
-                '</td><td style="text-align: right;">' + precio + '</td>'+
+                '<td style="text-align: right;">' + precio + '</td>'+
+                '<td style="text-align: right;">' + descuento + '</td>'+
                 '<td>' + iva.toFixed(2) + '</td><td>' + neto.toFixed(2) + '</td>'+'<td>' + total + '</td>'+
                 '<td class="row justify-content-center"><div><button  class="btn btn-danger " style="padding:1px;" type="button"  id="btn_del'+i+'" onclick="eliminarFC('+i+', '+total+', '+neto+', '+iva+', )" ><i class="fas fa-times-circle"></i></button></div></td>'+
                 '</tr>';
@@ -457,6 +497,8 @@ $(function() {
 
 </script>
 
+
+
 <script>
     /*
         On submiting the form, send the POST ajax
@@ -495,7 +537,7 @@ $(function() {
                 var cantidadTabla = document.getElementById('tablaAltaVenta').rows[f].cells[2].innerText;            
                 var idp = $('#tablaAltaVenta tr:eq('+f+')').find("td:first-child").data('producto');   
                 //var total = document.getElementById('tablaAltaCompra').rows[f].cells[6].innerText; 
-                
+               
             // carga detalle de la compra
                 $.ajax({
             type: 'get',
@@ -533,12 +575,17 @@ $(function() {
 <script>
     $(document).ready(function() {
         
-        $('#alertCantidad').hide();
+       
     table("tablaAltaVenta");
     
     });
   </script>
 
+<script>
+    // $("#comprobante").blur(function() {
+    //     form.classList.add('was-validated');
+    //         });
+</script>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   

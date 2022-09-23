@@ -30,7 +30,13 @@ class comprasForm(forms.ModelForm):
             'fecha' : forms.DateInput(attrs={"type": "date", "value": date.today(), 'id': 'fecha'}),
             'cuit' : forms.TextInput(attrs={'id': 'cuit', 'readonly': True}),
             'tipoComprobante': forms.Select(attrs={'id': 'tipoComprobante'} )
+
         }
+
+    def __init__(self, *args, **kwargs):
+        super(comprasForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control form-control-sm'    
 
 
 class detalleComprasForm(forms.ModelForm):
