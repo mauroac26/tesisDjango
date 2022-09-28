@@ -295,6 +295,7 @@
                 <a class="nav-link" href="{% url 'configuracion' %}" >
                     <i class="fas fa-fw fa-cog"></i>
                     <span>Configuración</span>
+                    
                 </a>
             </li>
             <!-- Divider
@@ -418,6 +419,7 @@
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
                     <span>Copyright &copy; Your Website 2020</span>
+
                 </div>
             </div>
         </footer>
@@ -497,7 +499,7 @@
     <script src="{% static 'cedal/datatables/Buttons-2.2.2/js/buttons.print.min.js' %}"></script>
 
     
-    {% if user.groups.all.0.name == 'productor' %}
+    {% if user.groups.all.0.name == 'Administrador' %}
     <script>
         
        $.ajax({
@@ -518,6 +520,26 @@
         document.getElementById('badgePedidos').className = "badge badge-info badge-pill ml-2 d-none";
         // document.getElementById('badgePedidosStock').className = "badge badge-info badge-pill ml-2 d-none";
       }
+  
+  }
+  });
+
+    </script>
+{% endif %}
+
+{% if user.groups.all.0.name == 'Administrador' %}
+    <script>
+        
+       $.ajax({
+    type: "get",
+    dataType: 'json',
+     url:  "{% url 'prodVencimiento' %}",
+  success: function(response) {
+    
+      var cantidad = response.data;
+        
+        document.getElementById('divVencimiento').innerText = cantidad
+      
   
   }
   });

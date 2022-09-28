@@ -35,16 +35,16 @@
                         <tr>
                          <td>{{p.codigo}}</td>
                          <td>{{p.nombre}}</td>
-                         {% if p.dias > 365 %}
-                         <td class="bg-danger text-center text-white">{{p.dias}} - Producto Vencido</td>
+                         {% if p.dias <= 0 %}
+                         <td class="bg-danger text-center text-white">Producto Vencido</td>
                          {% else %}
-                         <td class="bg-warning text-center  text-white">{{p.dias}} - Producto por vencerse</td>
+                         <td class="bg-warning text-center  text-white">Faltan {{p.dias}} dias - Producto por vencerse</td>
                          
                         
                          {% endif %}
                          <td>
                             <div class="row justify-content-center">
-                                {% if p.dias > 365 %}
+                                {% if p.dias <= 0 %}
                              <a class="btn-sm btn-primary ml-1" href="{% url 'altaAjuste'%}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Ajuste Stock">Ajuste Stock</a>
                              {% else %}
                              <a class="btn-sm btn-success ml-1" href="{% url 'promocion' p.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Promoción">Promoción</a>

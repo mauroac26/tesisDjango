@@ -1,4 +1,5 @@
 from datetime import datetime, date
+from django.views.generic import ListView
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
 from .forms import marcaForm, categoriaForm, productoForm, promocionForm
@@ -208,14 +209,14 @@ def vencimiento(request):
                 prodVencidos['id'] = v['id']
                 prodVencidos['codigo'] = v['codigo']
                 prodVencidos['nombre'] = v['nombre']
-                prodVencidos['dias'] = resultados.days
+                prodVencidos['dias'] = 365 - resultados.days
             
                 
             
             
 
                 resultado.append(prodVencidos)
-
+    
     
     data = {
         'producto': resultado
@@ -244,5 +245,9 @@ def promocion(request, id):
     return render(request, 'producto/promocion.html', data)
 
     
-
+class prodPromocion(ListView):
+    model = Producto
+    context_object_name = 'producto'   # your own name for the list as a template variable
+    queryset = Producto.objects.filter(descuento__gt=0).values() # Get 5 books containing the title war
+    template_name = 'producto/productoPromo.html' 
 

@@ -1,6 +1,5 @@
 import datetime
-import json
-from json.encoder import JSONEncoder
+from datetime import datetime, date
 from django.contrib import messages
 from django.shortcuts import redirect, render
 
@@ -8,7 +7,7 @@ from django.db.models import Sum, Count
 from cedal.models import tarjetaCredito, tarjetaDebito
 from django.http import JsonResponse
 from produccion.models import Pedido
-from producto.models import Marca
+from producto.models import Marca, Producto
 from user.models import Users
 from ventas.models import detalleVenta, Ventas
 
@@ -147,5 +146,34 @@ def cantidadPedidos(request):
         # return JsonResponse({"data": pedidos})
 
 
+def prodVencimiento(request):
+    if request.is_ajax() and request.method == "GET":
+        hoy =  date(datetime.now().year, datetime.now().month, datetime.now().day)
+        resultado = list()
+        producto = Producto.objects.values('id', 'codigo', 'nombre', 'vencimiento')
+
+        for v in producto:
+            
+            if v['vencimiento'] != None:
+                vencimiento = v['vencimiento']
+                
+                fecha = date(vencimiento.year, vencimiento.month, vencimiento.day)
+                
+                resultados = hoy - fecha
+
+                if resultados.days >= 355:
+                    prodVencidos = {}
+                    prodVencidos['id'] = v['id']
+                    prodVencidos['codigo'] = v['codigo']
+                    prodVencidos['nombre'] = v['nombre']
+                    prodVencidos['dias'] = resultados.days
+                
+                    
+                
+                
+
+                    resultado.append(prodVencidos)
+
+        return JsonResponse({"data": len(resultado)})
 
 

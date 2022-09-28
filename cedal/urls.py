@@ -3,7 +3,7 @@ from django.urls import path
 
 
 
-from .views import altaTarjeta, cantidadPedidos, configuracion, credito, graficoClientes, graficoProductos, index, graficoCompras
+from .views import altaTarjeta, cantidadPedidos, configuracion, credito, graficoClientes, graficoProductos, index, graficoCompras, prodVencimiento
 
 
 urlpatterns = [
@@ -16,5 +16,5 @@ urlpatterns = [
     path('graficoProductos/', graficoProductos, name="graficoProductos"),
     path('graficoClientes/', graficoClientes, name="graficoClientes"),
     path('cantidadPedidos/', cantidadPedidos, name="cantidadPedidos"),
-
+    path('prodVencimiento/', prodVencimiento, name="prodVencimiento"),
 ]
