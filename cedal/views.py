@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render
 from django.db.models import Sum, Count
 from cedal.models import tarjetaCredito, tarjetaDebito
 from django.http import JsonResponse
-from produccion.models import Pedido
+from produccion.models import Produccion
 from producto.models import Marca, Producto
 from user.models import Users
 from ventas.models import detalleVenta, Ventas
@@ -133,7 +133,7 @@ def altaTarjeta(request):
 def cantidadPedidos(request):
     pedidos = 0
     if request.is_ajax() and request.method == "GET":
-        pedidos = Pedido.objects.filter(estado='Pendiente').count()
+        pedidos = Produccion.objects.filter(estado='Pendiente').count()
         return JsonResponse({"data": pedidos})
         # usuario = request.user.id
         # grupo = Users.objects.filter(id=usuario).values('groups')

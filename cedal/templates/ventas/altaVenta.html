@@ -289,6 +289,7 @@ $(function() {
     var i = 0;
     function cargarTabla(){
         
+        
 
         
         cantidad = $('#cantidad').val();
@@ -298,8 +299,15 @@ $(function() {
         stock = $('#stock').val();
         descuento = $('#descuento').val();
 
-        if (stock <= 0) {
-            alert('No hay stock');
+        
+
+        if (parseInt(stock) <= 0) {
+            Swal.fire({
+                title:'Error',
+                text: 'No hay stock del producto seleccionado',
+                icon: 'error'
+  
+            })
             $('#stock').val("");
             $('#cantidad').val("");
             $('#nombreProducto').val("");
@@ -307,13 +315,14 @@ $(function() {
             $('#descuento').val("");
             $('#codigo').val("");
 
-        }else if (cantidad > stock ){
-            Swal.fire({
-                title:'Error',
-                text: 'La cantidad seleccionada es mayor al stock del producto',
-                icon: 'error'
+        }else if (cantidad > parseInt(stock) ){
+            alert('hola');
+            // Swal.fire({
+            //     title:'Error',
+            //     text: 'La cantidad seleccionada es mayor al stock del producto',
+            //     icon: 'error'
   
-            })
+            // })
             // $('#alertCantidad').show();
         
             $('#cantidad').val("");
@@ -338,7 +347,7 @@ $(function() {
                 '<td style="text-align: right;">' + precio + '</td>'+
                 '<td style="text-align: right;">' + descuento + '</td>'+
                 '<td>' + iva.toFixed(2) + '</td><td>' + neto.toFixed(2) + '</td>'+'<td>' + total + '</td>'+
-                '<td class="row justify-content-center"><div><button  class="btn btn-danger " style="padding:1px;" type="button"  id="btn_del'+i+'" onclick="eliminarFC('+i+', '+total+', '+neto+', '+iva+', )" ><i class="fas fa-times-circle"></i></button></div></td>'+
+                '<td ><div class="row justify-content-center"><button  class="btn btn-danger " style="padding:1px;" type="button"  id="btn_del'+i+'" onclick="eliminarFC('+i+', '+total+', '+neto+', '+iva+', )" ><i class="fas fa-times-circle"></i></button></div></td>'+
                 '</tr>';
              
                 $('#tablaAltaVenta').append(fila);

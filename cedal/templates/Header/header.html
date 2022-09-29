@@ -369,7 +369,45 @@
                         </form>
                     </div>
                 </li> -->
-
+                
+                    <!-- ITEM NOTIFICACIONES -->
+                  <!-- <li class="nav-item dropdown no-arrow">
+                    <a class="nav-link dropdown-toggle" href="#" id="notDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    
+                      <i class="fas fa-bell"></i>
+                      <span class="badge bg-primary badge-number">4</span>
+                    </a>
+          
+                    <ul class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="notDropdown">
+                      <li class="dropdown-header">
+                        Tienes notificaciones
+                    
+                      </li>
+                      <li>
+                        <hr class="dropdown-divider">
+                      </li>
+          
+                      <li class="dropdown-item1">
+                        <i class="fas fa-xmark-circle text-danger"></i>
+                        <div>
+                          <h4>Lorem Ipsum</h4>
+                          
+                        </div>
+                      </li>
+                      <li>
+                        <hr class="dropdown-divider">
+                      </li>
+          
+                      <li class="dropdown-item1">
+                        <i class="fas fa-exclamation-circle text-warning"></i>
+                        <div>
+                          <h4>Vencimiento</h4>
+                          
+                        </div>
+                      </li>
+                    </ul>
+                    </li> -->
             
 
                 
@@ -499,7 +537,7 @@
     <script src="{% static 'cedal/datatables/Buttons-2.2.2/js/buttons.print.min.js' %}"></script>
 
     
-    {% if user.groups.all.0.name == 'Productor' %}
+    {% if user.groups.all.0.name == 'productor' %}
     <script>
         
        $.ajax({
@@ -509,17 +547,18 @@
   success: function(response) {
     
       var cantidad = response.data;
-      if(cantidad > 0){
-        document.getElementById('badgePedidos').className = "badge badge-info badge-pill ml-2 d-inline";
-        document.getElementById('badgePedidos').innerText = cantidad
-        // document.getElementById('badgePedidosStock').className = "badge badge-info badge-pill ml-2 d-inline";
-        // document.getElementById('badgePedidosStock').innerText = cantidad
-        document.getElementById('divPedidos').innerText = cantidad
-      }
-      else{
-        document.getElementById('badgePedidos').className = "badge badge-info badge-pill ml-2 d-none";
-        // document.getElementById('badgePedidosStock').className = "badge badge-info badge-pill ml-2 d-none";
-      }
+      document.getElementById('divPedidos').innerText = cantidad
+    //   if(cantidad > 0){
+    //     // document.getElementById('badgePedidos').className = "badge badge-info badge-pill ml-2 d-inline";
+    //     // document.getElementById('badgePedidos').innerText = cantidad
+    //     // document.getElementById('badgePedidosStock').className = "badge badge-info badge-pill ml-2 d-inline";
+    //     // document.getElementById('badgePedidosStock').innerText = cantidad
+    //     document.getElementById('divPedidos').innerText = cantidad
+    //   }
+    //   else{
+    //     document.getElementById('badgePedidos').className = "badge badge-info badge-pill ml-2 d-none";
+    //     // document.getElementById('badgePedidosStock').className = "badge badge-info badge-pill ml-2 d-none";
+    //   }
   
   }
   });
