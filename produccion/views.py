@@ -1,8 +1,8 @@
 
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from produccion.forms import pediodosForm, produccionForm
-from produccion.models import Pedido, Produccion
+from produccion.forms import produccionForm
+from produccion.models import Produccion
 from producto.models import Producto
 
 
@@ -31,8 +31,8 @@ def altaProduccion(request):
     if request.method == "POST":
 
         # fecha = request.POST.get('fecha')
-        producto = request.POST.get('producto')
-        cantidad = request.POST.get('cantidad')
+        producto = request.POST.get('producto_retiro')
+        cantidad = request.POST.get('cantidad_retiro')
         # usuario = request.POST.get('usuario')
         
         # data['fecha'] = fecha
@@ -68,7 +68,7 @@ def altaProduccion(request):
 
 def pedido(request):
 
-    pedido = Pedido.objects.all()
+    pedido = Produccion.objects.all()
 
     data = {
         "pedido": pedido
@@ -77,22 +77,22 @@ def pedido(request):
     return render(request, 'produccion/pedido.html', data) 
 
 
-def altaPedido(request):
+# def altaPedido(request):
 
-    data = {
-        "form": pediodosForm()
-    }
+#     data = {
+#         "form": pediodosForm()
+#     }
 
-    if request.method == "POST":
-        formulario = pediodosForm(data=request.POST)
-        if formulario.is_valid():
-            formulario.save()
+#     if request.method == "POST":
+#         formulario = pediodosForm(data=request.POST)
+#         if formulario.is_valid():
+#             formulario.save()
                 
-            return redirect(to='pedido')
-        else:
-            data["form"] = formulario
+#             return redirect(to='pedido')
+#         else:
+#             data["form"] = formulario
         
-    return render(request, 'produccion/altaPedido.html', data) 
+#     return render(request, 'produccion/altaPedido.html', data) 
 
 
 def producido(request):
@@ -103,7 +103,7 @@ def producido(request):
         producto = request.GET['id_Producto']
         id_pedido = request.GET['id']
         
-        pedido = Pedido.objects.get(id = id_pedido)
+        pedido = Produccion.objects.get(id = id_pedido)
 
         pedido.estado = 'Producido'
         pedido.save()

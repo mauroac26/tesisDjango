@@ -51,4 +51,34 @@ function table(tabla){
         });
   }
 
- 
+
+ function cantidadPed(){
+  
+  $.ajax({
+    type: "get",
+    dataType: 'json',
+     url:  "cantidadPedidos",
+  success: function(response) {
+    
+      var cantidad = response.data;
+      
+      document.getElementById('divPedidos').innerText = cantidad
+        document.getElementById('badgePedidos').className = "badge badge-info badge-pill ml-2 d-inline";
+        document.getElementById('badgePedidos').innerText = cantidad
+    //   if(cantidad > 0){
+    //     document.getElementById('badgePedidos').className = "badge badge-info badge-pill ml-2 d-block";
+    //     document.getElementById('badgePedidos').innerText = cantidad
+    //     // document.getElementById('badgePedidosStock').className = "badge badge-info badge-pill ml-2 d-inline";
+    //     // document.getElementById('badgePedidosStock').innerText = cantidad
+        
+    //   }
+    //   else{
+    //     document.getElementById('badgePedidos').className = "badge badge-info badge-pill ml-2 d-none";
+    //     // document.getElementById('badgePedidosStock').className = "badge badge-info badge-pill ml-2 d-none";
+    //   }
+  
+  }
+  });
+  
+
+}

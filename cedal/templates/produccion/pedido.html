@@ -36,7 +36,7 @@
                         <td>{{p.producto_pedido}}</td>
                         <td>{{p.cantidad_pedido}}</td>
                         {% if p.estado == 'Pendiente'%}
-                        <td> <button onclick="producido({{p.producto_pedido}}, {{p.cantidad_pedido}}, {{p.id}} );" class="btn btn-primary" type="button">{{p.estado}}</button></td>
+                        <td> <button onclick="producido({{p.producto_pedido_id}}, {{p.cantidad_pedido}}, {{p.id}} );" class="btn btn-primary" type="button">{{p.estado}}</button></td>
                        {% else %}
                        <td>{{p.estado}}</td>
                        {% endif %}
@@ -85,5 +85,8 @@
     table("tablaPedido");
     });
 </script>
+
+  
+
 {% endblock %}
 

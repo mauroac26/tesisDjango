@@ -241,7 +241,7 @@
                         <a class="collapse-item" href="{% url 'movimientoStock' %}">Movimientos de stock</a>
                         
                         
-                        <a class="collapse-item" href="{% url 'altaAjuste' %}" >Ajuste de stock<span id="badgePedidos" class="ml-2 d-none"></span></a> 
+                        <a class="collapse-item" href="{% url 'altaAjuste' %}" >Ajuste de stock</a> 
                         
                         
                     </div>
@@ -487,8 +487,8 @@
                 </div>
                 <div class="modal-body">Seleccione "Cerrar sesión" a continuación si está listo para finalizar su sesión actual.</div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                    <a class="btn btn-primary" href="{% url 'logout' %}">Cerrar Sesión</a>
+                    <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-primary btn-sm" href="{% url 'logout' %}">Cerrar Sesión</a>
                 </div>
             </div>
         </div>
@@ -514,6 +514,8 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     
+
+    
     <!-- Page level plugins -->
 
 <!-- <script src="{% static 'cedal/datatables/DataTables-1.11.5/js/dataTables.bootstrap4.min.js' %}"></script>
@@ -521,7 +523,7 @@
 
 <!-- Page level custom scripts -->
 <!-- <script src="{% static 'cedal/js/demo/datatables-demo.js' %}"></script> -->
-<script src="{% static 'cedal/js/main.js' %}"></script> 
+ 
 
 <script src="//code.jquery.com/jquery-3.5.1.js"></script>
 <!-- DataTables JS library -->
@@ -535,36 +537,18 @@
     <script src="{% static 'cedal/datatables/pdfmake-0.1.36/vfs_fonts.js' %}"></script>
     <script src="{% static 'cedal/datatables/Buttons-2.2.2/js/buttons.html5.min.js' %}"></script>
     <script src="{% static 'cedal/datatables/Buttons-2.2.2/js/buttons.print.min.js' %}"></script>
+    <script src="{% static 'cedal/js/main.js' %}"></script>
 
-    
-    {% if user.groups.all.0.name == 'productor' %}
+
+    {% if user.groups.all.0.name == 'Productor' %}
     <script>
-        
-       $.ajax({
-    type: "get",
-    dataType: 'json',
-     url:  "{% url 'cantidadPedidos' %}",
-  success: function(response) {
     
-      var cantidad = response.data;
-      document.getElementById('divPedidos').innerText = cantidad
-    //   if(cantidad > 0){
-    //     // document.getElementById('badgePedidos').className = "badge badge-info badge-pill ml-2 d-inline";
-    //     // document.getElementById('badgePedidos').innerText = cantidad
-    //     // document.getElementById('badgePedidosStock').className = "badge badge-info badge-pill ml-2 d-inline";
-    //     // document.getElementById('badgePedidosStock').innerText = cantidad
-    //     document.getElementById('divPedidos').innerText = cantidad
-    //   }
-    //   else{
-    //     document.getElementById('badgePedidos').className = "badge badge-info badge-pill ml-2 d-none";
-    //     // document.getElementById('badgePedidosStock').className = "badge badge-info badge-pill ml-2 d-none";
-    //   }
-  
-  }
-  });
-
+    cantidadPed();
+    
     </script>
 {% endif %}
+    
+
 
 {% if user.groups.all.0.name == 'Administrador' %}
     <script>
