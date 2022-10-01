@@ -57,7 +57,7 @@ def productoAutocomplete(request):
    
     if 'term' in request.GET:
 
-        producto = Producto.objects.filter(nombre__icontains=request.GET.get("term"))
+        producto = Producto.objects.filter(nombre__icontains=request.GET.get("term")).exclude(precio_compra=0)
         nombre = list()
         if producto:
             
@@ -89,25 +89,25 @@ def productoAutocomplete(request):
 
 
 import json
-def cargarCompra(request):
+# def cargarCompra(request):
 
-    data = {
-        "form": compraProductoForm()
-    }
+#     data = {
+#         "form": compraProductoForm()
+#     }
 
-    data["formCompra"] = comprasForm()
+#     data["formCompra"] = comprasForm()
     
-    if request.is_ajax():
+#     if request.is_ajax():
         
-        data={}
+#         data={}
         
-        data['cuit'] = request.POST.get('cuit')
-        data['iva'] = request.POST('iva')
-        data['total'] = request.POST.get('total')
-        data['subTotal'] = request.POS.get('subTotal')
-        data['comprobante'] = request.POST.get('comprobante')
-        data['tipoComprobante'] = request.POST.cleaned_data['tipoComprobante']
-        data['fecha'] = request.POST.get('fecha')
+#         data['cuit'] = request.POST.get('cuit')
+#         data['iva'] = request.POST('iva')
+#         data['total'] = request.POST.get('total')
+#         data['subTotal'] = request.POS.get('subTotal')
+#         data['comprobante'] = request.POST.get('comprobante')
+#         data['tipoComprobante'] = request.POST.cleaned_data['tipoComprobante']
+#         data['fecha'] = request.POST.get('fecha')
         
   
        
@@ -116,7 +116,7 @@ def cargarCompra(request):
    
    
 
-    return render(request, 'compras/altaCompra.html', data)
+#     return render(request, 'compras/altaCompra.html', data)
        
         
 
@@ -152,7 +152,7 @@ def proveedorAutocomplete(request):
 
 
    
-def prueba(request):
+def cargarCompra(request):
    
     # request should be ajax and method should be POST.
     if request.is_ajax and request.method == "POST":

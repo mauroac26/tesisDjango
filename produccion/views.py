@@ -4,7 +4,7 @@ from django.contrib import messages
 from produccion.forms import produccionForm
 from produccion.models import Produccion
 from producto.models import Producto
-
+from stock.views import cargarStock
 
 # Create your views here.
 def index(request):
@@ -30,17 +30,15 @@ def altaProduccion(request):
 
     if request.method == "POST":
 
-        # fecha = request.POST.get('fecha')
+        fecha = request.POST.get('fecha')
         producto = request.POST.get('producto_retiro')
         cantidad = request.POST.get('cantidad_retiro')
-        # usuario = request.POST.get('usuario')
+        detalle = ""
+        usuario = request.user.username
         
-        # data['fecha'] = fecha
-        
-        # data['cantidad'] = cantidad
-        # data['producto'] = 1
-        # data['usuario'] = usuario
+        tipoMov = "Retiro para produccion"
         prod = Producto.objects.get(id=producto)
+        nombreProducto = prod.nombre
         stock = int(prod.stock)
         
         if stock > 0 and int(cantidad) <= stock:
@@ -51,10 +49,10 @@ def altaProduccion(request):
                 formulario.save()
                 
                 
-                stock = stock - int(cantidad)
-                prod.stock = stock
+                stockProducto = stock - int(cantidad)
+                prod.stock = stockProducto
                 prod.save()
-                
+                cargarStock(tipoMov, fecha, detalle, cantidad, nombreProducto, stockProducto, usuario)
                 return redirect(to='produccion')
             else:
                 data["form"] = formulario
@@ -102,16 +100,21 @@ def producido(request):
         cantidad = request.GET['cantidad']
         producto = request.GET['id_Producto']
         id_pedido = request.GET['id']
+        detalle = ""
+        usuario = request.user.username
+        tipoMov = "Producto Producido"
         
-        pedido = Produccion.objects.get(id = id_pedido)
 
+        pedido = Produccion.objects.get(id = id_pedido)
+        fecha = pedido.fecha
         pedido.estado = 'Producido'
         pedido.save()
 
         prod = Producto.objects.get(id=producto)
-        stock = int(cantidad)  + int(prod.stock) 
-        prod.stock = stock
+        nombreProducto = prod.nombre
+        stockProducto = int(cantidad)  + int(prod.stock) 
+        prod.stock = stockProducto
         prod.save()
-
+        cargarStock(tipoMov, fecha, detalle, cantidad, nombreProducto, stockProducto, usuario)
         return redirect(to='pedido')
  

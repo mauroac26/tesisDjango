@@ -453,7 +453,7 @@ $(function() {
         // carga la compra realizada
         $.ajax({
             type: 'POST',
-            url: "{% url 'prueba' %}",
+            url: "{% url 'cargarCompra' %}",
             data: serializedData,
             success: function (response) {
 

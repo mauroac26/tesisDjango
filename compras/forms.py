@@ -1,25 +1,17 @@
 from django import forms
 from datetime import date
 from .models import Compras, detalleCompra, formaPagoCompra
-from django.forms import ValidationError
 
-tipo_Comprobante = [
-    [0, "Factura"],
-    [1, "Recibo"],
-    [2, "Nota Credito"]
-]
+
+# tipo_Comprobante = [
+#     [0, "Factura"],
+#     [1, "Recibo"],
+#     [2, "Nota Credito"]
+# ]
 
 class comprasForm(forms.ModelForm):
     
-    # def clean_comprobante(self):
-    #     comprobante = self.cleaned_data["comprobante"]
-        
-    #     existe = Compras.objects.filter(comprobante__iexact=comprobante).exists()
-        
-    #     if existe:
-    #         raise ValidationError("El numero de comprobante ya existe")
-        
-    #     return comprobante
+    
 
     class Meta:
         model = Compras
@@ -33,10 +25,23 @@ class comprasForm(forms.ModelForm):
 
         }
 
+    # def clean_comprobante(self):
+    #     comprobante = self.cleaned_data["comprobante"]
+        
+    #     existe = Compras.objects.filter(comprobante__iexact=comprobante).exists()
+        
+    #     if existe:
+            
+    #         raise forms.ValidationError("El numero de comprobante ya existe")
+        
+    #     return comprobante
+
     def __init__(self, *args, **kwargs):
         super(comprasForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control form-control-sm'    
+
+    
 
 
 class detalleComprasForm(forms.ModelForm):

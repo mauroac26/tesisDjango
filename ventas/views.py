@@ -85,7 +85,7 @@ def productoVentaAutocomplete(request):
    
     if 'term' in request.GET:
 
-        producto = Producto.objects.filter(nombre__icontains=request.GET.get("term"))
+        producto = Producto.objects.filter(nombre__icontains=request.GET.get("term")).exclude(vencimiento=None)
         nombre = list()
         hoy =  date(datetime.now().year, datetime.now().month, datetime.now().day)
         if producto:
