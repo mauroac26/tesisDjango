@@ -17,7 +17,8 @@
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-12 col-md-6 offset-md-3">
-                        Nombre Producto
+                        {{ form|crispy}}
+                        <!-- Nombre Producto
                         <input type="text" name="nombreProducto" id="nombreProducto" class="form-control form-control-sm">
                         
                     </div>
@@ -53,17 +54,18 @@
                     <div class="col-12 col-md-6 offset-md-3">
                         {{ form.detalle|as_crispy_field }}
                      
-                    </div>
+                    </div> -->
 
                 </div>
-               <div class="row">
+               
                 <div class="col-12 col-md-6 offset-md-3 d-flex justify-content-end mt-2">
                     <button class="btn btn-primary btn-sm" type="submit">Confirmar</button> 
-                    <button onclick="cargarTabla();" class="btn btn-primary btn-sm ml-2" type="button">Añadir</button>
+                    <!-- <button onclick="cargarTabla();" class="btn btn-primary btn-sm ml-2" type="button">Añadir</button> -->
                 
                 
             </div> 
         </div>
+                </div>
             {{mensaje}}
             </form>
             <!-- <div class="row">
@@ -76,7 +78,7 @@
         </div>
       
     
-
+<!-- 
     <div class="row">
         <div class="col-md-12 pt-3">
             <div class="table-responsive" style="height: 160px;">
@@ -95,7 +97,7 @@
                 </table>
             </div>
         </div>
-    </div>
+    </div> -->
     
   </div>
 
@@ -107,207 +109,11 @@
 {% block js %}
 
 
-<script>
-    
-$(function() {
-    var p = 0;
-    $("#nombreProducto").autocomplete({
-        
-        source:  "{% url 'productoAuto' %}",
-        
-        select: function(event, ui){
-            p = ui.item.n;
-            if (ui.item.n == 1){
-               
-                // window.location = "{% url 'altaProducto' %}";
-                $("#nombreProducto").val('');
-                event.preventDefault();
-            }else{
-                $("#stock").val(ui.item.stock); 
-                $("#precio").val(ui.item.precio);
-                $("#nombreProducto").val(ui.item.value);
-            
-            
-                idProducto = ui.item.id
-            }
-            
-            
-}
-}).data('ui-autocomplete')._renderItem = function(ul, item) {
-        
-        
-                return $("<li>").append(item.label).appendTo(ul);
-                
-                
-            };
-  
-    
-    });
-  
- 
-</script>
-
-<script>
-    var cantidad = 0;
-    var diferencia = 0;
-    var i = 0;
-    function cargarTabla(){
-
-        
-        stock = $('#stock').val();
-        nombre = $('#nombreProducto').val();
-        cantidad = $('#cantidad').val();
-        
-        diferencia = stock - cantidad;
-        
-        i += 1;
-
-        fila = '<tr id=fila' + i +' class="text-dark"><td data-producto =' + idProducto +' style="text-align: right;">'+ nombre +'</td>' +
-                '<td style="text-align: right;">' + stock + '</td>'+
-                '<td>' + cantidad + '</td>'+
-                '<td>' + diferencia + '</td>'+
-                '<td class="row justify-content-center"><div><button  class="btn btn-danger " style="padding:1px;" type="button"  id="btn_del'+i+'" onclick="eliminarFC('+i+', )" ><i class="fas fa-times-circle"></i></button></div></td>'+
-                '</tr>';
-             
-                $('#tablaDetalle').append(fila);
-                      
-
-        }
-
-//  var objProducto = {}
-
-//          function cargarDetalle(){
-           
-
-//                 var tipoComprobante = $('#tipoComprobante option:selected').text();
-//                 var comprobante = $('#comprobante').val();
-//                 var fecha = $('#fecha').val();
-//                 var cuit = $('#cuit').val();
-//                 var iva = $('#iva').val();
-//                 var total = $('#total').val();
-//                 var subTotal = $('#subTotal').val();
-                
-//                 $.ajax({
-//                   type: "post",
-//                    url: "{% url 'cargarCompra' %}",
-//                   data: {tipoComprobante: '' + tipoComprobante + '',
-//                          comprobante: '' + comprobante + '',
-//                          iva: iva,
-//                          fecha:  '' + fecha + '',
-//                          cuit: '' + cuit + '',
-//                          total: total,
-//                          subTotal: subTotal
-//                           },
-//                 success: function(result) {
-//                           alert('Data Has been saved')
-//      }
-      
-              
-    
-//    });
-              
-//}         
-      
-   //}
-</script>
 
 
-<!-- Page level custom scripts -->
-
-<script>
-    function eliminarFC(id){
-    
 
 
-        $('#fila' + id).remove();
-        
-    }
-</script>
-
-
-<script>
-   
-    /*
-        On submiting the form, send the POST ajax
-        request to server and after successfull submission
-        display the object.
-    */
-    $("#form-ajuste").submit(function (e) {
-        detalle = $('#detalle').val();
-    
-        motivo = $('#motivo').val();
-        // preventing from page reload and default actions
-        e.preventDefault();
-        
-        //var serializedData = $(this).serialize();
-        Swal.fire({
-            "title": "Confirma el ajuste de stock?",
-            "text": "",
-            "icon":"question",
-            "showCancelButton": true,
-            "cancelButtonText":"No, Cancelar",
-            "confirmButtonText":"Si, confirmar",
-        })
-        .then(function(result){
-            if(result.isConfirmed){
-               
-                // serialize the data for sending the form data.
-        
-        // carga la compra realizada
-        $.ajax({
-            type: 'POST',
-            url: "{% url 'cargarAjuste' %}",
-            data: {
-            'csrfmiddlewaretoken': '{{ csrf_token }}',
-        },
-            success: function (response) {
-
-                let filaTablaAC = $('#tablaDetalle tr').length;
-               
-               for (f = 1; f <= filaTablaAC; f++) {
-
-                var cantidadTabla = document.getElementById('tablaDetalle').rows[f].cells[2].innerText;            
-                var idp = $('#tablaDetalle tr:eq('+f+')').find("td:first-child").data('producto');   
-                //var total = document.getElementById('tablaAltaCompra').rows[f].cells[6].innerText; 
-                
-            // carga detalle de la compra
-                $.ajax({
-            type: 'get',
-            url: "{% url 'cargarDetalleAjuste' %}",
-            data: {'id_producto': idp,
-                   'cantidad': cantidadTabla,
-                   'detalle': detalle,
-                   'motivo': motivo,
-                   'csrfmiddlewaretoken': '{{ csrf_token }}',
-        },
-            success: function (response) {
-                window.location = "{% url 'movimientoStock' %}";
-            },
-            error: function (response) {
-                // alert the error if any error occured
-                alert(response["responseJSON"]["error"]);
-            }
-        })
-    }
-    
-   
-          
-            },
-            error: function (response) {
-                // alert the error if any error occured
-                alert(response["responseJSON"]["error"]);
-            }
-        })
-            }
-
-        })
-        })
-        
-        
-    
-</script>
-
-
+<
 
 
 

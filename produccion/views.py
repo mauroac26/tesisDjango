@@ -26,7 +26,8 @@ def altaProduccion(request):
         "form": produccionForm()
     }
 
-    # print(data["form"]["usuario"][1])
+    # data["form"]["producto_retiro"] = data["form"]["producto_retiro"][1]
+    # print(data["form"]["producto_retiro"][1].tag)
 
     if request.method == "POST":
 
@@ -46,8 +47,9 @@ def altaProduccion(request):
             formulario = produccionForm(data=request.POST)
 
             if formulario.is_valid():
-                formulario.save()
-                
+                prod = formulario.save(commit=False)
+                prod.usuario_id = request.user.id
+                prod.save()
                 
                 stockProducto = stock - int(cantidad)
                 prod.stock = stockProducto
