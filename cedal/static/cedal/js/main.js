@@ -6,6 +6,8 @@ function table(tabla){
           //   "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
           // }
           "ordering": false,
+          
+          // "bLengthChange" : false,
           "language": {
            
             "emptyTable": "No hay información",
@@ -25,7 +27,7 @@ function table(tabla){
             }
           },
           responsive: "true",
-          dom: 'Bfrtilp',
+          dom: 'Bfrtip',
           buttons:[
             {
               extend: 'excelHtml5',

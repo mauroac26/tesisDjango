@@ -164,10 +164,15 @@ def cargarCompra(request):
             form.save()
             #ultima_compra = Compras.objects.order_by('id', 'fecha').last()
             return HttpResponse(True)
-            
+        else:
+            data = {
+                'error': form.errors.as_data()
+            } 
+            print(data['error'])
+            return JsonResponse({"error": list(data['error']['comprobante'][0])}, status = 400, safe = False)
 
     # some error occured
-    return JsonResponse({"error": "ingresar comprobante valido"}, status=400)
+        
 
 @login_required
 def cargarDetalleCompra(request):
