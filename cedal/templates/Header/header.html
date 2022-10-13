@@ -465,6 +465,7 @@
         <!-- End of Footer -->
 
     </div>
+    
     <!-- End of Content Wrapper -->
     {% endblock %}
 </div>
@@ -560,9 +561,11 @@
   success: function(response) {
     
       var cantidad = response.data;
-        
+        if (cantidad > 0) {
         document.getElementById('divVencimiento').innerText = cantidad
-      
+    }else{
+        document.getElementById('divVencimiento').innerText = 0
+    }
   
   }
   });

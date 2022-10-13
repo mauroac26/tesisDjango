@@ -133,17 +133,10 @@ def altaTarjeta(request):
 def cantidadPedidos(request):
     pedidos = 0
     if request.is_ajax() and request.method == "GET":
+    
         pedidos = Produccion.objects.filter(estado='Pendiente').count()
         return JsonResponse({"data": pedidos})
-        # usuario = request.user.id
-        # grupo = Users.objects.filter(id=usuario).values('groups')
-        # for p in grupo:
-           
-        #     if p['groups'] == 5:
-
-        #         pedidos = Pedido.objects.filter(estado='Pendiente').count()
-               
-        # return JsonResponse({"data": pedidos})
+        
 
 
 def prodVencimiento(request):
