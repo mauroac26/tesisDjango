@@ -27,7 +27,6 @@ class Producto(BaseModel):
     nombre = models.CharField(max_length=50)
     precio_compra = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     precio_venta = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-    descuento = models.DecimalField(max_digits=4, decimal_places=2, null=True)
     stock = models.IntegerField()
     stock_min = models.IntegerField(verbose_name='Stock Minimo')
     categoria = models.ForeignKey(Categoria, null=True, on_delete=models.SET_NULL)
@@ -44,6 +43,21 @@ class Producto(BaseModel):
         return self.nombre
 
 
+
+class ProductoPromocion(BaseModel):
+    id_producto = models.ForeignKey(Producto, null=True, on_delete=models.CASCADE, verbose_name='Producto')
+    descuento = models.DecimalField(max_digits=4, decimal_places=2, null=True)
+    fechaInicio = models.DateField(null=True, verbose_name='Fecha Inicio')
+    fechaFin = models.DateField(null=True, verbose_name='Fecha Finalizacion')
+    
+    
+    class Meta:
+        
+        verbose_name = 'Producto Promocion'
+        verbose_name_plural = 'Productos Promociones'
+
+    def __str__(self):
+        return int(self.id)
 
     
     

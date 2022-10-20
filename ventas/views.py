@@ -11,7 +11,7 @@ from cedal.form import formPago
 from cedal.models import formaPago
 from clientes.models import Clientes
 from producto.forms import ventaProductoForm
-from producto.models import Producto
+from producto.models import Producto, ProductoPromocion
 from stock.views import cargarStock
 from ventas.forms import detalleVentaForm, formPagoVenta, ventasForm
 from compras.utils import render_pdf
@@ -82,7 +82,7 @@ def clienteAutocomplete(request):
 
 
 def productoVentaAutocomplete(request):
-   
+    descuento = 0
     if 'term' in request.GET:
 
         producto = Producto.objects.filter(nombre__icontains=request.GET.get("term")).exclude(vencimiento=None)
@@ -101,6 +101,12 @@ def productoVentaAutocomplete(request):
                 else:
                     color = "badge-danger"
                 
+                promocion = ProductoPromocion.objects.filter(id_producto=n.id)
+                if promocion:
+                    for p in promocion:
+                        descuento = p.descuento
+                
+
                 signer_json = {}
                 signer_json['id'] = n.id
                 signer_json['label'] = '<li class="list-group-item d-flex justify-content-between align-items-center"><div class="col-sm-4">'+str(n.nombre)+'</div><span class="badge '+str(color)+' badge-pill text-white">'+str(n.stock)+'</span><span class="float-right">$'+str(n.precio_venta)+'</span></li>'
@@ -108,7 +114,7 @@ def productoVentaAutocomplete(request):
                 signer_json['stock'] = n.stock
                 signer_json['codigo'] = n.codigo
                 signer_json['precio'] = n.precio_venta
-                signer_json['descuento'] = n.descuento
+                signer_json['descuento'] = descuento
                 signer_json['vencimiento'] = resultado.days
                 nombre.append(signer_json)
             return JsonResponse(nombre, safe=False)
@@ -118,6 +124,7 @@ def productoVentaAutocomplete(request):
             signer_json['label'] = '<li class="list-group-item align-items-center"><div class="col-sm-4"><span class="badge badge-pill badge-danger">Dar alta producto</span></div></li>'
             nombre.append(signer_json)
             return JsonResponse(nombre, safe=False)
+
 
 
 def cargarVenta(request):

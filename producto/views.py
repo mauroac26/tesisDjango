@@ -2,8 +2,8 @@ from datetime import datetime, date
 from django.views.generic import ListView
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
-from .forms import marcaForm, categoriaForm, productoForm, promocionForm
-from .models import Marca, Categoria, Producto
+from .forms import marcaForm, categoriaForm, productoForm, promocionForm, promocionPromocionForm
+from .models import Marca, Categoria, Producto, ProductoPromocion
 
 from django.contrib.auth.decorators import login_required, permission_required
 # Create your views here.
@@ -56,6 +56,7 @@ def categorias(request):
     }
     return render(request, 'producto/categorias.html', data)
 
+
 @login_required
 @permission_required('producto.add_categoria', login_url='categorias')
 def altaCategorias(request):
@@ -75,6 +76,7 @@ def altaCategorias(request):
 
     return render(request, 'producto/altaCategorias.html', data)
 
+
 @login_required
 @permission_required('producto.add_marca', login_url='marcas')
 def altaMarcas(request):
@@ -93,6 +95,7 @@ def altaMarcas(request):
             data["form"] = formulario
 
     return render(request, 'producto/altaMarcas.html', data)
+
 
 @login_required
 @permission_required('producto.change_producto', login_url='productos')
@@ -231,7 +234,6 @@ def promocion(request, id):
     
     data = {
         'form': promocionForm(instance=producto),
-        'nombre': producto.nombre
     }
 
     if request.method == "POST":
@@ -246,8 +248,53 @@ def promocion(request, id):
 
     
 class prodPromocion(ListView):
-    model = Producto
-    context_object_name = 'producto'   # your own name for the list as a template variable
-    queryset = Producto.objects.filter(descuento__gt=0).values() # Get 5 books containing the title war
+    model = ProductoPromocion
+    context_object_name = 'productoPromo'   # your own name for the list as a template variable
+    queryset = ProductoPromocion.objects.all() # Get 5 books containing the title war
     template_name = 'producto/productoPromo.html' 
 
+
+
+def altaProductoPromo(request):
+
+    data = {
+        "form": promocionPromocionForm()
+    }
+
+    if request.method == "POST":
+        formulario = promocionPromocionForm(data=request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            messages.add_message(request, messages.SUCCESS, "La promocion se guardó exitosamente")
+            return redirect(to='productosPromo')
+        else:
+            data["form"] = formulario
+
+    return render(request, 'producto/altaPromocion.html', data)
+
+
+def editarPromocion(request, id):
+    promocion = get_object_or_404(ProductoPromocion, pk=id)
+    
+    data = {
+        'form': promocionPromocionForm(instance=promocion)
+    }
+
+    if request.method == "POST":
+        formulario = promocionPromocionForm(data=request.POST, instance=promocion)
+        if formulario.is_valid():
+            formulario.save()
+            messages.add_message(request, messages.SUCCESS, "La promocion se modificó exitosamente")
+            return redirect(to='productosPromo')
+        data["form"] = promocionPromocionForm()
+            
+    return render(request, 'producto/editarPromo.html', data)
+
+
+def eliminarPromocion(request, id):
+    promocion = get_object_or_404( ProductoPromocion, pk=id)
+    
+    if promocion:
+        promocion.delete()
+        messages.add_message(request, messages.SUCCESS, "La promocion se eliminó exitosamente")
+        return redirect(to='productosPromo')

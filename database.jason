@@ -1,0 +1,9 @@
+[
+{
+  "model": "producto.categoria",
+  "pk": 1,
+  "fields": {
+    "descripcion": "General"
+  }
+}
+]
