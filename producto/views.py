@@ -2,7 +2,9 @@ from datetime import datetime, date
 from django.views.generic import ListView
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
-from .forms import marcaForm, categoriaForm, productoForm, promocionForm, promocionPromocionForm
+
+from cedal.views import consultaPromo
+from .forms import marcaForm, categoriaForm, productoForm, productoPromocionForm, promocionForm
 from .models import Marca, Categoria, Producto, ProductoPromocion
 
 from django.contrib.auth.decorators import login_required, permission_required
@@ -248,21 +250,28 @@ def promocion(request, id):
 
     
 class prodPromocion(ListView):
+
+    consultaPromo()
+    
     model = ProductoPromocion
     context_object_name = 'productoPromo'   # your own name for the list as a template variable
     queryset = ProductoPromocion.objects.all() # Get 5 books containing the title war
     template_name = 'producto/productoPromo.html' 
 
+    
 
+    
+                
+            
 
 def altaProductoPromo(request):
 
     data = {
-        "form": promocionPromocionForm()
+        "form": productoPromocionForm()
     }
 
     if request.method == "POST":
-        formulario = promocionPromocionForm(data=request.POST)
+        formulario = productoPromocionForm(data=request.POST)
         if formulario.is_valid():
             formulario.save()
             messages.add_message(request, messages.SUCCESS, "La promocion se guardó exitosamente")

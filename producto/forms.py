@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from django import forms
 from .models import Marca, Categoria, Producto, ProductoPromocion
 
@@ -71,7 +71,7 @@ class  ventaProductoForm(forms.ModelForm):
         }
 
 
-class promocionPromocionForm(forms.ModelForm):
+class productoPromocionForm(forms.ModelForm):
 
     class Meta:
         model = ProductoPromocion
@@ -83,8 +83,20 @@ class promocionPromocionForm(forms.ModelForm):
             'fechaFin' : forms.DateInput(attrs={"type": "date", "value": date.today(), 'id': 'fechaFin'})
             }
 
+    def clean_fechaFin(self):
+        fechaFin = self.cleaned_data['fechaFin']
+        hoy =  date(datetime.now().year, datetime.now().month, datetime.now().day)
+    
+     
+        fecha = date(fechaFin.year, fechaFin.month, fechaFin.day)
+        
+        if hoy > fecha:
+            print('hola')
+            raise forms.ValidationError('Ingrese una fecha valida')
+        return fechaFin
+
     def __init__(self, *args, **kwargs):
-        super(promocionPromocionForm, self).__init__(*args, **kwargs)
+        super(productoPromocionForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control form-control-sm'
 

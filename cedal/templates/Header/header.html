@@ -20,8 +20,8 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     
-    
-
+    <!-- Rango de fechas css-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
    
     <link href="{% static 'cedal/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
     <link
@@ -282,6 +282,29 @@
             </li>
             
             <li class="nav-item">
+                
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReporte" aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-chart-pie"></i>
+                    <span>Reportes</span>
+                </a>
+
+                <div id="collapseReporte" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-secondary text-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'reportesCompras' %}">Compras</a>
+                        
+                        
+                        <a class="collapse-item" href="#" >Ventas</a>
+                        <a class="collapse-item" href="#">Cuentas por pagar</a>
+                        
+                        
+                        <a class="collapse-item" href="#" >Cuentas por cobrar</a>  
+                        
+                        
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
                 <!-- <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
@@ -541,6 +564,9 @@
     <script src="{% static 'cedal/datatables/Buttons-2.2.2/js/buttons.print.min.js' %}"></script>
     <script src="{% static 'cedal/js/main.js' %}"></script>
 
+    <!--Rango de fechas js-->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
     {% if user.groups.all.0.name == 'Productor' %}
     <script>

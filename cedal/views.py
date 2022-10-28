@@ -4,10 +4,12 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 
 from django.db.models import Sum, Count
+from cedal.form import reporteForm
 from cedal.models import tarjetaCredito, tarjetaDebito
 from django.http import JsonResponse
+from compras.models import detalleCompra
 from produccion.models import Produccion
-from producto.models import Marca, Producto
+from producto.models import Marca, Producto, ProductoPromocion
 from user.models import Users
 from ventas.models import detalleVenta, Ventas
 
@@ -170,3 +172,56 @@ def prodVencimiento(request):
         return JsonResponse({"data": len(resultado)})
 
 
+def consultaPromo():
+    promo = ProductoPromocion.objects.all()
+    hoy =  date(datetime.now().year, datetime.now().month, datetime.now().day)
+    for p in promo:
+        fecha = p.fechaFin
+        fechaFin = date(fecha.year, fecha.month, fecha.day)
+        if hoy > fechaFin:
+            p.delete()
+
+
+def reportesCompras(request):
+    # compra = detalleCompra.objects.values('id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__cuit', 'id_compra__fecha',  'id_compra__formapagocompra__tipoPago').annotate(Sum('total'))
+
+
+    data = {
+       
+        "reporteForm": reporteForm()
+    }
+
+
+    return render(request, 'reportes/reporteCompras.html', data)
+
+
+def comprasRango(request):
+    if request.is_ajax():
+       
+        data = []
+    
+        fecha_inicio = request.POST['fecha_inicio']
+        fecha_fin = request.POST['fecha_fin']
+
+    
+        compras = detalleCompra.objects.values('id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__cuit', 'id_compra__fecha',  'id_compra__formapagocompra__tipoPago').annotate(Sum('total'))
+        
+        if len(fecha_inicio) and len(fecha_fin):
+            
+            compras = compras.filter(id_compra__fecha__range=[fecha_inicio, fecha_fin])
+            
+        for f in compras:
+            
+            data.append([
+                f['id_compra__comprobante'],
+                f['id_compra__cuit__nombre'],
+                f['id_compra__cuit'],
+                f['id_compra__fecha'],
+                f['id_compra__formapagocompra__tipoPago'],
+                f['total__sum']
+            ])
+
+    else:
+        data['error'] = 'Ha ocurrido un error'
+    
+    return JsonResponse(data, safe=False)

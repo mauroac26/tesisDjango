@@ -3,7 +3,7 @@ from django.urls import path
 
 
 
-from .views import altaTarjeta, cantidadPedidos, configuracion, credito, graficoClientes, graficoProductos, index, graficoCompras, prodVencimiento
+from .views import altaTarjeta, cantidadPedidos, configuracion, credito, graficoClientes, graficoProductos, index, graficoCompras, prodVencimiento, reportesCompras, comprasRango
 
 
 urlpatterns = [
@@ -17,4 +17,6 @@ urlpatterns = [
     path('graficoClientes/', graficoClientes, name="graficoClientes"),
     path('cantidadPedidos/', cantidadPedidos, name="cantidadPedidos"),
     path('prodVencimiento/', prodVencimiento, name="prodVencimiento"),
+    path('reportesCompras/', reportesCompras, name="reportesCompras"),
+    path('comprasRango/', comprasRango, name="comprasRango"),
 ]

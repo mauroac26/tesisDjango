@@ -1,4 +1,5 @@
 from django import forms
+# from django.forms import Form
 from .models import formaPago, tarjetaCredito, tarjetaDebito
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -56,3 +57,10 @@ class formDebito(forms.ModelForm):
     class Meta:
         model = tarjetaDebito
         fields = '__all__'
+
+
+
+class reporteForm(forms.Form):
+    
+    fecha_rango = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control form-control-sm', 'autocomplete': 'off' }))
+    

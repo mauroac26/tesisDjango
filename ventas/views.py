@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from django.contrib import messages
 from django.db.models.aggregates import Sum
-#from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
@@ -16,7 +16,7 @@ from stock.views import cargarStock
 from ventas.forms import detalleVentaForm, formPagoVenta, ventasForm
 from compras.utils import render_pdf
 from django.views.generic import View
-
+from cedal.views import consultaPromo
 from ventas.models import Ventas, detalleVenta, formaPagoVenta
 
 
@@ -24,12 +24,13 @@ from django.template.loader import get_template
 import os
 from django.conf import settings
 
-from django.contrib.staticfiles import finders
+
 # Create your views here.
 # @login_required
 # @permission_required('ventas.view_ventas', login_url='index')
 def index(request):
 
+    consultaPromo()
 
     venta = detalleVenta.objects.values('id_venta__id', 'id_venta__comprobante', 'id_venta__cuit__nombre', 'id_venta__fecha').annotate(Sum('total'))
     
@@ -41,7 +42,8 @@ def index(request):
 
     return render(request, 'ventas/ventas.html', data)
 
-
+@login_required
+@permission_required('ventas.add_ventas', login_url='ventas')
 def altaVenta(request):
 
     data = {
