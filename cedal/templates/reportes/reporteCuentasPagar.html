@@ -1,7 +1,7 @@
 {% extends 'Header/header.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
-{% block title %}Reporte de Compras{% endblock %}
+{% block title %}Reporte cuentas por pagar{% endblock %}
 
 {% block content %}
 
@@ -10,7 +10,7 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Reporte de Compras</h1>
+    <h1 class="h3 mb-2 text-gray-800">Reporte cuentas por pagar</h1>
     
 
     <!-- DataTales Example -->
@@ -31,16 +31,15 @@
         
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-sm table-striped table-hover display" id="tablaReporteCompra" width="100%" >
+                <table class="table table-sm table-striped table-hover display" id="tablaCuentasPagar" width="100%" >
                     <thead>
                         <tr>
-                            <th>Comprobante</th>
-                            <th>Fecha de compra</th>
                             <th>Proveedor</th>
                             <th>Cuit</th>
-                            <th>Forma de pago</th>
-                            <th>total($)</th>
-                            
+                            <th>Fecha de compra</th>
+                            <th>Deuda</th>
+                            <th>Saldo</th>
+                            <th>Estado</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -82,7 +81,7 @@ function generar_reporte(){
             fecha_fin = fecha_rango.endDate.format('YYYY-MM-DD');
         }
 
-        $('#tablaReporteCompra').DataTable({
+        $('#tablaCuentasPagar').DataTable({
             "language": {
            
            "emptyTable": "No hay información",
@@ -130,7 +129,7 @@ function generar_reporte(){
           ],
             ajax:{
                   type: "post",
-                   url: "{% url 'comprasRango' %}",
+                   url: "{% url 'cuentasPagarRango' %}",
                   data: {fecha_inicio,
                          fecha_fin,
                     'csrfmiddlewaretoken': '{{ csrf_token }}',

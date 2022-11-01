@@ -1,7 +1,7 @@
 {% extends 'Header/header.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
-{% block title %}Reporte de Compras{% endblock %}
+{% block title %}Reporte de Ventas{% endblock %}
 
 {% block content %}
 
@@ -10,7 +10,7 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Reporte de Compras</h1>
+    <h1 class="h3 mb-2 text-gray-800">Reporte de Ventas</h1>
     
 
     <!-- DataTales Example -->
@@ -31,14 +31,16 @@
         
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-sm table-striped table-hover display" id="tablaReporteCompra" width="100%" >
+                <table class="table table-sm  table-striped table-hover display" id="tablaReporteVenta" width="100%" >
                     <thead>
                         <tr>
                             <th>Comprobante</th>
-                            <th>Fecha de compra</th>
-                            <th>Proveedor</th>
+                            <th>Fecha de venta</th>
+                            <th>Cliente</th>
                             <th>Cuit</th>
-                            <th>Forma de pago</th>
+                            <th>iva($)</th>
+                            <th>subTotal($)</th>
+                           
                             <th>total($)</th>
                             
                         </tr>
@@ -82,7 +84,7 @@ function generar_reporte(){
             fecha_fin = fecha_rango.endDate.format('YYYY-MM-DD');
         }
 
-        $('#tablaReporteCompra').DataTable({
+        $('#tablaReporteVenta').DataTable({
             "language": {
            
            "emptyTable": "No hay información",
@@ -130,7 +132,7 @@ function generar_reporte(){
           ],
             ajax:{
                   type: "post",
-                   url: "{% url 'comprasRango' %}",
+                    url: "{% url 'ventasRango' %}",
                   data: {fecha_inicio,
                          fecha_fin,
                     'csrfmiddlewaretoken': '{{ csrf_token }}',
@@ -139,7 +141,6 @@ function generar_reporte(){
                   dataSrc: ''
                   },
             order: false,
-            
             searching: false
 
         });

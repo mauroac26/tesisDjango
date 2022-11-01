@@ -3,7 +3,7 @@ from django.urls import path
 
 
 
-from .views import altaTarjeta, cantidadPedidos, configuracion, credito, graficoClientes, graficoProductos, index, graficoCompras, prodVencimiento, reportesCompras, comprasRango
+from .views import altaTarjeta, backup, cantidadPedidos, configuracion, credito, cuentasCobrarRango, cuentasPagarRango, graficoClientes, graficoProductos, index, graficoCompras, prodVencimiento, reportesCompras, comprasRango, reportesCuentasCobrar, reportesCuentasPagar, reportesVentas, ventasRango
 
 
 urlpatterns = [
@@ -19,4 +19,11 @@ urlpatterns = [
     path('prodVencimiento/', prodVencimiento, name="prodVencimiento"),
     path('reportesCompras/', reportesCompras, name="reportesCompras"),
     path('comprasRango/', comprasRango, name="comprasRango"),
+    path('reportesVentas/', reportesVentas, name="reportesVentas"),
+    path('ventasRango/', ventasRango, name="ventasRango"),
+    path('reportesCuentasPagar/', reportesCuentasPagar, name="reportesCuentasPagar"),
+    path('cuentasPagarRango/', cuentasPagarRango, name="cuentasPagarRango"),
+    path('reportesCuentasCobrar/', reportesCuentasCobrar, name="reportesCuentasCobrar"),
+    path('cuentasCobrarRango/', cuentasCobrarRango, name="cuentasCobrarRango"),
+    path('backup/', backup, name="backup"),
 ]

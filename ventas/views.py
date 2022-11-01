@@ -428,7 +428,7 @@ def pagoVenta(request):
 def ventaAdeudada(request):
     if 'term' in request.GET:
         
-        ventas = detalleVenta.objects.annotate(Sum('total')).values('total__sum', 'id_venta__cuit__nombre', 'id_venta__fecha','id_venta').filter(id_venta__cuit__nombre__icontains=request.GET.get("term"), id_venta__estado = 'Adeudado')
+        ventas = detalleVenta.objects.values('id_venta__cuit__nombre', 'id_venta__fecha','id_venta').annotate(Sum('total')).filter(id_venta__cuit__nombre__icontains=request.GET.get("term"), id_venta__estado = 'Adeudado')
         
         nombre = list()
         if ventas:
@@ -470,9 +470,8 @@ def registroPagoVenta(request):
         tipoPago = request.POST.get('tipoPago')
         tarjeta = request.POST.get('tipoCredito')
         cuotas = request.POST.get('cuotas')
-        print(tarjeta)
-        print(cuotas)
-        saldo = detalleVenta.objects.annotate(Sum('total')).values('total__sum', 'id_venta__comprobante').filter(id_venta=id_venta)
+     
+        saldo = detalleVenta.objects.values('id_venta__comprobante').annotate(Sum('total')).filter(id_venta=id_venta)
         for c in saldo:
             comprobante = c['id_venta__comprobante']
             deuda = c['total__sum']
@@ -482,10 +481,10 @@ def registroPagoVenta(request):
         if total <= float(deuda):
             
                 
-            id = Caja.objects.order_by('id', 'total', 'estado').last()
+            caja_actual = Caja.objects.order_by('id', 'total', 'estado').last()
             
             if tipoPago == 'Efectivo':
-                if id.estado:
+                if caja_actual.estado:
                     
                     cargarPagoVenta(id_venta, total, tipoPago, deuda, tarjeta, cuotas)
                     #Registra el monto pagado en movimientos de la caja si es en efectivo y la caja se encuentra abierta
@@ -494,7 +493,7 @@ def registroPagoVenta(request):
                     caja['descripcion'] = "Venta comprobante N° " + comprobante
                     caja['operacion'] = 0
                     caja['monto'] = total
-                    caja['id_caja'] = id.id
+                    caja['id_caja'] = caja_actual.id
                     caja['saldo'] = deuda
                     caja['fecha'] = fecha
                     formulario = movimientoCajaForm(caja) 
@@ -504,9 +503,11 @@ def registroPagoVenta(request):
                         
                         ultimo_saldo = movCaja.objects.latest('fecha').saldo
                                 
-                        post.saldo = float(ultimo_saldo) + float(total)
-            
+                        total = float(ultimo_saldo) + float(total)
+                        post.saldo = total
                         post.save()
+                        caja_actual.total = total
+                        caja_actual.save()
                         messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
                         return redirect(to='pagoVenta')
                     else:
