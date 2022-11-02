@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import tarjetaCredito, tarjetaDebito, formaPago
+from .models import backup
+from simple_history.admin import SimpleHistoryAdmin
+
 # Register your models here.
-admin.site.register(tarjetaCredito)
-admin.site.register(tarjetaDebito)
-admin.site.register(formaPago)
+admin.site.register(backup, SimpleHistoryAdmin)

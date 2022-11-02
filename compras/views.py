@@ -87,41 +87,6 @@ def productoAutocomplete(request):
 
     
 
-
-import json
-# def cargarCompra(request):
-
-#     data = {
-#         "form": compraProductoForm()
-#     }
-
-#     data["formCompra"] = comprasForm()
-    
-#     if request.is_ajax():
-        
-#         data={}
-        
-#         data['cuit'] = request.POST.get('cuit')
-#         data['iva'] = request.POST('iva')
-#         data['total'] = request.POST.get('total')
-#         data['subTotal'] = request.POS.get('subTotal')
-#         data['comprobante'] = request.POST.get('comprobante')
-#         data['tipoComprobante'] = request.POST.cleaned_data['tipoComprobante']
-#         data['fecha'] = request.POST.get('fecha')
-        
-  
-       
-      
-
-   
-   
-
-#     return render(request, 'compras/altaCompra.html', data)
-       
-        
-
-
-
 def proveedorAutocomplete(request):
    
     if 'term' in request.GET:
@@ -384,9 +349,9 @@ def registroPago(request):
             
                 
             caja_actual = Caja.objects.order_by('id', 'total', 'estado').last()
-            
+            print(caja_actual)
             if tipoPago == 'Efectivo':
-                if caja_actual.estado:
+                if caja_actual != None and caja_actual.estado:
                     
                     if caja_actual.total >= total:
                         cargarPago(id_compra, total, tipoPago, deuda)

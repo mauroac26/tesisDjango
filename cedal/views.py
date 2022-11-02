@@ -4,8 +4,8 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.db.models.functions import Coalesce
 from django.db.models import Sum, Count
-from cedal.form import reporteForm
-from cedal.models import tarjetaCredito, tarjetaDebito
+from cedal.form import formBackup, reporteForm
+from cedal.models import backup, tarjetaCredito, tarjetaDebito
 from django.http import JsonResponse
 from compras.models import detalleCompra, formaPagoCompra
 from produccion.models import Produccion
@@ -397,17 +397,46 @@ from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 from zipfile import ZipFile
 
-def backup(request):
-    name = DATABASES['default']['NAME']
-    passwd = DATABASES['default']['PASSWORD']
-    user = DATABASES['default']['USER']
-    ruta = RUTA
 
-    proc = subprocess.Popen("mysqldump -u "+user+"  "+name+" > "+ruta+"backup.sql", shell=True)
-    proc.wait()
-    return redirect(to='credito')
-    # fs = FileSystemStorage(ruta)
-    # with fs.open('backup.sql'):
-    #     # response = HttpResponse(tar, content_type='application/x-gzip')
-    #     # response['Content-Disposition'] = 'filename="backup.sql"'
-    #     return redirect(to='credito')
+
+
+def backupBD(request):
+    respaldo = backup.objects.all()
+
+    data = {
+        "respaldo": respaldo
+    }
+
+    if request.method == "POST":
+        name = DATABASES['default']['NAME']
+        passwd = DATABASES['default']['PASSWORD']
+        user = DATABASES['default']['USER']
+        ruta = RUTA
+
+        fecha = datetime.now()
+        fecha1 = fecha.strftime("%m-%d-%Y")
+    
+        proc = subprocess.Popen("mysqldump -u "+user+"  "+name+" > "f'{ruta}{fecha1}.sql', shell=True)
+        proc.wait()
+
+        fecha_respaldo = fecha
+        usuario = request.user.id
+         
+        data = {}
+        data['fecha'] = fecha_respaldo
+        data['usuario'] = usuario
+        data['archivo'] = f'{ruta}{fecha1}.sql'
+        
+        respaldo = formBackup(data)
+                
+        if respaldo.is_valid(): 
+            respaldo.save()
+            messages.add_message(request, messages.SUCCESS, "El backup de la base de datos se realizó correctamente")
+            return redirect(to='backup')
+        else:
+            messages.add_message(request, messages.ERROR, "El backup de la base de datos no se pudo realizar")
+
+    return render(request, 'configuracion/backup.html', data)
+
+    
+    
