@@ -17,6 +17,8 @@
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <a href="{% url 'altaProducto' %}" class="btn btn-primary btn-sm"><i class="fas fa-plus pr-2"></i>Nuevo Producto</a>
+            <a href="{% url 'vencimiento' %}" class="btn btn-danger btn-sm">Productos por vencerse</a>
+        
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -64,8 +66,15 @@
                             
                         </td>
 
-                        <td class="row justify-content-center"><a class="btn-sm btn-success" href="{% url 'editarProducto' p.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
-                            <a class="btn-sm btn-danger ml-3" href="{% url 'eliminarProducto' p.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
+                        <td>
+                            <div class="row justify-content-center">
+                            <a class="btn-sm btn-success" href="{% url 'editarProducto' p.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
+                        
+                        
+                            <a class="btn-sm btn-danger ml-1" href="{% url 'eliminarProducto' p.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                        </div>
+                        </td>
+                    
                     </tr>
                        {% endfor %}
                     </tbody>

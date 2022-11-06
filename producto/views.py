@@ -1,7 +1,11 @@
+from datetime import datetime, date
+from django.views.generic import ListView
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
-from .forms import marcaForm, categoriaForm, productoForm
-from .models import Marca, Categoria, Producto
+
+from cedal.views import consultaPromo
+from .forms import marcaForm, categoriaForm, productoForm, productoPromocionForm, promocionForm
+from .models import Marca, Categoria, Producto, ProductoPromocion
 
 from django.contrib.auth.decorators import login_required, permission_required
 # Create your views here.
@@ -54,6 +58,7 @@ def categorias(request):
     }
     return render(request, 'producto/categorias.html', data)
 
+
 @login_required
 @permission_required('producto.add_categoria', login_url='categorias')
 def altaCategorias(request):
@@ -73,6 +78,7 @@ def altaCategorias(request):
 
     return render(request, 'producto/altaCategorias.html', data)
 
+
 @login_required
 @permission_required('producto.add_marca', login_url='marcas')
 def altaMarcas(request):
@@ -91,6 +97,7 @@ def altaMarcas(request):
             data["form"] = formulario
 
     return render(request, 'producto/altaMarcas.html', data)
+
 
 @login_required
 @permission_required('producto.change_producto', login_url='productos')
@@ -187,3 +194,116 @@ def eliminarCategoria(request, id):
 
 
 
+def vencimiento(request):
+    
+    hoy =  date(datetime.now().year, datetime.now().month, datetime.now().day)
+    resultado = list()
+    producto = Producto.objects.values('id', 'codigo', 'nombre', 'vencimiento')
+
+    for v in producto:
+        
+        if v['vencimiento'] != None:
+            vencimiento = v['vencimiento']
+            
+            fecha = date(vencimiento.year, vencimiento.month, vencimiento.day)
+            
+            resultados = hoy - fecha
+
+            if resultados.days >= 355:
+                prodVencidos = {}
+                prodVencidos['id'] = v['id']
+                prodVencidos['codigo'] = v['codigo']
+                prodVencidos['nombre'] = v['nombre']
+                prodVencidos['dias'] = 365 - resultados.days
+            
+                
+            
+            
+
+                resultado.append(prodVencidos)
+    
+    
+    data = {
+        'producto': resultado
+    }
+
+    return render(request, 'producto/vencimiento.html', data)
+
+            
+        
+def promocion(request, id):
+    producto = get_object_or_404(Producto, pk=id)
+    
+    data = {
+        'form': promocionForm(instance=producto),
+    }
+
+    if request.method == "POST":
+        formulario = promocionForm(data=request.POST, instance=producto)
+        if formulario.is_valid():
+            formulario.save()
+            messages.add_message(request, messages.SUCCESS, "Se añadió el descuento correctamente")
+            return redirect(to='productos')
+        data["form"] = promocionForm()
+            
+    return render(request, 'producto/promocion.html', data)
+
+    
+class prodPromocion(ListView):
+
+    consultaPromo()
+    
+    model = ProductoPromocion
+    context_object_name = 'productoPromo'   # your own name for the list as a template variable
+    queryset = ProductoPromocion.objects.all() # Get 5 books containing the title war
+    template_name = 'producto/productoPromo.html' 
+
+    
+
+    
+                
+            
+
+def altaProductoPromo(request):
+
+    data = {
+        "form": productoPromocionForm()
+    }
+
+    if request.method == "POST":
+        formulario = productoPromocionForm(data=request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            messages.add_message(request, messages.SUCCESS, "La promocion se guardó exitosamente")
+            return redirect(to='productosPromo')
+        else:
+            data["form"] = formulario
+
+    return render(request, 'producto/altaPromocion.html', data)
+
+
+def editarPromocion(request, id):
+    promocion = get_object_or_404(ProductoPromocion, pk=id)
+    
+    data = {
+        'form': promocionPromocionForm(instance=promocion)
+    }
+
+    if request.method == "POST":
+        formulario = promocionPromocionForm(data=request.POST, instance=promocion)
+        if formulario.is_valid():
+            formulario.save()
+            messages.add_message(request, messages.SUCCESS, "La promocion se modificó exitosamente")
+            return redirect(to='productosPromo')
+        data["form"] = promocionPromocionForm()
+            
+    return render(request, 'producto/editarPromo.html', data)
+
+
+def eliminarPromocion(request, id):
+    promocion = get_object_or_404( ProductoPromocion, pk=id)
+    
+    if promocion:
+        promocion.delete()
+        messages.add_message(request, messages.SUCCESS, "La promocion se eliminó exitosamente")
+        return redirect(to='productosPromo')

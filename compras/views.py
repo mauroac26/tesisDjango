@@ -57,7 +57,7 @@ def productoAutocomplete(request):
    
     if 'term' in request.GET:
 
-        producto = Producto.objects.filter(nombre__icontains=request.GET.get("term"))
+        producto = Producto.objects.filter(nombre__icontains=request.GET.get("term")).exclude(precio_compra=0)
         nombre = list()
         if producto:
             
@@ -86,41 +86,6 @@ def productoAutocomplete(request):
             return JsonResponse(nombre, safe=False)
 
     
-
-
-import json
-def cargarCompra(request):
-
-    data = {
-        "form": compraProductoForm()
-    }
-
-    data["formCompra"] = comprasForm()
-    
-    if request.is_ajax():
-        
-        data={}
-        
-        data['cuit'] = request.POST.get('cuit')
-        data['iva'] = request.POST('iva')
-        data['total'] = request.POST.get('total')
-        data['subTotal'] = request.POS.get('subTotal')
-        data['comprobante'] = request.POST.get('comprobante')
-        data['tipoComprobante'] = request.POST.cleaned_data['tipoComprobante']
-        data['fecha'] = request.POST.get('fecha')
-        
-  
-       
-      
-
-   
-   
-
-    return render(request, 'compras/altaCompra.html', data)
-       
-        
-
-
 
 def proveedorAutocomplete(request):
    
@@ -152,7 +117,7 @@ def proveedorAutocomplete(request):
 
 
    
-def prueba(request):
+def cargarCompra(request):
    
     # request should be ajax and method should be POST.
     if request.is_ajax and request.method == "POST":
@@ -164,10 +129,15 @@ def prueba(request):
             form.save()
             #ultima_compra = Compras.objects.order_by('id', 'fecha').last()
             return HttpResponse(True)
-            
+        else:
+            data = {
+                'error': form.errors.as_data()
+            } 
+            print(data['error'])
+            return JsonResponse({"error": list(data['error']['comprobante'][0])}, status = 400, safe = False)
 
     # some error occured
-    return JsonResponse({"error": "ingresar comprobante valido"}, status=400)
+        
 
 @login_required
 def cargarDetalleCompra(request):
@@ -367,7 +337,8 @@ def registroPago(request):
         total = float(request.POST.get('total'))
         id_compra = request.POST.get('id_compra')
         tipoPago = request.POST.get('tipoPago')
-        saldo = detalleCompra.objects.annotate(Sum('total')).values('total__sum', 'id_compra__comprobante').filter(id_compra=id_compra)
+        saldo = detalleCompra.objects.values('id_compra__comprobante').annotate(Sum('total')).filter(id_compra=id_compra)
+     
         for c in saldo:
             comprobante = c['id_compra__comprobante']
             deuda = c['total__sum']
@@ -377,11 +348,12 @@ def registroPago(request):
         if total <= float(deuda):
             
                 
-            id = Caja.objects.order_by('id', 'total', 'estado').last()
-            
+            caja_actual = Caja.objects.order_by('id', 'total', 'estado').last()
+            print(caja_actual)
             if tipoPago == 'Efectivo':
-                if id.estado:
-                    if id.total >= total:
+                if caja_actual != None and caja_actual.estado:
+                    
+                    if caja_actual.total >= total:
                         cargarPago(id_compra, total, tipoPago, deuda)
                         #Registra el monto pagado en movimientos de la caja si es en efectivo y la caja se encuentra abierta
                         fecha = datetime.now()
@@ -389,7 +361,7 @@ def registroPago(request):
                         caja['descripcion'] = "Compra comprobante N° " + comprobante
                         caja['operacion'] = 1
                         caja['monto'] = total
-                        caja['id_caja'] = id.id
+                        caja['id_caja'] = caja_actual.id
                         caja['saldo'] = deuda
                         caja['fecha'] = fecha
                         formulario = movimientoCajaForm(caja)
@@ -399,9 +371,11 @@ def registroPago(request):
                         
                             ultimo_saldo = movCaja.objects.latest('fecha').saldo
                                 
-                            post.saldo = float(ultimo_saldo) - float(total)
-            
+                            total = float(ultimo_saldo) - float(total)
+                            post.saldo = total 
                             post.save()
+                            caja_actual.total = total
+                            caja_actual.save()
                             messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
                             return redirect(to='pago')
                         else:
@@ -450,8 +424,8 @@ def cargarPago(id_compra, total, tipoPago, deuda):
 def compraAdeudada(request):
     if 'term' in request.GET:
         
-        compras = detalleCompra.objects.annotate(Sum('total')).values('total__sum', 'id_compra__cuit__nombre', 'id_compra__fecha','id_compra').filter(id_compra__cuit__nombre__icontains=request.GET.get("term"), id_compra__estado = 'Adeudado')
         
+        compras = detalleCompra.objects.values('id_compra', 'id_compra__cuit__nombre', 'id_compra__fecha', 'id_compra__cuit', 'id_compra__estado').annotate(Sum('total')).filter(id_compra__cuit__nombre__icontains=request.GET.get("term"), id_compra__estado="Adeudado")
         nombre = list()
         if compras:
             for n in compras:

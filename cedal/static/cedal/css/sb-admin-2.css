@@ -3195,6 +3195,37 @@ input[type="button"].btn-block {
   border: 0;
 }
 
+/* CSS ITEM NOTIFICACIONES */
+/* .dropdown-item1 {
+display: flex;
+  align-items: center;
+  padding: 15px 10px;
+  transition: 0.3s;
+}
+
+.dropdown-item1 i {
+  margin: 0 20px 0 10px;
+  font-size: 24px;
+}
+
+.dropdown-item1 h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.dropdown-item1:hover {
+  background-color: #f6f9ff;
+}
+
+.badge-number{
+  position: absolute;
+  inset: 18px -2px auto auto;
+  font-weight: normal;
+  font-size: 12px;
+  padding: 3px 6px;
+} */
+
 .dropdown-item:hover, .dropdown-item:focus {
   color: #2e2f37;
   text-decoration: none;
@@ -3224,6 +3255,7 @@ input[type="button"].btn-block {
   font-size: 0.875rem;
   color: #858796;
   white-space: nowrap;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .dropdown-item-text {
@@ -4096,6 +4128,8 @@ input[type="button"].btn-block {
   display: block;
 }
 
+
+
 .navbar {
   position: relative;
   display: flex;
@@ -4189,6 +4223,8 @@ input[type="button"].btn-block {
   background-size: 100% 100%;
 }
 
+
+
 @media (max-width: 575.98px) {
   
   .navbar-expand-sm > .container,
@@ -4227,6 +4263,8 @@ input[type="button"].btn-block {
     display: none;
   }
 }
+
+
 
 @media (max-width: 767.98px) {
   .navbar-expand-md > .container,
@@ -9884,7 +9922,7 @@ a:focus {
 
 .bg-gradient-primary {
   background-color: #4e73df;
-  background-image: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
+  background-image: linear-gradient(180deg, #4e73df 10%, #224abe 50%);
   background-size: cover;
 }
 

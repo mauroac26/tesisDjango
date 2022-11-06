@@ -167,7 +167,8 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'user.Users'
 
-
+RUTA = 'C:\\backupBD\\'
 
 MEDIA_URL =  "cedal/static/cedal/img/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "cedal/static/cedal/img/")
+

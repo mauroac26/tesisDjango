@@ -1,10 +1,10 @@
 
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from produccion.forms import pediodosForm, produccionForm
-from produccion.models import Pedido, Produccion
+from produccion.forms import produccionForm
+from produccion.models import Produccion
 from producto.models import Producto
-
+from stock.views import cargarStock
 
 # Create your views here.
 def index(request):
@@ -26,21 +26,20 @@ def altaProduccion(request):
         "form": produccionForm()
     }
 
-    # print(data["form"]["usuario"][1])
+    # data["form"]["producto_retiro"] = data["form"]["producto_retiro"][1]
+    # print(data["form"]["producto_retiro"][1].tag)
 
     if request.method == "POST":
 
-        # fecha = request.POST.get('fecha')
-        producto = request.POST.get('producto')
-        cantidad = request.POST.get('cantidad')
-        # usuario = request.POST.get('usuario')
+        fecha = request.POST.get('fecha')
+        producto = request.POST.get('producto_retiro')
+        cantidad = request.POST.get('cantidad_retiro')
+        detalle = ""
+        usuario = request.user.username
         
-        # data['fecha'] = fecha
-        
-        # data['cantidad'] = cantidad
-        # data['producto'] = 1
-        # data['usuario'] = usuario
+        tipoMov = "Retiro para produccion"
         prod = Producto.objects.get(id=producto)
+        nombreProducto = prod.nombre
         stock = int(prod.stock)
         
         if stock > 0 and int(cantidad) <= stock:
@@ -48,13 +47,14 @@ def altaProduccion(request):
             formulario = produccionForm(data=request.POST)
 
             if formulario.is_valid():
-                formulario.save()
-                
-                
-                stock = stock - int(cantidad)
-                prod.stock = stock
+                prod = formulario.save(commit=False)
+                prod.usuario_id = request.user.id
                 prod.save()
                 
+                stockProducto = stock - int(cantidad)
+                prod.stock = stockProducto
+                prod.save()
+                cargarStock(tipoMov, fecha, detalle, cantidad, nombreProducto, stockProducto, usuario)
                 return redirect(to='produccion')
             else:
                 data["form"] = formulario
@@ -68,7 +68,7 @@ def altaProduccion(request):
 
 def pedido(request):
 
-    pedido = Pedido.objects.all()
+    pedido = Produccion.objects.all()
 
     data = {
         "pedido": pedido
@@ -77,22 +77,22 @@ def pedido(request):
     return render(request, 'produccion/pedido.html', data) 
 
 
-def altaPedido(request):
+# def altaPedido(request):
 
-    data = {
-        "form": pediodosForm()
-    }
+#     data = {
+#         "form": pediodosForm()
+#     }
 
-    if request.method == "POST":
-        formulario = pediodosForm(data=request.POST)
-        if formulario.is_valid():
-            formulario.save()
+#     if request.method == "POST":
+#         formulario = pediodosForm(data=request.POST)
+#         if formulario.is_valid():
+#             formulario.save()
                 
-            return redirect(to='pedido')
-        else:
-            data["form"] = formulario
+#             return redirect(to='pedido')
+#         else:
+#             data["form"] = formulario
         
-    return render(request, 'produccion/altaPedido.html', data) 
+#     return render(request, 'produccion/altaPedido.html', data) 
 
 
 def producido(request):
@@ -102,16 +102,21 @@ def producido(request):
         cantidad = request.GET['cantidad']
         producto = request.GET['id_Producto']
         id_pedido = request.GET['id']
+        detalle = ""
+        usuario = request.user.username
+        tipoMov = "Producto Producido"
         
-        pedido = Pedido.objects.get(id = id_pedido)
 
+        pedido = Produccion.objects.get(id = id_pedido)
+        fecha = pedido.fecha
         pedido.estado = 'Producido'
         pedido.save()
 
         prod = Producto.objects.get(id=producto)
-        stock = int(cantidad)  + int(prod.stock) 
-        prod.stock = stock
+        nombreProducto = prod.nombre
+        stockProducto = int(cantidad)  + int(prod.stock) 
+        prod.stock = stockProducto
         prod.save()
-
+        cargarStock(tipoMov, fecha, detalle, cantidad, nombreProducto, stockProducto, usuario)
         return redirect(to='pedido')
  

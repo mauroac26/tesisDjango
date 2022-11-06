@@ -1,8 +1,6 @@
-from datetime import date
-from tkinter import Widget
-from unicodedata import category
+from datetime import date, datetime
 from django import forms
-from .models import Marca, Categoria, Producto
+from .models import Marca, Categoria, Producto, ProductoPromocion
 
 class marcaForm(forms.ModelForm):
 
@@ -71,3 +69,54 @@ class  ventaProductoForm(forms.ModelForm):
             'codigo': forms.TextInput(attrs={'id': 'codigo', 'name': 'codigo'}),
             'stock': forms.TextInput(attrs={'id': 'stock', 'name': 'stock'}),
         }
+
+
+class productoPromocionForm(forms.ModelForm):
+
+    class Meta:
+        model = ProductoPromocion
+        fields = '__all__'
+    
+        widgets = {
+            
+            'fechaInicio' : forms.DateInput(attrs={"type": "date", "value": date.today(), 'id': 'fechaInicio'}),
+            'fechaFin' : forms.DateInput(attrs={"type": "date", "value": date.today(), 'id': 'fechaFin'})
+            }
+
+    def clean_fechaFin(self):
+        fechaFin = self.cleaned_data['fechaFin']
+        hoy =  date(datetime.now().year, datetime.now().month, datetime.now().day)
+    
+     
+        fecha = date(fechaFin.year, fechaFin.month, fechaFin.day)
+        
+        if hoy > fecha:
+            print('hola')
+            raise forms.ValidationError('Ingrese una fecha valida')
+        return fechaFin
+
+    def __init__(self, *args, **kwargs):
+        super(productoPromocionForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control form-control-sm'
+
+    
+
+
+class promocionForm(forms.ModelForm):
+
+    class Meta:
+        model = ProductoPromocion
+        fields = '__all__'
+
+        widgets = {
+            
+            'fechaInicio' : forms.DateInput(attrs={"type": "date", "value": date.today(), 'id': 'fechaInicio'}),
+            'fechaFin' : forms.DateInput(attrs={"type": "date", "value": date.today(), 'id': 'fechaFin'})
+            }
+
+    def __init__(self, instance, *args, **kwargs):
+        super(promocionForm, self).__init__(*args, **kwargs)
+        self.fields['id_producto'] =  forms.ModelChoiceField(queryset=Producto.objects.all(), initial=Producto.objects.get(id = instance.id))
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control form-control-sm'

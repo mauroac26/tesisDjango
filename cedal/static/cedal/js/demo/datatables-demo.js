@@ -34,6 +34,7 @@ function table(tabla){
         //   "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
         // }
         
+
         "language": {
           "decimal": "",
           "emptyTable": "No hay información",
@@ -52,10 +53,11 @@ function table(tabla){
               "last": "Ultimo",
               "next": "Siguiente",
               "previous": "Anterior"
-          }
+          },
+          
         },
         responsive: true,
-        dom: 'Bfrtilp',
+        dom: 'Blfrtip',
         buttons:[
           {
             extend: 'excelHtml5',

@@ -22,7 +22,7 @@ class Marca(models.Model):
         return self.descripcion
 
 
-class Producto(models.Model):
+class Producto(BaseModel):
     codigo = models.CharField(max_length=10)
     nombre = models.CharField(max_length=50)
     precio_compra = models.DecimalField(max_digits=8, decimal_places=2, null=True)
@@ -33,11 +33,31 @@ class Producto(models.Model):
     marca = models.ForeignKey(Marca, null=True, on_delete=models.SET_NULL)
     vencimiento = models.DateField(null=True)
     
+    
+    class Meta:
+        
+        verbose_name = 'Producto'
+        verbose_name_plural = 'Productos'
 
     def __str__(self):
         return self.nombre
 
 
+
+class ProductoPromocion(BaseModel):
+    id_producto = models.ForeignKey(Producto, null=True, on_delete=models.CASCADE, verbose_name='Producto')
+    descuento = models.DecimalField(max_digits=4, decimal_places=2, null=True)
+    fechaInicio = models.DateField(null=True, verbose_name='Fecha Inicio')
+    fechaFin = models.DateField(null=True, verbose_name='Fecha Finalizacion')
+    
+    
+    class Meta:
+        
+        verbose_name = 'Producto Promocion'
+        verbose_name_plural = 'Productos Promociones'
+
+    def __str__(self):
+        return int(self.id)
 
     
     

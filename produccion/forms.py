@@ -1,7 +1,8 @@
 from datetime import date
 from django import forms
+from producto.models import Producto
 from user.models import Users
-from .models import Pedido, Produccion
+from .models import Produccion
 
 
 class produccionForm(forms.ModelForm):
@@ -10,7 +11,7 @@ class produccionForm(forms.ModelForm):
 
     class Meta:
         model = Produccion
-        fields = '__all__'
+        exclude = ('estado', 'usuario')
 
         # usuarios = usuario()
             
@@ -23,19 +24,20 @@ class produccionForm(forms.ModelForm):
     # def __init__(self, *args, **kwargs):
         
     #     super(produccionForm, self).__init__(*args, **kwargs)
-    #     self.fields['usuario'] =  forms.ModelChoiceField(queryset=Users.objects.all(), initial=Users.objects.get(id = self.user.id))
-    #     self.fields['usuario'].widget.attrs['disabled'] = 'disabled'
+    #     self.fields['producto_retiro'] = forms.ModelChoiceField(queryset=Producto.objects.all(), initial=Producto.objects.get(id = 1))
+        #self.fields['usuario'] =  forms.ModelChoiceField(queryset=Users.objects.all(), initial=Users.objects.get(id = self.user.id))
+        #self.fields['usuario'].widget.attrs['disabled'] = 'disabled'
 
-class pediodosForm(forms.ModelForm):
+# class pediodosForm(forms.ModelForm):
 
-    class Meta:
-        model = Pedido
-        fields = '__all__'
+#     class Meta:
+#         model = Pedido
+#         fields = '__all__'
 
-        # usuarios = usuario()
+#         # usuarios = usuario()
             
     
-        widgets = {
-            'fecha' : forms.DateInput(attrs={"type": "date", "value": date.today(), 'id': 'fecha'}),
+#         widgets = {
+#             'fecha' : forms.DateInput(attrs={"type": "date", "value": date.today(), 'id': 'fecha'}),
           
-        }
+#         }

@@ -1,0 +1,65 @@
+{% extends 'Header/header.html' %}
+{% load static %}
+
+{% block title %}Respaldo Base de datos{% endblock %}
+
+{% block content %}
+
+
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Respaldo Base de datos</h1>
+    
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <form action="" method="post">
+                {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus pr-2"></i>Generar Backup</button>
+        </form>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="tablaBackup" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Usuario</th>
+                            <th>Archivo</th>
+                        </tr>
+                    </thead>
+                   
+                    <tbody>
+                       {% for b in respaldo %}
+                       <tr>
+                        <td>{{b.fecha}}</td>
+                        <td>{{b.usuario}}</td>
+                        <td>{{b.archivo}}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {{mensaje}}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+
+
+<script>
+    $(document).ready(function() {
+    table("tablaBackup");
+    });
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,173 @@
+{% extends 'Header/header.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Reporte cuentas por cobrar{% endblock %}
+
+{% block content %}
+
+
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Reporte cuentas por cobrar</h1>
+    
+
+    <!-- DataTales Example -->
+    
+    <div class="card shadow mb-4">
+        
+        <div class="card-header py-3">
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Rango de fechas:</label>
+                        {{reporteForm.fecha_rango}}
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-sm table-striped table-hover display" id="tablaCuentasCobrar" width="100%" >
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Cuit</th>
+                            <th>Fecha de venta</th>
+                            <th>Deuda</th>
+                            <th>Saldo</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    
+                       
+                      
+                    </tbody>
+                </table>
+               
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+
+<!-- <script>
+    $(document).ready(function() {
+    table("tablaReporteCompra");
+
+
+    });
+</script> -->
+
+<script>
+var fecha_rango = null;
+var hoy = new moment().format('YYYY-MM-DD');
+
+function generar_reporte(){
+    let fecha_inicio = hoy;
+     let   fecha_fin = hoy;
+
+        if(fecha_rango !== null){
+            fecha_inicio = fecha_rango.startDate.format('YYYY-MM-DD');
+            fecha_fin = fecha_rango.endDate.format('YYYY-MM-DD');
+        }
+
+        $('#tablaCuentasCobrar').DataTable({
+            "language": {
+           
+           "emptyTable": "No hay información",
+           "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+           "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+           "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+           "lengthMenu": "Mostrar _MENU_ Entradas",
+           "loadingRecords": "Cargando...",
+           "processing": "Procesando...",
+           "search": "Buscar:",
+           "zeroRecords": "Sin resultados encontrados",
+           "paginate": {
+               "first": "Primero",
+               "last": "Ultimo",
+               "next": "Siguiente",
+               "previous": "Anterior"
+           }
+         },
+            responsive: true,
+            autoWidth: false,
+            destroy: true,
+            deferRender: true,
+            dom: 'Bfrtip',
+          buttons:[
+            {
+              extend: 'excelHtml5',
+              text: '<i class="fas fa-file-excel fa-1x"></i>',
+              titleAttr: 'Exportar a Excel',
+              className: 'btn btn-success btn-sm mb-2'
+            },
+            {
+              extend: 'pdfHtml5',
+              text: '<i class="fas fa-file-pdf fa-1x"></i>',
+              titleAttr: 'Exportar a PDF',
+              className: 'btn btn-danger btn-sm mb-2'
+            },
+            {
+              extend: 'print',
+              text: '<i class="fas fa-print fa-1x"></i>',
+              titleAttr: 'Exportar a Imprimir',
+              className: 'btn btn-secondary btn-sm mb-2'
+            
+  
+            }
+          ],
+            ajax:{
+                  type: "post",
+                   url: "{% url 'cuentasCobrarRango' %}",
+                  data: {fecha_inicio,
+                         fecha_fin,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                          },    
+                  dataType: 'json',
+                  dataSrc: ''
+                  },
+            order: false,
+            
+            searching: false
+
+        });
+    }
+
+    $(function(){
+        $('input[name="fecha_rango"]').daterangepicker({
+            cancelButtonClasses: "btn-danger",
+            locale: {
+        format: 'YYYY-MM-DD',
+          cancelLabel: 'Cancelar',
+          
+          applyLabel: 'Aplicar',
+      }
+        }).on('apply.daterangepicker', function(ev, picker) {
+            fecha_rango = picker;
+            generar_reporte();
+  }).on('cancel.daterangepicker', function(ev, picker) {
+    $(this).data('daterangepicker').setStartDate(hoy);
+$(this).data('daterangepicker').setEndDate(hoy);
+fecha_rango = picker;
+generar_reporte();
+  });
+        generar_reporte();
+    });
+    
+    
+
+    
+</script>
+
+{% endblock %}

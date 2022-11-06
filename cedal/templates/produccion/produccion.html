@@ -16,7 +16,7 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <a href="{% url 'altaProduccion' %}" class="btn btn-primary"><i class="fas fa-plus pr-2"></i>Nuevo</a>
+            <a href="{% url 'altaProduccion' %}" class="btn btn-primary btn-sm"><i class="fas fa-plus pr-2"></i>Nuevo</a>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -35,8 +35,8 @@
                        {% for p in produccion %}
                        <tr>
                         <td>{{p.fecha}}</td>
-                        <td>{{p.producto}}</td>
-                        <td>{{p.cantidad}}</td>
+                        <td>{{p.producto_retiro}}</td>
+                        <td>{{p.cantidad_retiro}}</td>
                         <td>{{p.usuario}}</td>
                         <!-- <td class="row justify-content-center"><a class="btn-sm btn-success" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
                             <a class="btn-sm btn-danger ml-3" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a></td>

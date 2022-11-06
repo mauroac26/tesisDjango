@@ -15,9 +15,7 @@
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <a href="{% url 'altaPedido' %}" class="btn btn-primary"><i class="fas fa-plus pr-2"></i>Nuevo</a>
-        </div>
+        
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table-sm table-bordered table-striped table-hover" id="tablaPedido" width="100%" cellspacing="0">
@@ -35,10 +33,10 @@
                        {% for p in pedido %}
                        <tr>
                         <td>{{p.fecha}}</td>
-                        <td>{{p.producto}}</td>
-                        <td>{{p.cantidad}}</td>
+                        <td>{{p.producto_pedido}}</td>
+                        <td>{{p.cantidad_pedido}}</td>
                         {% if p.estado == 'Pendiente'%}
-                        <td> <button onclick="producido({{p.producto.id}}, {{p.cantidad}}, {{p.id}} );" class="btn btn-primary" type="button">{{p.estado}}</button></td>
+                        <td> <button onclick="producido({{p.producto_pedido_id}}, {{p.cantidad_pedido}}, {{p.id}} );" class="btn btn-primary" type="button">{{p.estado}}</button></td>
                        {% else %}
                        <td>{{p.estado}}</td>
                        {% endif %}
@@ -87,5 +85,7 @@
     table("tablaPedido");
     });
 </script>
+
+
 {% endblock %}
 
