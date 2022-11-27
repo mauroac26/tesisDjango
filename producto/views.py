@@ -194,59 +194,59 @@ def eliminarCategoria(request, id):
 
 
 
-def vencimiento(request):
+# def vencimiento(request):
     
-    hoy =  date(datetime.now().year, datetime.now().month, datetime.now().day)
-    resultado = list()
-    producto = Producto.objects.values('id', 'codigo', 'nombre', 'vencimiento')
+#     hoy =  date(datetime.now().year, datetime.now().month, datetime.now().day)
+#     resultado = list()
+#     producto = Producto.objects.values('id', 'codigo', 'nombre', 'vencimiento')
 
-    for v in producto:
+#     for v in producto:
         
-        if v['vencimiento'] != None:
-            vencimiento = v['vencimiento']
+#         if v['vencimiento'] != None:
+#             vencimiento = v['vencimiento']
             
-            fecha = date(vencimiento.year, vencimiento.month, vencimiento.day)
+#             fecha = date(vencimiento.year, vencimiento.month, vencimiento.day)
             
-            resultados = hoy - fecha
+#             resultados = hoy - fecha
 
-            if resultados.days >= 355:
-                prodVencidos = {}
-                prodVencidos['id'] = v['id']
-                prodVencidos['codigo'] = v['codigo']
-                prodVencidos['nombre'] = v['nombre']
-                prodVencidos['dias'] = 365 - resultados.days
+#             if resultados.days >= 355:
+#                 prodVencidos = {}
+#                 prodVencidos['id'] = v['id']
+#                 prodVencidos['codigo'] = v['codigo']
+#                 prodVencidos['nombre'] = v['nombre']
+#                 prodVencidos['dias'] = 365 - resultados.days
             
                 
             
             
 
-                resultado.append(prodVencidos)
+#                 resultado.append(prodVencidos)
     
     
-    data = {
-        'producto': resultado
-    }
+#     data = {
+#         'producto': resultado
+#     }
 
-    return render(request, 'producto/vencimiento.html', data)
+#     return render(request, 'producto/vencimiento.html', data)
 
             
         
-def promocion(request, id):
-    producto = get_object_or_404(Producto, pk=id)
+# def promocion(request, id):
+#     producto = get_object_or_404(Producto, pk=id)
     
-    data = {
-        'form': promocionForm(instance=producto),
-    }
+#     data = {
+#         'form': promocionForm(instance=producto),
+#     }
 
-    if request.method == "POST":
-        formulario = promocionForm(data=request.POST, instance=producto)
-        if formulario.is_valid():
-            formulario.save()
-            messages.add_message(request, messages.SUCCESS, "Se añadió el descuento correctamente")
-            return redirect(to='productos')
-        data["form"] = promocionForm()
+#     if request.method == "POST":
+#         formulario = promocionForm(data=request.POST, instance=producto)
+#         if formulario.is_valid():
+#             formulario.save()
+#             messages.add_message(request, messages.SUCCESS, "Se añadió el descuento correctamente")
+#             return redirect(to='productos')
+#         data["form"] = promocionForm()
             
-    return render(request, 'producto/promocion.html', data)
+#     return render(request, 'producto/promocion.html', data)
 
     
 class prodPromocion(ListView):

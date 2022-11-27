@@ -141,35 +141,35 @@ def cantidadPedidos(request):
         
 
 
-def prodVencimiento(request):
-    if request.is_ajax() and request.method == "GET":
-        hoy =  date(datetime.now().year, datetime.now().month, datetime.now().day)
-        resultado = list()
-        producto = Producto.objects.values('id', 'codigo', 'nombre', 'vencimiento')
+# def prodVencimiento(request):
+#     if request.is_ajax() and request.method == "GET":
+#         hoy =  date(datetime.now().year, datetime.now().month, datetime.now().day)
+#         resultado = list()
+#         producto = Producto.objects.values('id', 'codigo', 'nombre', 'vencimiento')
 
-        for v in producto:
+#         for v in producto:
             
-            if v['vencimiento'] != None:
-                vencimiento = v['vencimiento']
+#             if v['vencimiento'] != None:
+#                 vencimiento = v['vencimiento']
                 
-                fecha = date(vencimiento.year, vencimiento.month, vencimiento.day)
+#                 fecha = date(vencimiento.year, vencimiento.month, vencimiento.day)
                 
-                resultados = hoy - fecha
+#                 resultados = hoy - fecha
 
-                if resultados.days >= 355:
-                    prodVencidos = {}
-                    prodVencidos['id'] = v['id']
-                    prodVencidos['codigo'] = v['codigo']
-                    prodVencidos['nombre'] = v['nombre']
-                    prodVencidos['dias'] = resultados.days
+#                 if resultados.days >= 355:
+#                     prodVencidos = {}
+#                     prodVencidos['id'] = v['id']
+#                     prodVencidos['codigo'] = v['codigo']
+#                     prodVencidos['nombre'] = v['nombre']
+#                     prodVencidos['dias'] = resultados.days
                 
                     
                 
                 
 
-                    resultado.append(prodVencidos)
+#                     resultado.append(prodVencidos)
 
-        return JsonResponse({"data": len(resultado)})
+#         return JsonResponse({"data": len(resultado)})
 
 
 def consultaPromo():

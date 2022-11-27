@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import editarCategoria, editarPromocion, eliminarCategoria, eliminarProducto, eliminarPromocion, index, marcas, categorias, altaCategorias, altaMarcas, altaProducto, editarProducto, editarMarca, eliminarMarca, prodPromocion, promocion, vencimiento, altaProductoPromo
+from .views import editarCategoria, editarPromocion, eliminarCategoria, eliminarProducto, eliminarPromocion, index, marcas, categorias, altaCategorias, altaMarcas, altaProducto, editarProducto, editarMarca, eliminarMarca, prodPromocion, altaProductoPromo
 
 urlpatterns = [
     path('', index, name="productos"),
@@ -14,8 +14,8 @@ urlpatterns = [
     path('eliminarMarca/<id>', eliminarMarca, name="eliminarMarca"),
     path('editarCategoria/<id>', editarCategoria, name="editarCategoria"),
     path('eliminarCategoria/<id>', eliminarCategoria, name="eliminarCategoria"),
-    path('vencimiento/', vencimiento, name="vencimiento"),
-    path('promocion/<id>', promocion, name="promocion"),
+    # path('vencimiento/', vencimiento, name="vencimiento"),
+    # path('promocion/<id>', promocion, name="promocion"),
     path('altaProductoPromo/', altaProductoPromo, name="altaProductoPromo"),
     path('productosPromo/', prodPromocion.as_view(), name="productosPromo"),
     path('editarPromocion/<id>', editarPromocion, name="editarPromocion"),
