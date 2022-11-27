@@ -24,9 +24,12 @@
                     <thead class="bg-dark text-white">
                         <tr>
                             <th>Fecha</th>
-                            <th>Producto</th>
-                            <th>Cantidad</th>
+                            <th>Producto Retirado</th>
+                            <th>Cantidad Retirada</th>
+                            <th>Producto a producir</th>
+                            <th>Cantidad a producir</th>
                             <th>Usuario</th>
+                            <th>Acciones</th>
                             
                         </tr>
                     </thead>
@@ -37,10 +40,14 @@
                         <td>{{p.fecha}}</td>
                         <td>{{p.producto_retiro}}</td>
                         <td>{{p.cantidad_retiro}}</td>
+                        <td>{{p.producto_pedido}}</td>
+                        <td>{{p.cantidad_pedido}}</td>
                         <td>{{p.usuario}}</td>
-                        <!-- <td class="row justify-content-center"><a class="btn-sm btn-success" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
-                            <a class="btn-sm btn-danger ml-3" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
-                    </tr> -->
+                        <td>
+                            <!-- <a class="btn-sm btn-success" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a> -->
+                        <a class="btn-sm btn-danger ml-3" href="{% url 'eliminarProduccion' p.id  %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                    </tr>
                        {% endfor %}
                     </tbody>
                 </table>

@@ -56,10 +56,11 @@
                         <td >{{c.nombre}}</td>
                         <td>${{c.total}}</td>
                         <td>${{c.saldo}}</td>
-                        {% if c.estado == 'Adeudado' %}
-                        <td><span class="badge badge-danger">{{c.estado}}</span></td>
-                        {% else %}
+                        {% if c.estado == 'Pagado' %}
                         <td><span class="badge badge-success">{{c.estado}}</span></td>
+                        
+                        {% else %}
+                        <td><span class="badge badge-danger">{{c.estado}}</span></td>
                         {% endif %}
                         <td class="text-center"><button class="btn btn-primary btn-sm " onclick="prueba({{c.id}});" aria-hidden="true"  data-toggle="modal" data-target="#modalDetallePago" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalle"><i class="far fa-file-alt"></i></button>
                            

@@ -286,16 +286,17 @@ def editarPromocion(request, id):
     promocion = get_object_or_404(ProductoPromocion, pk=id)
     
     data = {
-        'form': promocionPromocionForm(instance=promocion)
+        'form': productoPromocionForm(instance=promocion)
     }
 
     if request.method == "POST":
-        formulario = promocionPromocionForm(data=request.POST, instance=promocion)
+        formulario = productoPromocionForm(data=request.POST, instance=promocion)
         if formulario.is_valid():
             formulario.save()
             messages.add_message(request, messages.SUCCESS, "La promocion se modificó exitosamente")
             return redirect(to='productosPromo')
-        data["form"] = promocionPromocionForm()
+        else:
+            data["form"] = formulario
             
     return render(request, 'producto/editarPromo.html', data)
 

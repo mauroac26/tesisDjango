@@ -32,7 +32,8 @@ class editarUserForm(UserChangeForm):
     def __init__(self, instance, *args, **kwargs):
         
         super(editarUserForm, self).__init__(*args, **kwargs)
-        self.fields['groups'] =  forms.ModelChoiceField(queryset=Group.objects.all(), initial=Group.objects.get(user = instance.id))
+        self.fields['groups'] =  forms.ModelChoiceField(label= "Grupo", queryset=Group.objects.all(), initial=Group.objects.get(user = instance.id))
+
 
 class editarPerfilForm(UserChangeForm):
     password = None

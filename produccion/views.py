@@ -1,11 +1,11 @@
 
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib import messages
 from produccion.forms import produccionForm
 from produccion.models import Produccion
 from producto.models import Producto
 from stock.views import cargarStock
-
+from datetime import datetime
 # Create your views here.
 def index(request):
 
@@ -38,9 +38,9 @@ def altaProduccion(request):
         usuario = request.user.username
         
         tipoMov = "Retiro para produccion"
-        prod = Producto.objects.get(id=producto)
-        nombreProducto = prod.nombre
-        stock = int(prod.stock)
+        prodStock = Producto.objects.get(id=producto)
+        nombreProducto = prodStock.nombre
+        stock = int(prodStock.stock)
         
         if stock > 0 and int(cantidad) <= stock:
 
@@ -52,8 +52,8 @@ def altaProduccion(request):
                 prod.save()
                 
                 stockProducto = stock - int(cantidad)
-                prod.stock = stockProducto
-                prod.save()
+                prodStock.stock = stockProducto
+                prodStock.save()
                 cargarStock(tipoMov, fecha, detalle, cantidad, nombreProducto, stockProducto, usuario)
                 return redirect(to='produccion')
             else:
@@ -66,9 +66,22 @@ def altaProduccion(request):
     return render(request, 'produccion/altaProduccion.html', data)
 
 
+def eliminarProduccion(request, id):
+    produccion = get_object_or_404( Produccion, pk=id)
+
+    if produccion:
+        producto = Producto.objects.get(id = produccion.producto_retiro_id)
+        stockProducto = int(produccion.cantidad_retiro) + int(producto.stock) 
+        producto.stock = stockProducto
+        producto.save()
+        produccion.delete()
+        messages.add_message(request, messages.SUCCESS, "La produccion se eliminó exitosamente")
+        return redirect(to='produccion')
+
+
 def pedido(request):
 
-    pedido = Produccion.objects.all()
+    pedido = Produccion.objects.filter(fecha=datetime.now())
 
     data = {
         "pedido": pedido

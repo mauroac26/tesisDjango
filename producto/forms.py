@@ -85,13 +85,14 @@ class productoPromocionForm(forms.ModelForm):
 
     def clean_fechaFin(self):
         fechaFin = self.cleaned_data['fechaFin']
+        fechaInicio= self.cleaned_data['fechaInicio']
         hoy =  date(datetime.now().year, datetime.now().month, datetime.now().day)
     
      
         fecha = date(fechaFin.year, fechaFin.month, fechaFin.day)
+        fechaIn = date(fechaInicio.year, fechaInicio.month, fechaInicio.day)
         
-        if hoy > fecha:
-            print('hola')
+        if hoy > fecha or fecha <= fechaIn:
             raise forms.ValidationError('Ingrese una fecha valida')
         return fechaFin
 

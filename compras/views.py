@@ -119,21 +119,20 @@ def proveedorAutocomplete(request):
    
 def cargarCompra(request):
    
-    # request should be ajax and method should be POST.
+    
     if request.is_ajax and request.method == "POST":
         
-        # get the form data
+        
         form = comprasForm(request.POST)
-        # save the data and after fetch the object in instance
+        
         if form.is_valid():
             form.save()
-            #ultima_compra = Compras.objects.order_by('id', 'fecha').last()
             return HttpResponse(True)
         else:
             data = {
                 'error': form.errors.as_data()
             } 
-            print(data['error'])
+           
             return JsonResponse({"error": list(data['error']['comprobante'][0])}, status = 400, safe = False)
 
     # some error occured
@@ -300,6 +299,7 @@ def pago(request):
     for d in data["compras"]:
         pago = formaPagoCompra.objects.filter(id_compra=d['id_compra__id']).annotate(Sum('total'))
         saldo = 0
+        
         for p in pago:
             saldo = float(p.total__sum) + saldo
             
@@ -349,7 +349,7 @@ def registroPago(request):
             
                 
             caja_actual = Caja.objects.order_by('id', 'total', 'estado').last()
-            print(caja_actual)
+            
             if tipoPago == 'Efectivo':
                 if caja_actual != None and caja_actual.estado:
                     
@@ -429,6 +429,7 @@ def compraAdeudada(request):
         nombre = list()
         if compras:
             for n in compras:
+                
                 pago = formaPagoCompra.objects.filter(id_compra=n['id_compra']).annotate(Sum('total'))
                 saldo = 0.0
                 for p in pago:
@@ -475,10 +476,43 @@ def eliminarCompra(request, id):
 
 def eliminarPago(request, id):
     pago = formaPagoCompra.objects.filter(id_compra=id)
-    
-    if pago:
-        pago.delete()
-        return redirect(to='pago')
+    saldo = 0.0
+    for p in pago:
+        saldo = float(p.total)
+        tipo = p.tipoPago
+
+        if pago:
+            
+            if tipo == "Efectivo":
+                caja_actual = Caja.objects.order_by('id', 'total', 'estado').last()
+                fecha = datetime.now()
+                caja = {}
+                caja['descripcion'] = "Eliminacion pago "
+                caja['operacion'] = 0
+                caja['monto'] = saldo
+                caja['id_caja'] = caja_actual.id
+                caja['saldo'] = saldo
+                caja['fecha'] = fecha
+                formulario = movimientoCajaForm(caja)
+                                
+                if formulario.is_valid():
+                    post = formulario.save(commit=False)
+                            
+                    ultimo_saldo = movCaja.objects.latest('fecha').saldo
+                                    
+                    total = float(ultimo_saldo) + float(saldo)
+                    post.saldo = total 
+                    post.save()
+                    caja_actual.total = total
+                    caja_actual.save()
+                    
+    pago.delete()
+
+    obj = Compras.objects.get(id=id)
+    obj.estado = "Adeudado"
+    obj.save()
+
+    return redirect(to='pago')
 
 
 def detalleFormaPago(request):

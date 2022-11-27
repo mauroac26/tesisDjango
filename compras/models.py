@@ -9,12 +9,17 @@ tipo_Comprobante = [
     ["Recibo", "Recibo"],
     ["Nota Credito", "Nota Credito"]
 ]
+
+estado = [
+    ["Pagado", "Pagado"],
+    ["Adeudado", "Adeudado"]
+]
 class Compras(BaseModel):
     comprobante = models.CharField(max_length=50, unique=True)
     cuit = models.ForeignKey(proveedores, on_delete=models.CASCADE)
     fecha = models.DateField()
     tipoComprobante =  models.CharField(max_length = 150, choices=tipo_Comprobante, verbose_name="Tipo Comprobante")
-    estado = models.CharField(max_length=150, default='Adeudado')
+    estado = models.CharField(max_length=150, choices=estado, default='Adeudado')
 
     class Meta:
         verbose_name = 'Compra'
@@ -53,7 +58,7 @@ class formaPagoCompra(models.Model):
     fecha = models.DateField()
     total = models.DecimalField(max_digits=8, decimal_places=2 , null=True, blank=True, verbose_name='Monto')
     tipoPago =  models.CharField(max_length=150, choices=tipo_Pago, verbose_name="Tipo Pago")
-    id_compra =  models.ForeignKey(Compras, on_delete=models.CASCADE, null=True, blank=True)
+    id_compra =  models.ForeignKey(Compras, on_delete=models.CASCADE)
     
 
 def __str__(self):

@@ -18,7 +18,7 @@
     <!-- DataTales Example -->
     <div class="card border-primary shadow mb-4">
         <div class="card-header bg-primary py-3 text-white">
-            Compra Realizada
+            Venta Realizada
         </div>
         <div class="card body">
          
@@ -74,7 +74,13 @@
                 <label id="total" for="total"><small> Total: <b>${{total.total__sum}}</b></small></label>
              </div>
              
-             <div class=""><a class="btn btn-primary" href="{% url 'repVentas' id_venta %}" type="button" >Imprimir pdf</a></div>
+             <div class="d-flex justify-content-end mt-2">
+               
+                <a class="btn-sm btn-danger ml-2" href="#" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">Eliminar Venta</a>
+             <button class="btn btn-primary btn-sm ml-2 " aria-hidden="true" type="button" data-toggle="modal" data-target="#modalformaPago">Salir</button>
+             </div>
+
+             <!-- <div class=""><a class="btn btn-primary" href="{% url 'repVentas' id_venta %}" type="button" >Imprimir pdf</a></div> -->
              
         </div>
     </div>
@@ -90,11 +96,11 @@
 
 {% block js %}
 <!-- Page level plugins -->
-<script src="{% static 'cedal/vendor/datatables/jquery.dataTables.min.js' %}"></script>
-<script src="{% static 'cedal/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<!-- <script src="{% static 'cedal/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'cedal/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script> -->
 
 <!-- Page level custom scripts -->
-<script src="{% static 'cedal/js/demo/datatables-demo.js' %}"></script>
+<!-- <script src="{% static 'cedal/js/demo/datatables-demo.js' %}"></script> -->
 
 
 

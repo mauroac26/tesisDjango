@@ -57,7 +57,7 @@
                         {% endif %}
                         <td class="text-center"><button class="btn btn-primary btn-sm " onclick="prueba({{c.id}});" aria-hidden="true"  data-toggle="modal" data-target="#modalDetallePago" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalle"><i class="far fa-file-alt"></i></button>
         
-                        <a class="btn btn-sm btn-danger ml-3" href="#" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                        <a class="btn btn-sm btn-danger ml-3" href="{% url 'eliminarPagoVenta' c.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
                         </td>
                     </tr>
                        {% endfor %}

@@ -1,6 +1,6 @@
 from django.urls import path
 
-from produccion.views import altaProduccion, index, pedido, producido
+from produccion.views import altaProduccion, eliminarProduccion, index, pedido, producido
 
 
 urlpatterns = [
@@ -8,5 +8,5 @@ urlpatterns = [
     path('altaProduccion/', altaProduccion, name="altaProduccion"),
     path('pedido/', pedido, name="pedido"),
     path('producido/', producido, name="producido"),
-    # path('altaPedido/', altaPedido, name="altaPedido"),
+    path('eliminarProduccion/<id>', eliminarProduccion, name="eliminarProduccion"),
 ]

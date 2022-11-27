@@ -14,5 +14,6 @@ class proveedores(models.Model):
     mail = models.EmailField()
     condicion = models.IntegerField(choices=opciones_condicion)
 
-def __str__(self):
-    return self.cuit
+    
+    def __str__(self):
+        return self.cuit

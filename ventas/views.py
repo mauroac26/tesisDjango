@@ -2,7 +2,7 @@ from datetime import date, datetime
 from django.contrib import messages
 from django.db.models.aggregates import Sum
 from django.contrib.auth.decorators import login_required, permission_required
-
+from xhtml2pdf import pisa
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from caja.forms import movCajaForm, movimientoCajaForm
@@ -374,6 +374,7 @@ class VentasPdf(View):
         data['provincia'] = 'Córdoba'
         data['icono'] = '{}{}'.format(settings.MEDIA_URL, 'cedal.png')
 
+
         template = get_template('ventas/pdfVentas.html')
         
         html = template.render(data)
@@ -559,3 +560,44 @@ def detalleFormaPagoVenta(request):
         pago = formaPagoVenta.objects.filter(id_venta=id).values('id_venta__comprobante','total', 'tipoPago', 'fecha', 'cuotas', 'tipoCredito_id__nombre')
         
         return JsonResponse({"data": list(pago)})
+
+
+def eliminarPagoVenta(request, id):
+    pago = formaPagoVenta.objects.filter(id_venta=id)
+    saldo = 0.0
+    for p in pago:
+        saldo = float(p.total)
+        tipo = p.tipoPago
+
+        if pago:
+            
+            if tipo == "Efectivo":
+                caja_actual = Caja.objects.order_by('id', 'total', 'estado').last()
+                fecha = datetime.now()
+                caja = {}
+                caja['descripcion'] = "Eliminacion pago "
+                caja['operacion'] = 1
+                caja['monto'] = saldo
+                caja['id_caja'] = caja_actual.id
+                caja['saldo'] = saldo
+                caja['fecha'] = fecha
+                formulario = movimientoCajaForm(caja)
+                                
+                if formulario.is_valid():
+                    post = formulario.save(commit=False)
+                            
+                    ultimo_saldo = movCaja.objects.latest('fecha').saldo
+                                    
+                    total = float(ultimo_saldo) - float(saldo)
+                    post.saldo = total 
+                    post.save()
+                    caja_actual.total = total
+                    caja_actual.save()
+                    
+    pago.delete()
+
+    obj = Ventas.objects.get(id=id)
+    obj.estado = "Adeudado"
+    obj.save()
+
+    return redirect(to='pagoVenta')
