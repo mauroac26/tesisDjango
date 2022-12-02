@@ -1,0 +1,177 @@
+{% extends 'Header/header.html' %}
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Alta Pedido Venta Por Menor{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 text-gray-800">Nuevo Pedido para Venta por menor</h1>
+
+<div class="row mt-3">
+        
+    <div class="col-md-5">
+    <div class="card border-primary mb-3">
+        <div class="card-header bg-primary text-white">Seleccion de Productos</div>
+        <div class="card-body text-primary">
+            <form id="form-pedido" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                {{form|crispy}}
+               
+                <div class="d-flex justify-content-end mt-3">
+                <button onclick="cargarTabla();" class="btn btn-primary btn-sm " type="button">Añadir</button>
+                        
+            
+
+            </div>
+           
+            {{mensaje}}
+            </form>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-7">
+      <div class="card border-primary mb-3" >
+        <div class="card-header bg-primary text-white">Productos Seleccionados</div>
+        <div class="card-body text-primary">
+            <div class="row">
+                <div class="col-md-12 ">
+                    
+
+                    <div class="table-responsive" style="height: 160px;">
+                        <table class="table table-hover table-bordered table-sm table-striped text-white" id="tablaPedido">
+                            <thead class="bg-primary">
+                                <th>Producto</th>
+                                <th>cantidad</th>
+                                <th>Accion</th>
+                            </thead>
+                            <tbody style="overflow-y: scroll;">
+                                
+                            </tbody>
+
+                            
+                        </table>
+                        
+                    </div>
+                    
+                
+                </div>
+            </div>
+
+            <div class="row justify-content-end mt-2">
+            <button onclick="cargarPedido();" class="btn btn-primary btn-sm ml-2" type="button">Confirmar</button>
+        </div>
+        </div>
+      </div>
+    </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+{% block js %}
+<script>
+    // var arr = [];
+    // var objProducto = {}
+    var i = 0;
+    function cargarTabla(){
+        
+        
+
+        
+        cantidad = $('#cantidad').val();
+        producto = $('#producto').val();
+        producto_nombre = $('select[name="producto"] option:selected').text();
+        
+        i += 1;
+
+        fila = '<tr id=fila' + i +' class="text-dark"><td data-producto =' + producto +' style="text-align: left;">' + producto_nombre + '</td>'+ 
+                '<td>' + cantidad +'</td>'+
+                '<td ><div class="row justify-content-center"><button  class="btn btn-danger " style="padding:1px;" type="button" onclick="eliminar('+i+' )" ><i class="fas fa-times-circle"></i></button></div></td>'+
+                '</tr>';
+             
+                $('#tablaPedido').append(fila);
+                
+        }
+    
+
+</script>
+
+<script>
+    function eliminar(id){
+
+
+        $('#fila' + id).remove();
+        
+    }
+</script>
+
+
+<script>
+    /*
+        On submiting the form, send the POST ajax
+        request to server and after successfull submission
+        display the object.
+    */
+    function cargarPedido(){
+
+    
+        
+        
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'cargarPedidoVenta' %}",
+            data:{'csrfmiddlewaretoken': '{{ csrf_token }}'},
+            success: function (response) {
+
+                let filaTablaTP = $('#tablaPedido tr').length;
+               
+               for (f = 1; f <= filaTablaTP; f++) {
+
+                var cantidadTabla = document.getElementById('tablaPedido').rows[f].cells[1].innerText;            
+                var idp = $('#tablaPedido tr:eq('+f+')').find("td:first-child").data('producto');   
+                alert(idp)
+            // carga detalle de la compra
+                $.ajax({
+            type: 'get',
+            url: "{% url 'cargarDetallePedidoVenta' %}",
+            data: {'id_producto': idp,
+                   'cantidad': cantidadTabla
+        },
+            success: function (response) {
+                window.location = "{% url 'pedidoVentaPorMenor' %}";
+            },
+            error: function (response) {
+                // alert the error if any error occured
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+    }
+    
+   
+          
+            },
+            error: function (response) {
+                // alert the error if any error occured
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+            
+
+        }
+        
+        
+        
+    
+</script>
+
+{% endblock %}

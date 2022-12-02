@@ -8,7 +8,7 @@ opciones_condicion =[
 ]
 
 class proveedores(models.Model):
-    cuit = models.CharField(max_length=12, primary_key=True, unique=True)
+    cuit = models.CharField(max_length=13, primary_key=True, unique=True)
     nombre = models.CharField(max_length=50)
     direccion = models.CharField(max_length=50)
     mail = models.EmailField()

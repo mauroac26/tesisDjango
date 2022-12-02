@@ -7,8 +7,6 @@ from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from caja.forms import movCajaForm, movimientoCajaForm
 from caja.models import Caja, movCaja
-from cedal.form import formPago
-from cedal.models import formaPago
 from clientes.models import Clientes
 from producto.forms import ventaProductoForm
 from producto.models import Producto, ProductoPromocion
@@ -87,15 +85,15 @@ def productoVentaAutocomplete(request):
     descuento = 0
     if 'term' in request.GET:
 
-        producto = Producto.objects.filter(nombre__icontains=request.GET.get("term")).exclude(vencimiento=None)
+        producto = Producto.objects.filter(nombre__icontains=request.GET.get("term"))
         nombre = list()
         hoy =  date(datetime.now().year, datetime.now().month, datetime.now().day)
         if producto:
             
             for n in producto:
-                vencimiento = n.vencimiento
-                fecha = date(vencimiento.year, vencimiento.month, vencimiento.day)
-                resultado = hoy - fecha
+                # vencimiento = n.vencimiento
+                # fecha = date(vencimiento.year, vencimiento.month, vencimiento.day)
+                # resultado = hoy - fecha
                 if n.stock > n.stock_min:
                     color = "badge-success"
                 elif n.stock <= n.stock_min:
@@ -117,7 +115,7 @@ def productoVentaAutocomplete(request):
                 signer_json['codigo'] = n.codigo
                 signer_json['precio'] = n.precio_venta
                 signer_json['descuento'] = descuento
-                signer_json['vencimiento'] = resultado.days
+                # signer_json['vencimiento'] = resultado.days
                 nombre.append(signer_json)
             return JsonResponse(nombre, safe=False)
         else:
@@ -207,9 +205,9 @@ def detallesVenta(request, id):
         "datos": ventas
     }
     
-    data["pagos"] = formaPago.objects.filter(id_venta=id).select_related('tipoDebito').select_related('tipoCredito')
+    # data["pagos"] = formaPago.objects.filter(id_venta=id).select_related('tipoDebito').select_related('tipoCredito')
 
-    data["formPago"] = formPago()
+    # data["formPago"] = formPago()
 
     detalle = detalleVenta.objects.filter(id_venta=id).select_related('id_producto')
     
@@ -251,12 +249,12 @@ def detallesVenta(request, id):
 
             
 
-            pago = formPago(data)
+            # pago = formPago(data)
         
-            if pago.is_valid(): 
-                pago.save()
+            # if pago.is_valid(): 
+            #     pago.save()
                 
-                messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
+            #     messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
             
             if efectivo > 0:
                 
@@ -278,7 +276,7 @@ def detallesVenta(request, id):
                     post.fecha = fecha
                     post.save()
             else:
-                data["formPago"] = formPago() 
+                data["formPago"] = formPagoVenta() 
         else:
             messages.add_message(request, messages.ERROR, "El monto seleccionado es diferente al monto total de la compra")
             return render(request, 'ventas/detalleVenta.html', data)
@@ -287,104 +285,104 @@ def detallesVenta(request, id):
     return render(request, 'ventas/detalleVenta.html', data)
 
 
-def reporteVentas(request, id):
+# def reporteVentas(request, id):
 
     
-    ventas = Ventas.objects.filter(id=id).select_related('cuit')
+#     ventas = Ventas.objects.filter(id=id).select_related('cuit')
     
-    data = {
-        "datos": ventas
-    }
+#     data = {
+#         "datos": ventas
+#     }
     
-    data["pagos"] = formaPago.objects.filter(id_venta=id).select_related('tipoDebito').select_related('tipoCredito')
+#     data["pagos"] = formaPago.objects.filter(id_venta=id).select_related('tipoDebito').select_related('tipoCredito')
 
-    data["formPago"] = formPago()
+#     data["formPago"] = formPago()
 
-    detalle = detalleVenta.objects.filter(id_venta=id).select_related('id_producto')
+#     detalle = detalleVenta.objects.filter(id_venta=id).select_related('id_producto')
     
-    iva = detalleVenta.objects.filter(id_venta=id).aggregate(Sum('iva'))
-    subTotal = detalleVenta.objects.filter(id_venta=id).aggregate(Sum('subTotal'))
-    total = detalleVenta.objects.filter(id_venta=id).aggregate(Sum('total'))
+#     iva = detalleVenta.objects.filter(id_venta=id).aggregate(Sum('iva'))
+#     subTotal = detalleVenta.objects.filter(id_venta=id).aggregate(Sum('subTotal'))
+#     total = detalleVenta.objects.filter(id_venta=id).aggregate(Sum('total'))
 
     
-    data["iva"] = iva
-    data["subTotal"] = subTotal
-    data["total"] = total
+#     data["iva"] = iva
+#     data["subTotal"] = subTotal
+#     data["total"] = total
         
-    data["detalles"] = detalle
-    datos ={}
+#     data["detalles"] = detalle
+#     datos ={}
 
-    pdf = render_pdf('ventas/imprimirVenta.html', datos)
+#     pdf = render_pdf('ventas/imprimirVenta.html', datos)
 
-    return HttpResponse(pdf, content_type='application/pdf')
+#     return HttpResponse(pdf, content_type='application/pdf')
 
 
-class VentasPdf(View):
+# class VentasPdf(View):
 
-    def link_callback(self, uri, rel):
+#     def link_callback(self, uri, rel):
         
     
         
-        sUrl = settings.STATIC_URL        # Typically /static/
-        sRoot = settings.STATIC_ROOT      # Typically /home/userX/project_static/
-        mUrl = settings.MEDIA_URL         # Typically /media/
-        mRoot = settings.MEDIA_ROOT       # Typically /home/userX/project_static/media/
+#         sUrl = settings.STATIC_URL        # Typically /static/
+#         sRoot = settings.STATIC_ROOT      # Typically /home/userX/project_static/
+#         mUrl = settings.MEDIA_URL         # Typically /media/
+#         mRoot = settings.MEDIA_ROOT       # Typically /home/userX/project_static/media/
 
-        if uri.startswith(mUrl):
-            path = os.path.join(mRoot, uri.replace(mUrl, ""))
-        elif uri.startswith(sUrl):
-            path = os.path.join(sRoot, uri.replace(sUrl, ""))
-        else:
-            return uri
+#         if uri.startswith(mUrl):
+#             path = os.path.join(mRoot, uri.replace(mUrl, ""))
+#         elif uri.startswith(sUrl):
+#             path = os.path.join(sRoot, uri.replace(sUrl, ""))
+#         else:
+#             return uri
 
-            # make sure that file exists
-        if not os.path.isfile(path):
-            raise Exception(
-                    'media URI must start with %s or %s' % (sUrl, mUrl)
-                    )
-        return path
+#             # make sure that file exists
+#         if not os.path.isfile(path):
+#             raise Exception(
+#                     'media URI must start with %s or %s' % (sUrl, mUrl)
+#                     )
+#         return path
 
-    def get(self, request, *args, **kwargs):
+#     def get(self, request, *args, **kwargs):
 
-        ventas = Ventas.objects.filter(id=self.kwargs['id']).select_related('cuit')
+#         ventas = Ventas.objects.filter(id=self.kwargs['id']).select_related('cuit')
     
-        data = {
-            "datos": ventas
-        }
+#         data = {
+#             "datos": ventas
+#         }
         
-        data["pagos"] = formaPago.objects.filter(id_venta=self.kwargs['id']).select_related('tipoDebito').select_related('tipoCredito')
+#         data["pagos"] = formaPago.objects.filter(id_venta=self.kwargs['id']).select_related('tipoDebito').select_related('tipoCredito')
 
-        data["formPago"] = formPago()
+#         data["formPago"] = formPago()
 
-        detalle = detalleVenta.objects.filter(id_venta=self.kwargs['id']).select_related('id_producto')
+#         detalle = detalleVenta.objects.filter(id_venta=self.kwargs['id']).select_related('id_producto')
         
-        iva = detalleVenta.objects.filter(id_venta=self.kwargs['id']).aggregate(Sum('iva'))
-        subTotal = detalleVenta.objects.filter(id_venta=self.kwargs['id']).aggregate(Sum('subTotal'))
-        total = detalleVenta.objects.filter(id_venta=self.kwargs['id']).aggregate(Sum('total'))
+#         iva = detalleVenta.objects.filter(id_venta=self.kwargs['id']).aggregate(Sum('iva'))
+#         subTotal = detalleVenta.objects.filter(id_venta=self.kwargs['id']).aggregate(Sum('subTotal'))
+#         total = detalleVenta.objects.filter(id_venta=self.kwargs['id']).aggregate(Sum('total'))
 
         
-        data["iva"] = iva
-        data["subTotal"] = subTotal
-        data["total"] = total
-        data['id_venta'] = self.kwargs['id']
-        data["detalles"] = detalle
+#         data["iva"] = iva
+#         data["subTotal"] = subTotal
+#         data["total"] = total
+#         data['id_venta'] = self.kwargs['id']
+#         data["detalles"] = detalle
         
-        data['direccion'] = 'Ruta E53 km 18'
-        data['localidad'] = 'Río Ceballos'
-        data['provincia'] = 'Córdoba'
-        data['icono'] = '{}{}'.format(settings.MEDIA_URL, 'cedal.png')
+#         data['direccion'] = 'Ruta E53 km 18'
+#         data['localidad'] = 'Río Ceballos'
+#         data['provincia'] = 'Córdoba'
+#         data['icono'] = '{}{}'.format(settings.MEDIA_URL, 'cedal.png')
 
 
-        template = get_template('ventas/pdfVentas.html')
+#         template = get_template('ventas/pdfVentas.html')
         
-        html = template.render(data)
-        response = HttpResponse(content_type='application/pdf')
-        #response['Content-Disposition'] = 'attachment; filename="reporte.pdf"'
-        pisaStatus = pisa.CreatePDF(html, dest=response, link_callback=self.link_callback)
-        if pisaStatus.err:
-            return HttpResponse("asdads" + html + 'asddd')
+#         html = template.render(data)
+#         response = HttpResponse(content_type='application/pdf')
+#         #response['Content-Disposition'] = 'attachment; filename="reporte.pdf"'
+#         pisaStatus = pisa.CreatePDF(html, dest=response, link_callback=self.link_callback)
+#         if pisaStatus.err:
+#             return HttpResponse("asdads" + html + 'asddd')
         
-        return response
+#         return response
 
 
 def pagoVenta(request):

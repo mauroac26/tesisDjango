@@ -4,14 +4,14 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.db.models.functions import Coalesce
 from django.db.models import Sum, Count
-from cedal.form import formBackup, reporteForm
-from cedal.models import backup, tarjetaCredito, tarjetaDebito
+from cedal.form import formBackup, formCredito, reporteForm
+from cedal.models import backup
 from django.http import JsonResponse
 from compras.models import detalleCompra, formaPagoCompra
 from produccion.models import Produccion
 from producto.models import Marca, Producto, ProductoPromocion
 from user.models import Users
-from ventas.models import detalleVenta, Ventas, formaPagoVenta
+from ventas.models import detalleVenta, Ventas, formaPagoVenta, tarjetaCredito
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required, permission_required
@@ -92,44 +92,35 @@ def configuracion(request):
 def credito(request):
     
     credito = tarjetaCredito.objects.all()
-    debito = tarjetaDebito.objects.all()
+    
 
     data = {
         "credito": credito,
-        "debito": debito
     }
     return render(request, 'cedal/credito.html', data)
 
 
 def altaTarjeta(request):
     
-    # data = {
-    #     'form': formCredito()
-    # }
-
-    data = {}
+    data = {
+        'form': formCredito()
+    }
 
     if request.method == "POST":
-        nombre = request.POST.get('nombre')
-        tarjetas = request.POST.get('selectTarjetas')
         
-        data['nombre'] = nombre
-        if tarjetas == "0":
+        
            
-            formulario = formCredito(data)
-        else:
-            
-            formulario = formDebito(data)
+        formulario = formCredito(data=request.POST)
+        
 
         if formulario.is_valid():
             formulario.save()
             messages.add_message(request, messages.SUCCESS, "La tarjeta de credito se guardó exitosamente")
             return redirect(to='credito')
         else:
-            messages.add_message(request, messages.ERROR, "Error al guardar los datos")
+            data["form"] = formulario
 
-
-    return render(request, 'cedal/altaTarjetas.html')
+    return render(request, 'cedal/altaTarjetas.html', data)
     
 
 def cantidadPedidos(request):

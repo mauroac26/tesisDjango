@@ -27,6 +27,5 @@ class movCaja(models.Model):
     saldo = models.DecimalField(max_digits=8, decimal_places=2)
     id_caja = models.ForeignKey(Caja, on_delete=models.CASCADE)
 
-
-def __str__(self):
-    return self.fecha
+    def __str__(self):
+        return self.fecha

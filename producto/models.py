@@ -31,7 +31,6 @@ class Producto(BaseModel):
     stock_min = models.IntegerField(verbose_name='Stock Minimo')
     categoria = models.ForeignKey(Categoria, null=True, on_delete=models.SET_NULL)
     marca = models.ForeignKey(Marca, null=True, on_delete=models.SET_NULL)
-    vencimiento = models.DateField(null=True)
     
     
     class Meta:

@@ -37,8 +37,12 @@
                        {% for m in marcas %}
                        <tr>
                         <td>{{m.descripcion}}</td>
-                        <td class="row justify-content-center"><a class="btn-sm btn-success" href="{% url 'editarMarca' m.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
-                            <a class="btn-sm btn-danger ml-3" onclick="eliminarMarca({{m.id}})"  href="#"    role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
+                        <td>
+                            <div class="row justify-content-center">
+                            <a class="btn-sm btn-success" href="{% url 'editarMarca' m.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
+                            <a class="btn-sm btn-danger ml-3" onclick="eliminarMarca({{m.id}})"  href="#"    role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                            </div>
+                        </td>
                        {% endfor %}
                     </tr>
                     </tbody>

@@ -20,7 +20,7 @@
         <div class="card-header py-3">
             <div class="row">
                 <div class="col">
-            <a href="{% url 'altaTarjeta' %}"  class="btn btn-primary"  ><i class="fas fa-plus pr-2"></i>Nuevo</a>
+            <a href="{% url 'altaTarjeta' %}"  class="btn btn-primary btn-sm"  ><i class="fas fa-plus pr-2"></i>Nuevo</a>
         </div>
         
             </div>
@@ -46,8 +46,12 @@
                         <td >{{c.nombre}}</td>
                  
                         
-                        <td class="row justify-content-center"><a class="btn-sm btn-success" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
-                            <a class="btn-sm btn-danger ml-3" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
+                        <td>
+                            <div class="row justify-content-center">
+                            <a class="btn-sm btn-success" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
+                            <a class="btn-sm btn-danger ml-3" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                        </div>
+                        </td>
                     </tr>
                        {% endfor %}
                       
@@ -56,31 +60,7 @@
                
             </div><br>
 
-            <h5 class="h3 mb-2 text-gray-800">Tarjetas de debito</h5>
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover" id="tablaDebito" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Accion</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                       {% for d in debito %}
-                       
-                       <tr>
-                        <td >{{d.nombre}}</td>
-                 
-                        
-                        <td class="row justify-content-center"><a class="btn-sm btn-success" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
-                            <a class="btn-sm btn-danger ml-3" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
-                    </tr>
-                       {% endfor %}
-                      
-                    </tbody>
-                </table>
-               
-            </div>
+            
 
         </div>
     </div>
@@ -91,16 +71,15 @@
 
 {% block js %}
 <!-- Page level plugins -->
-<script src="{% static 'cedal/vendor/datatables/jquery.dataTables.min.js' %}"></script>
-<script src="{% static 'cedal/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<!-- <script src="{% static 'cedal/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'cedal/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script> -->
 
 <!-- Page level custom scripts -->
-<script src="{% static 'cedal/js/demo/datatables-demo.js' %}"></script>
+<!-- <script src="{% static 'cedal/js/demo/datatables-demo.js' %}"></script> -->
 
 <script>
     $(document).ready(function() {
     table("tablaCredito");
-    table("tablaDebito");
     });
 </script>
 

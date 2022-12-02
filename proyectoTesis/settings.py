@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'produccion',
     'stock',
     'simple_history',
+    'ventaPorMenor',
 ]
 
 X_FRAME_OPTIONS='SAMEORIGIN'

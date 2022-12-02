@@ -32,17 +32,20 @@ def altaProduccion(request):
     if request.method == "POST":
 
         fecha = request.POST.get('fecha')
-        producto = request.POST.get('producto_retiro')
-        cantidad = request.POST.get('cantidad_retiro')
+        producto_retiro = request.POST.get('producto_retiro')
+        cantidad_retiro = request.POST.get('cantidad_retiro')
+        producto_pedido = request.POST.get('producto_pedido')
+        cantidad_pedido = request.POST.get('cantidad_pedido')
         detalle = ""
         usuario = request.user.username
         
         tipoMov = "Retiro para produccion"
-        prodStock = Producto.objects.get(id=producto)
+        
+        prodStock = Producto.objects.get(id=producto_retiro)
         nombreProducto = prodStock.nombre
         stock = int(prodStock.stock)
         
-        if stock > 0 and int(cantidad) <= stock:
+        if stock > 0 and int(cantidad_retiro) <= stock:
 
             formulario = produccionForm(data=request.POST)
 
@@ -51,10 +54,19 @@ def altaProduccion(request):
                 prod.usuario_id = request.user.id
                 prod.save()
                 
-                stockProducto = stock - int(cantidad)
+                stockProducto = stock - int(cantidad_retiro)
                 prodStock.stock = stockProducto
                 prodStock.save()
-                cargarStock(tipoMov, fecha, detalle, cantidad, nombreProducto, stockProducto, usuario)
+                cargarStock(tipoMov, fecha, detalle, cantidad_retiro, nombreProducto, stockProducto, usuario)
+
+                prodStock = Producto.objects.get(id=producto_pedido)
+                nombreProducto = prodStock.nombre
+                stock = int(prodStock.stock)
+                stockProducto = stock + int(cantidad_pedido)
+                prodStock.stock = stockProducto
+                prodStock.save()
+                tipoMov = "Producto Producido"
+                cargarStock(tipoMov, fecha, detalle, cantidad_pedido, nombreProducto, stockProducto, usuario)
                 return redirect(to='produccion')
             else:
                 data["form"] = formulario

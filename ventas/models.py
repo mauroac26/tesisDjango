@@ -41,15 +41,9 @@ class detalleVenta(models.Model):
         return str(self.id)
 
 
-class tarjetaDebito(models.Model):
-    nombre = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.nombre
-
 
 class tarjetaCredito(models.Model):
-    nombre = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.nombre

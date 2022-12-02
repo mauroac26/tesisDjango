@@ -141,32 +141,6 @@ def consultaCaja(request):
     return render(request, 'caja/consultaCaja.html', data)
 
 
-def movimientoCaja(request):
-    if 'term' in request.GET:
-    
-        caja = Caja.objects.filter(nombre__icontains=request.GET.get("term")).values('id', 'nombre')
-        
-       
-        nombre = list()
-        if caja:
-            for c in caja:
-                id = c['id']
-                mov = movCaja.objects.filter(id_caja=id).latest('fecha')
-                dicCompras = {}
-                dicCompras['id'] = c['id']
-                dicCompras['label'] = '<li style="font-size: 11px;" class="list-group-item d-flex justify-content-between align-items-center"><div class="col-sm-5">'+str(c['nombre'])+'</div><span>'+str(mov.fecha)+'</span></li>'
-                dicCompras['value'] = f'{c["nombre"]} / {mov.fecha}'
-                
-                
-                nombre.append(dicCompras)
-            return JsonResponse(nombre, safe=False)
-        else:
-            dicCompras = {}
-            dicCompras['n'] = 1
-            dicCompras['label'] = '<li style="font-size: 11px;" class="list-group-item align-items-center"><div class="col-sm-7"><span>No se moviemientos</span></div></li>'
-            nombre.append(dicCompras)
-            return JsonResponse(nombre, safe=False)
-
 
 
 

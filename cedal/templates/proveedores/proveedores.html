@@ -31,16 +31,7 @@
                             <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tfoot class="bg-dark text-white">
-                        <tr>
-                            <th>Razon Social</th>
-                            <th>Direccion</th>
-                            <th>E-mail</th>
-                            <th>CUIT</th>
-                            <th>Cond. Tributaria</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </tfoot>
+    
                     <tbody>
                        {% for p in proveedores %}
                        <tr>
@@ -55,8 +46,12 @@
                             Responsable Inscripto
                             {% endif %}
                         </td>
-                        <td class="row justify-content-center"><a class="btn-sm btn-success" href="{% url 'editarProveedor' p.cuit %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
-                        <a class="btn-sm btn-danger ml-3" href="{% url 'eliminarProveedor' p.cuit %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a></td>
+                        <td>
+                            <div class="row justify-content-center">
+                            <a class="btn-sm btn-success" href="{% url 'editarProveedor' p.cuit %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
+                        <a class="btn-sm btn-danger ml-3" href="{% url 'eliminarProveedor' p.cuit %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                            </div>
+                    </td>
                     </tr>
                        {% endfor %}
                     </tbody>

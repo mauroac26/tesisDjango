@@ -37,7 +37,7 @@ urlpatterns = [
     path('ventas/', include('ventas.urls')),
     path('produccion/', include('produccion.urls')),
     path('stock/', include('stock.urls')),
-   
+    path('ventaPorMenor/', include('ventaPorMenor.urls')),
     
 ]
 

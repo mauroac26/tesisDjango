@@ -19,21 +19,22 @@
                 <div class="row">
                     <div class="col-12 col-md-6 offset-md-3">
                      
-                        <!-- {{ form|crispy}} -->
+                        {{ form|crispy}}
 
 
-                        Nombre: <input type="text" name="nombre" id="nombre" class="form-control"><br>
+                        <!-- Nombre: <input type="text" name="nombre" id="nombre" class="form-control"><br> -->
 
-                        Tipo: <select name="selectTarjetas" id="selectTarjetas" class="form-control">
+                        <!-- Tipo: <select name="selectTarjetas" id="selectTarjetas" class="form-control">
 
                             <option value="0">Tarjeta de credito</option>
                             <option value="1">Tarjeta de debito</option>
-                        </select>
+                        </select> -->
                     
                     
                 <br>
                 <div class="d-flex justify-content-end">
-                <button class="btn btn-primary" type="submit">Añadir</button>
+                <button class="btn btn-primary btn-sm" type="submit">Añadir</button>
+                <button class="btn btn-primary btn-sm ml-2 " aria-hidden="true" type="button" onclick="history.back()">Salir</button>
             </div>
                 </div>
                 </div>
