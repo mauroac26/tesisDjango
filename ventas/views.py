@@ -4,7 +4,7 @@ from django.db.models.aggregates import Sum
 from django.contrib.auth.decorators import login_required, permission_required
 from xhtml2pdf import pisa
 from django.http.response import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from caja.forms import movCajaForm, movimientoCajaForm
 from caja.models import Caja, movCaja
 from clientes.models import Clientes
@@ -599,3 +599,21 @@ def eliminarPagoVenta(request, id):
     obj.save()
 
     return redirect(to='pagoVenta')
+
+
+
+def eliminarVenta(request, id):
+    venta = get_object_or_404(Ventas, pk=id)
+    
+    if venta:
+        detalle = detalleVenta.objects.filter(id_venta = id).values('id_producto', 'cantidad')
+        for d in detalle:
+            producto = Producto.objects.get(id=d['id_producto'])
+            stockProducto = int(producto.stock) + int(d['cantidad'])
+            producto.stock = stockProducto
+            producto.save()
+            
+
+        venta.delete()
+        messages.add_message(request, messages.SUCCESS, "La venta se eliminó exitosamente")
+        return redirect(to='ventas')

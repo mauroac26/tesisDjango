@@ -1,6 +1,6 @@
 from django.urls import path
 from ventas.views import altaVenta, detalleFormaPagoVenta, eliminarPagoVenta, registroPagoVenta, cargarPagoVenta, \
-    cargarDetalleVenta, cargarVenta, clienteAutocomplete, detallesVenta, index, pagoVenta, productoVentaAutocomplete, ventaAdeudada
+    cargarDetalleVenta, cargarVenta, clienteAutocomplete, detallesVenta, index, pagoVenta, productoVentaAutocomplete, ventaAdeudada, eliminarVenta
 
 urlpatterns = [
     path('', index, name='ventas'),
@@ -18,5 +18,6 @@ urlpatterns = [
     # path('repVentas/<id>/', VentasPdf.as_view(), name="repVentas"),
     path('detalleFormaPagoVenta/', detalleFormaPagoVenta, name="detalleFormaPagoVenta"),
     path('eliminarPagoVenta/<id>/', eliminarPagoVenta, name="eliminarPagoVenta"),
+    path('eliminarVenta/<id>/', eliminarVenta, name="eliminarVenta"),
 
 ]

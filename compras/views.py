@@ -244,47 +244,7 @@ def reporteCompras(request):
 
     return HttpResponse(pdf, content_type='application/pdf')
 
-# from django.conf import settings
-# import uuid
 
-# def reporteExcel(request):
-#     compra = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha').annotate(Sum('total'))
-#     df = pd.DataFrame(compra)
-#     df.to_excel("cedal/static/excel/sdf.xlsx", encoding="UTF-8", index=False)
-#     #return HttpResponse(df)
-
-# import xlwt
-
-# def reporteComprasExcel(request):
-#     hoy = datetime.now()
-#     response = HttpResponse(content_type='application/ms-excel')
-#     response['Content-Disposition'] = 'attachment; filename='f'compras{hoy}.xls'''
-
-#     wb = xlwt.Workbook(encoding='utf-8')
-#     ws = wb.add_sheet('Compras')
-
-#     # Sheet header, first row
-#     row_num = 0
-
-#     font_style = xlwt.XFStyle()
-#     font_style.font.bold = True
-
-#     columns = ['Comprobante', 'nombre', 'fecha', 'Total', ]
-
-#     for col_num in range(len(columns)):
-#         ws.write(row_num, col_num, columns[col_num], font_style)
-
-#     # Sheet body, remaining rows
-#     font_style = xlwt.XFStyle()
-
-#     rows = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha').annotate(Sum('total')).values_list("id_compra__comprobante", "id_compra__cuit__nombre", "id_compra__fecha", "total")
-#     for row in rows:
-#         row_num += 1
-#         for col_num in range(len(row)):
-#             ws.write(row_num, col_num, row[col_num], font_style)
-
-#     wb.save(response)
-#     return response
 
 
 def pago(request):
@@ -470,7 +430,18 @@ def eliminarCompra(request, id):
     compra = get_object_or_404(Compras, pk=id)
     
     if compra:
+        
+        detalle = detalleCompra.objects.filter(id_compra = id).values('id_producto', 'cantidad')
+        for d in detalle:
+            producto = Producto.objects.get(id=d['id_producto'])
+            print(producto.stock)
+            stockProducto = int(producto.stock) - int(d['cantidad'])
+            producto.stock = stockProducto
+            producto.save()
+            
+
         compra.delete()
+        messages.add_message(request, messages.SUCCESS, "La compra se eliminó exitosamente")
         return redirect(to='compras')
     
 
