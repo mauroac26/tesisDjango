@@ -17,9 +17,13 @@ class UserRegisterForm(UserCreationForm):
             'password2': forms.TextInput(attrs={'class': 'form-control form-control-sm' }),
             
         }
+        
     def __init__(self, *args, **kwargs):
         super(UserRegisterForm, self).__init__(*args, **kwargs)
         self.fields['groups'] =  forms.ModelChoiceField(queryset=Group.objects.all())
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control form-control-sm'
+
 
 class editarUserForm(UserChangeForm):
     password = None
@@ -30,9 +34,10 @@ class editarUserForm(UserChangeForm):
         #     'groups': forms.ChoiceField()
         # }
     def __init__(self, instance, *args, **kwargs):
-        
         super(editarUserForm, self).__init__(*args, **kwargs)
         self.fields['groups'] =  forms.ModelChoiceField(label= "Grupo", queryset=Group.objects.all(), initial=Group.objects.get(user = instance.id))
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control form-control-sm'
 
 
 class editarPerfilForm(UserChangeForm):
@@ -41,16 +46,25 @@ class editarPerfilForm(UserChangeForm):
         model = Users
         fields = ['username', 'first_name', 'last_name', 'email', 'imagen']
         widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control form-control-sm' }),
             'first_name': forms.TextInput(attrs={'class': 'form-control form-control-sm' }),
             'last_name': forms.TextInput(attrs={'class': 'form-control form-control-sm' }),
-            'email': forms.TextInput(attrs={'class': 'form-control form-control-sm' }),
-            'imagen': forms.FileInput(attrs={'class': 'form-control-file form-control-sm'  })
+            'email': forms.TextInput(attrs={'class': 'form-control form-control-sm' })
+           
         }
 
 
 class cambiarPasswordForm(PasswordChangeForm):
-    model = Users
-    fields = '__all__'
+    class Meta:
+        model = Users
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(cambiarPasswordForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control form-control-sm'
+
+
 
 
 
@@ -76,4 +90,10 @@ class resetPasswordForm(forms.Form):
         if password != confirmPassword:
             raise forms.ValidationError('Las contraseña deben ser iguales')
         return cleaned
+
+    
+    def __init__(self, *args, **kwargs):
+        super(resetPasswordForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control form-control-sm'
         

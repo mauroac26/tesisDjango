@@ -21,6 +21,11 @@ class produccionForm(forms.ModelForm):
           
         }
 
+    def __init__(self, *args, **kwargs):
+        super(produccionForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control form-control-sm'
+
     # def __init__(self, *args, **kwargs):
         
     #     super(produccionForm, self).__init__(*args, **kwargs)

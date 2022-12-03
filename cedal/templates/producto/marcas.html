@@ -24,7 +24,7 @@
                     <thead>
                         <tr>
                             <th>Descripcion</th>
-                            <th  style="width: 30px;">Acción</th>
+                            <th  style="width: 100px;">Acción</th>
                         </tr>
                     </thead>
                     <!-- <tfoot>
@@ -43,8 +43,9 @@
                             <a class="btn-sm btn-danger ml-3" onclick="eliminarMarca({{m.id}})"  href="#"    role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
                             </div>
                         </td>
-                       {% endfor %}
+                       
                     </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
                 {{mensaje}}

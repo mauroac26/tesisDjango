@@ -16,6 +16,12 @@ class ajusteForm(forms.ModelForm):
             #'usuario': forms.TextInput(attrs={'id': 'usuario', 'class': 'form-control form-control-sm', "value": user.username,}),
         }
 
+    
+    def __init__(self, *args, **kwargs):
+        super(ajusteForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control form-control-sm'
+
     # def __init__(self, *args, **kwargs):
         
     #     super(ajusteForm, self).__init__(*args, **kwargs)
@@ -42,6 +48,9 @@ class stockForm(forms.ModelForm):
     class Meta:
         model = stock
         fields = '__all__'
+
+    
+    
 
 # class ajusteForm(forms.ModelForm):
     

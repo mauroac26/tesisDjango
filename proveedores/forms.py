@@ -36,6 +36,11 @@ class editarProvForm(forms.ModelForm):
             'cuit': forms.TextInput(attrs={'id': 'cuit', 'readonly': True})
         }
 
+    def __init__(self, *args, **kwargs):
+        super(editarProvForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control form-control-sm'
+
 
 class proveedorCompraForm(forms.ModelForm):
 

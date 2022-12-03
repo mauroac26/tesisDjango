@@ -3,29 +3,33 @@ from django import forms
 from ventas.models import tarjetaCredito
 # from django.forms import Form
 from .models import backup
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+# from django.contrib.auth.forms import UserCreationForm
+# from django.contrib.auth.models import User
 
 
-nivel_usuario = [
-    [0, "Administrador"],
-    [1, "Vendedor"]
-]
+# nivel_usuario = [
+#     [0, "Administrador"],
+#     [1, "Vendedor"]
+# ]
 
-class UserRegisterForm(UserCreationForm):
-    nivel = forms.MultipleChoiceField(widget=forms.SelectMultiple, choices=nivel_usuario)
+# class UserRegisterForm(UserCreationForm):
+#     nivel = forms.MultipleChoiceField(widget=forms.SelectMultiple, choices=nivel_usuario)
 
-    class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'nivel', 'password1', 'password2']
+#     class Meta:
+#         model = User
+#         fields = ['username', 'first_name', 'last_name', 'nivel', 'password1', 'password2']
 
 
 class formCredito(forms.ModelForm):
     
-
     class Meta:
         model = tarjetaCredito
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(formCredito, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control form-control-sm'
 
 
 
