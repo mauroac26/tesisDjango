@@ -19,7 +19,7 @@ def index(request):
     return render(request, 'ventaPorMenor/ventaPorMenor.html', data) 
 
 
-def altaPedidoPorMenor(request):
+def altaRetiroPorMenor(request):
 
 
     data = {
@@ -27,10 +27,10 @@ def altaPedidoPorMenor(request):
     }
 
 
-    return render(request, 'ventaPorMenor/pedidoVentaPorMenor.html', data)
+    return render(request, 'ventaPorMenor/retiroVentaPorMenor.html', data)
 
 
-def cargarPedidoVenta(request):
+def cargarRetiroVenta(request):
    
     # request should be ajax and method should be POST.
     if request.is_ajax and request.method == "POST":
@@ -55,7 +55,7 @@ def cargarPedidoVenta(request):
     return JsonResponse({"error": "Error"}, status=400)
 
 
-def cargarDetallePedidoVenta(request):
+def cargarDetalleRetiroVenta(request):
 
     if request.is_ajax():
     
@@ -68,10 +68,10 @@ def cargarDetallePedidoVenta(request):
         
         producto = Producto.objects.get(id=id_producto)
 
-        data['id_ventaPorMenor'] = 13
+        data['id_ventaPorMenor'] = ultimo_pedido
         data['producto'] = id_producto
         data['cantidad'] = cantidad
-        print(data)
+   
         tipoMov = "Retiro Venta Por Menor"
         fecha = ultimo_pedido.fecha
         detalle = ""
@@ -99,7 +99,7 @@ def cargarDetallePedidoVenta(request):
     return JsonResponse({"error": "Error"}, status=400)
 
 
-def detallePedidoVenta(request):
+def detalleRetiroVenta(request):
     
     if request.is_ajax():
         id = request.POST.get("id")

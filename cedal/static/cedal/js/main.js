@@ -50,7 +50,8 @@ function table(tabla){
                 } );
             },
             exportOptions: {
-              columns: 'th:not(:last-child)'
+              columns: 'th:not(:last-child)',
+              alignment: 'center',
             }
         },
             

@@ -3,14 +3,14 @@
 
 {% load crispy_forms_tags %}
 
-{% block title %}Alta Pedido Venta Por Menor{% endblock %}
+{% block title %}Registro retiro de mercadería para Venta por menor{% endblock %}
 
 {% block content %}
 
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 text-gray-800">Nuevo Pedido para Venta por menor</h1>
+    <h1 class="h3 text-gray-800">Registro retiro de mercadería para Venta por menor</h1>
 
 <div class="row mt-3">
         
@@ -129,7 +129,7 @@
         
         $.ajax({
             type: 'POST',
-            url: "{% url 'cargarPedidoVenta' %}",
+            url: "{% url 'cargarRetiroVenta' %}",
             data:{'csrfmiddlewaretoken': '{{ csrf_token }}'},
             success: function (response) {
 
@@ -139,16 +139,16 @@
 
                 var cantidadTabla = document.getElementById('tablaPedido').rows[f].cells[1].innerText;            
                 var idp = $('#tablaPedido tr:eq('+f+')').find("td:first-child").data('producto');   
-                alert(idp)
+              
             // carga detalle de la compra
                 $.ajax({
             type: 'get',
-            url: "{% url 'cargarDetallePedidoVenta' %}",
+            url: "{% url 'cargarDetalleRetiroVenta' %}",
             data: {'id_producto': idp,
                    'cantidad': cantidadTabla
         },
             success: function (response) {
-                window.location = "{% url 'pedidoVentaPorMenor' %}";
+                window.location = "{% url 'retiroVentaPorMenor' %}";
             },
             error: function (response) {
                 // alert the error if any error occured

@@ -86,6 +86,10 @@ def eliminarProduccion(request, id):
         stockProducto = int(produccion.cantidad_retiro) + int(producto.stock) 
         producto.stock = stockProducto
         producto.save()
+        producto = Producto.objects.get(id = produccion.producto_pedido_id)
+        stockProducto = int(produccion.cantidad_pedido) + int(producto.stock) 
+        producto.stock = stockProducto
+        producto.save()
         produccion.delete()
         messages.add_message(request, messages.SUCCESS, "La produccion se eliminó exitosamente")
         return redirect(to='produccion')

@@ -24,25 +24,16 @@ def index(request):
     #     return HttpResponse(True)
     return render(request, 'cedal/index.html')
 
-def graficoCompras(request):
+def graficoVentas(request):
     resultado = list()
     if request.is_ajax() and request.method == "GET":
         
 
-        #compra = detalleCompra.objects.filter(id_compra__fecha__year = "2022").values('id_compra__fecha__month').order_by('id_compra__fecha__month').annotate(Sum('total'))
+        compra = detalleCompra.objects.all().values('id_compra__fecha__month').annotate(Sum('total')).order_by('id_compra__fecha__month')
         venta = detalleVenta.objects.all().values('id_venta__fecha__month').annotate(Sum('total')).order_by('id_venta__fecha__month')
+       
         
-        # for e in venta:
-        #     fecha = e['id_venta__fecha']
-            
-        #     tablaProsiciones = {}
-        #     tablaProsiciones['total'] = e['total__sum']
-        #     tablaProsiciones['fecha'] = fecha
-
-        #     resultado.append(tablaProsiciones)
-
-        #     print(resultado)
-        return JsonResponse({"data": list(venta)})
+        return JsonResponse({"data": list(venta), 'compra': list(compra)})
         
    
 

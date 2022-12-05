@@ -27,8 +27,11 @@ function number_format(number, decimals, dec_point, thousands_sep) {
   return s.join(dec);
 }
 
-var paramFecha = [];
-var paramPrecio = [];
+var paramFecha = ['0','0','0','0','0','0','0','0','0','0','0','0'];
+var paramPrecio = ['0','0','0','0','0','0','0','0','0','0','0','0'];
+
+var paramFechaCompra = [];
+var paramPrecioCompra = ['0','0','0','0','0','0','0','0','0','0','0','0'];
 // let mes;
 // $.ajax({
 //   type: "post",
@@ -64,16 +67,25 @@ fecha = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "
 $.ajax({
   type: "get",
   dataType: 'json',
-   url:  "graficoCompras",
+   url:  "graficoVentas",
 success: function(response) {
   
     var pe = response.data;
-    //alert(pe);
-                 $.each(pe, function(i, item){
-                  //const shortMonthName = moment(item.id_compra__fecha).format('MMM');
-                paramFecha.push(fecha[item.id_venta__fecha__month - 1]);
+   
+    var com = response.compra;
+
                 
-                 paramPrecio.push(parseFloat(item.total__sum).toFixed(2)); 
+                 $.each(pe, function(i, item){
+                  
+                                        
+                 paramPrecio[item.id_venta__fecha__month - 1] = parseFloat(item.total__sum).toFixed(2)
+                
+                 });
+
+                 $.each(com, function(i, item){
+                 
+
+                 paramPrecioCompra[item.id_compra__fecha__month - 1] = parseFloat(item.total__sum).toFixed(2)
                                         
             
                 
@@ -88,46 +100,80 @@ var ctx = document.getElementById("myAreaChart");
 var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
-    labels: paramFecha,
-    datasets: [{
-      label: "Ventas",
-      lineTension: 0.3,
-      backgroundColor: "rgba(78, 115, 223, 0.05)",
-      borderColor: "rgba(78, 115, 223, 1)",
-      pointRadius: 3,
-      pointBackgroundColor: "rgba(78, 115, 223, 1)",
-      pointBorderColor: "rgba(78, 115, 223, 1)",
-      pointHoverRadius: 3,
-      pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-      pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-      pointHitRadius: 10,
-      pointBorderWidth: 2,
-      data: paramPrecio,
-    }],
+    labels: fecha,
+    datasets: [{ 
+        data: paramPrecio,
+        label: "Ventas",
+        borderColor: "#3e95cd",
+        fill: false
+      }, { 
+        data: paramPrecioCompra,
+        label: "Compras",
+        borderColor: "#8e5ea2",
+        fill: false
+      }
+    ]
   },
   options: {
     maintainAspectRatio: false,
-    layout: {
-      padding: {
-        left: 10,
-        right: 25,
-        top: 25,
-        bottom: 0
+    // title: {
+    //   display: true,
+    //   text: 'Ventas/Compras año 2022'
+    // },
+//     legend: {
+//       display: false,
+//       labels: {
+        
+//         // This more specific font property overrides the global property
+//         font: {
+//             size: 50
+             
+//         }
+//     }
+    
+// },
+    tooltips: {
+      // backgroundColor: "rgb(255,255,255)",
+      // bodyFontColor: "#858796",
+      // titleMarginBottom: 10,
+      // titleFontColor: '#6e707e',
+      // titleFontSize: 14,
+      // borderColor: '#dddfeb',
+      // borderWidth: 1,
+      // xPadding: 15,
+      // yPadding: 15,
+      // displayColors: false,
+      // intersect: false,
+      // mode: 'index',
+      // caretPadding: 10,
+      callbacks: {
+        label: function(tooltipItem, chart) {
+          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+          return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+        }
       }
     },
+    // layout: {
+    //   padding: {
+    //     left: 10,
+    //     right: 25,
+    //     top: 25,
+    //     bottom: 0
+    //   }
+    // },
     scales: {
-      xAxes: [{
-        time: {
-          unit: 'date'
-        },
-        gridLines: {
-          display: false,
-          drawBorder: false
-        },
-        ticks: {
-          maxTicksLimit: 7
-        }
-      }],
+      // xAxes: [{
+      //   time: {
+      //     unit: 'date'
+      //   },
+      //   gridLines: {
+      //     display: false,
+      //     drawBorder: false
+      //   },
+      //   ticks: {
+      //     maxTicksLimit: 7
+      //   }
+      // }],
       yAxes: [{
         ticks: {
           maxTicksLimit: 5,
@@ -136,50 +182,129 @@ var myLineChart = new Chart(ctx, {
           callback: function(value, index, values) {
             return '$' + number_format(value);
           }
-        },
-        gridLines: {
-          color: "rgb(234, 236, 244)",
-          zeroLineColor: "rgb(234, 236, 244)",
-          drawBorder: false,
-          borderDash: [2],
-          zeroLineBorderDash: [2]
         }
+        // gridLines: {
+        //   color: "rgb(234, 236, 244)",
+        //   zeroLineColor: "rgb(234, 236, 244)",
+        //   drawBorder: false,
+        //   borderDash: [2],
+        //   zeroLineBorderDash: [2]
+        // }
       }],
     },
-    legend: {
-      display: false,
-      labels: {
-        
-        // This more specific font property overrides the global property
-        font: {
-            size: 50
-             
-        }
-    }
-    
-},
-    tooltips: {
-      backgroundColor: "rgb(255,255,255)",
-      bodyFontColor: "#858796",
-      titleMarginBottom: 10,
-      titleFontColor: '#6e707e',
-      titleFontSize: 14,
-      borderColor: '#dddfeb',
-      borderWidth: 1,
-      xPadding: 15,
-      yPadding: 15,
-      displayColors: false,
-      intersect: false,
-      mode: 'index',
-      caretPadding: 10,
-      callbacks: {
-        label: function(tooltipItem, chart) {
-          var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-          return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
-        }
-      }
-    }
   }
 });
+
+// var myLineChart = new Chart(ctx, {
+//   type: 'line',
+//   data: {
+//     labels: fecha,
+//     datasets: [{
+//       label: "Ventas",
+//       lineTension: 0.3,
+//       backgroundColor: "rgba(78, 115, 223, 0.05)",
+//       borderColor: "rgba(78, 115, 223, 1)",
+//       pointRadius: 3,
+//       pointBackgroundColor: "rgba(78, 115, 223, 1)",
+//       pointBorderColor: "rgba(78, 115, 223, 1)",
+//       pointHoverRadius: 3,
+//       pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+//       pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+//       pointHitRadius: 10,
+//       pointBorderWidth: 2,
+//       data: paramPrecio,
+//     }],
+//     datasets: [{
+//       label: "Compras",
+//       lineTension: 0.3,
+//       backgroundColor: "rgba(78, 115, 223, 0.05)",
+//       borderColor: "rgba(78, 115, 223, 1)",
+//       pointRadius: 3,
+//       pointBackgroundColor: "rgba(78, 115, 223, 1)",
+//       pointBorderColor: "rgba(78, 115, 223, 1)",
+//       pointHoverRadius: 3,
+//       pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+//       pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+//       pointHitRadius: 10,
+//       pointBorderWidth: 2,
+//       data: paramPrecioCompra,
+//     }],
+//   },
+//   options: {
+//     maintainAspectRatio: false,
+//     layout: {
+//       padding: {
+//         left: 10,
+//         right: 25,
+//         top: 25,
+//         bottom: 0
+//       }
+//     },
+//     scales: {
+//       xAxes: [{
+//         time: {
+//           unit: 'date'
+//         },
+//         gridLines: {
+//           display: false,
+//           drawBorder: false
+//         },
+//         ticks: {
+//           maxTicksLimit: 7
+//         }
+//       }],
+//       yAxes: [{
+//         ticks: {
+//           maxTicksLimit: 5,
+//           padding: 10,
+//           // Include a dollar sign in the ticks
+//           callback: function(value, index, values) {
+//             return '$' + number_format(value);
+//           }
+//         },
+//         gridLines: {
+//           color: "rgb(234, 236, 244)",
+//           zeroLineColor: "rgb(234, 236, 244)",
+//           drawBorder: false,
+//           borderDash: [2],
+//           zeroLineBorderDash: [2]
+//         }
+//       }],
+//     },
+//     legend: {
+//       display: false,
+//       labels: {
+        
+//         // This more specific font property overrides the global property
+//         font: {
+//             size: 50
+             
+//         }
+//     }
+    
+// },
+//     tooltips: {
+//       backgroundColor: "rgb(255,255,255)",
+//       bodyFontColor: "#858796",
+//       titleMarginBottom: 10,
+//       titleFontColor: '#6e707e',
+//       titleFontSize: 14,
+//       borderColor: '#dddfeb',
+//       borderWidth: 1,
+//       xPadding: 15,
+//       yPadding: 15,
+//       displayColors: false,
+//       intersect: false,
+//       mode: 'index',
+//       caretPadding: 10,
+//       callbacks: {
+//         label: function(tooltipItem, chart) {
+//           var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+//           return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+//         }
+//       }
+//     }
+//   }
+// });
 }
 });

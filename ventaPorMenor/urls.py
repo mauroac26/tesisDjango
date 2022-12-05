@@ -1,12 +1,12 @@
 from django.urls import path
 
-from ventaPorMenor.views import index, altaPedidoPorMenor, cargarPedidoVenta, cargarDetallePedidoVenta, detallePedidoVenta
+from ventaPorMenor.views import index, altaRetiroPorMenor, cargarRetiroVenta, cargarDetalleRetiroVenta, detalleRetiroVenta
 
 urlpatterns = [
-    path('', index, name="pedidoVentaPorMenor"),
-    path('altaPedidoPorMenor/', altaPedidoPorMenor, name="altaPedidoPorMenor"),
-    path('cargarPedidoVenta/', cargarPedidoVenta, name="cargarPedidoVenta"),
-    path('cargarDetallePedidoVenta/', cargarDetallePedidoVenta, name="cargarDetallePedidoVenta"),
-    path('detallePedidoVenta/', detallePedidoVenta, name="detallePedidoVenta"),
+    path('', index, name="retiroVentaPorMenor"),
+    path('altaRetiroPorMenor/', altaRetiroPorMenor, name="altaRetiroPorMenor"),
+    path('cargarRetiroVenta/', cargarRetiroVenta, name="cargarRetiroVenta"),
+    path('cargarDetalleRetiroVenta/', cargarDetalleRetiroVenta, name="cargarDetalleRetiroVenta"),
+    path('detalleRetiroVenta/', detalleRetiroVenta, name="detalleRetiroVenta"),
 
 ]
