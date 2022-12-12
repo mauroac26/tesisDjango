@@ -303,9 +303,14 @@ def registroPago(request):
             comprobante = c['id_compra__comprobante']
             deuda = c['total__sum']
 
+        pago = formaPagoCompra.objects.filter(id_compra=id_compra).annotate(Sum('total'))
+        if pago:
+            for p in pago:
+                saldo = float(deuda) - float(p.total__sum) 
+        else:
+            saldo = float(deuda)
         
-        
-        if total <= float(deuda):
+        if total <= float(saldo):
             
                 
             caja_actual = Caja.objects.order_by('id', 'total', 'estado').last()

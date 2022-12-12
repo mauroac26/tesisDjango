@@ -19,20 +19,20 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 @login_required
 def index(request):
+    
     # if request.is_ajax() and request.method == "POST":
     #     compra = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__fecha').annotate(Sum('total'))
     #     return HttpResponse(True)
     return render(request, 'cedal/index.html')
 
 def graficoVentas(request):
-    resultado = list()
+   
     if request.is_ajax() and request.method == "GET":
         
-
         compra = detalleCompra.objects.all().values('id_compra__fecha__month').annotate(Sum('total')).order_by('id_compra__fecha__month')
         venta = detalleVenta.objects.all().values('id_venta__fecha__month').annotate(Sum('total')).order_by('id_venta__fecha__month')
        
-        
+       
         return JsonResponse({"data": list(venta), 'compra': list(compra)})
         
    

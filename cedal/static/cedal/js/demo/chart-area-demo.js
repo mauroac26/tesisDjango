@@ -27,39 +27,13 @@ function number_format(number, decimals, dec_point, thousands_sep) {
   return s.join(dec);
 }
 
+
 var paramFecha = ['0','0','0','0','0','0','0','0','0','0','0','0'];
 var paramPrecio = ['0','0','0','0','0','0','0','0','0','0','0','0'];
 
 var paramFechaCompra = [];
 var paramPrecioCompra = ['0','0','0','0','0','0','0','0','0','0','0','0'];
-// let mes;
-// $.ajax({
-//   type: "post",
-//    url: "{% url '/cedal/graficoCompras' %}",
-// success: function(response) {
-//           alert(response);
-// }
 
-
-
-// });
-
-// 	$.post("{% url 'index' %}",
-							
-//  function(data){
-// alert(data);
-				// var pe = JSON.parse(data);
-				 //$.each(pe, function(i, item){
-						 
-			                
-							// paramCompra.push(item.fecha + ' ' +item.year);
-							// paramPrecio.push(parseFloat(item.total).toFixed(2));                    
-				
-				
-				
-				 //});
-
-// Area Chart Example
 
 fecha = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 
@@ -73,7 +47,7 @@ success: function(response) {
     var pe = response.data;
    
     var com = response.compra;
-
+  
                 
                  $.each(pe, function(i, item){
                   

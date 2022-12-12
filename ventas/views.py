@@ -470,14 +470,20 @@ def registroPagoVenta(request):
         tarjeta = request.POST.get('tipoCredito')
         cuotas = request.POST.get('cuotas')
      
-        saldo = detalleVenta.objects.values('id_venta__comprobante').annotate(Sum('total')).filter(id_venta=id_venta)
-        for c in saldo:
+        ven = detalleVenta.objects.values('id_venta__comprobante').annotate(Sum('total')).filter(id_venta=id_venta)
+        for c in ven:
             comprobante = c['id_venta__comprobante']
             deuda = c['total__sum']
         
+        pago = formaPagoVenta.objects.filter(id_venta=id_venta).annotate(Sum('total'))
+        if pago:
+            for p in pago:
+                saldo = float(deuda) - float(p.total__sum) 
+        else:
+            saldo = float(deuda)
         
         
-        if total <= float(deuda):
+        if total <= float(saldo):
             
                 
             caja_actual = Caja.objects.order_by('id', 'total', 'estado').last()
@@ -526,7 +532,8 @@ def registroPagoVenta(request):
 
 
 def cargarPagoVenta(id_venta, total, tipoPago, deuda, tarjeta, cuotas):
-    #Registra el pago en formaPagoCompra 
+    #Registra el pago en formaPagoCompra
+     
     data = {}
     data['id_venta'] = id_venta
     data['fecha'] = datetime.now()
@@ -544,7 +551,8 @@ def cargarPagoVenta(id_venta, total, tipoPago, deuda, tarjeta, cuotas):
         tot = 0.0
         for p in pago:
             tot = float(p.total__sum) + float(tot)
-                    
+
+        print(tot)     
         #si es igual el total y la deuda el estado de la venta pasa a pagado sino sigue estando en adeudado
         if float(tot) == float(deuda):
             venta.estado = 'Pagado'
