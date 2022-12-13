@@ -71,8 +71,9 @@ def altaAjuste(request):
 
                 producto.stock = stock_actual
                 producto.save()
-                
-                cargarStock(tipoMov, fecha, detalle, cantidad, nombreProducto, stock_actual, usuario)
+            
+            id_tipo = ajusteStock.objects.order_by('id', 'fecha').last()
+            cargarStock(id_tipo.id, tipoMov, fecha, detalle, cantidad, nombreProducto, stock_actual, usuario)
             messages.add_message(request, messages.SUCCESS, "El ajuste de stock se realizo exitosamente")
             return redirect(to='movimientoStock')
         data["form"] = ajusteForm()
@@ -192,9 +193,11 @@ def altaAjuste(request):
 #     return JsonResponse({"error": "Error"}, status=400)
 
 
-def cargarStock(tipo, fecha, detalle, cantidad, producto, stock, usuario):
+def cargarStock(id_tipo, tipo, fecha, detalle, cantidad, producto, stock, usuario):
+    
     productos = {}
 
+    productos['id_tipo'] = id_tipo
     productos['tipoMovimiento'] = tipo
     productos['fecha'] = fecha
     productos['detalle'] = detalle
@@ -207,4 +210,9 @@ def cargarStock(tipo, fecha, detalle, cantidad, producto, stock, usuario):
 
     if formulario.is_valid():
         formulario.save()
+
+
+def eliminarStock(id_tipo, tipo):
+    s = stock.objects.filter(id_tipo=id_tipo, tipoMovimiento = tipo)
+    s.delete()
 

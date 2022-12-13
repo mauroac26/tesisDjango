@@ -15,7 +15,7 @@ estado = [
     ["Adeudado", "Adeudado"]
 ]
 class Compras(BaseModel):
-    comprobante = models.CharField(max_length=50, unique=True)
+    comprobante = models.CharField(max_length=8, unique=True)
     cuit = models.ForeignKey(proveedores, on_delete=models.CASCADE)
     fecha = models.DateField()
     tipoComprobante =  models.CharField(max_length = 150, choices=tipo_Comprobante, verbose_name="Tipo Comprobante")

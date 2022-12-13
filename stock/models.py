@@ -7,6 +7,7 @@ from base.models import BaseModel
 # Create your models here.
 
 class stock(models.Model):
+    id_tipo = models.IntegerField()
     fecha = models.DateTimeField(null=True)
     tipoMovimiento = models.CharField(max_length=50, verbose_name="Tipo Movimiento")
     producto = models.CharField(max_length = 150)

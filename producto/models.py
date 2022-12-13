@@ -41,6 +41,8 @@ class Producto(BaseModel):
     def __str__(self):
         return self.nombre
 
+    
+
 
 
 class ProductoPromocion(BaseModel):

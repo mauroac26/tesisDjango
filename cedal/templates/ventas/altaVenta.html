@@ -177,8 +177,8 @@
                 </div>
                 <div class="d-flex justify-content-end">
                
-                    
-                    <button class="btn btn-primary btn-sm" type="submit">Confirmar Venta</button>
+                    <button class="btn btn-primary btn-sm mr-2" name="confirmarynuevo" type="submit">Confirmar y Nuevo</button>
+                    <button class="btn btn-primary btn-sm" name="confirmar" type="submit">Confirmar Venta</button>
               
                </div> 
               
@@ -317,16 +317,18 @@ $(function() {
             $('#codigo').val("");
 
         }else if (cantidad > parseInt(stock) ){
-            alert('hola');
-            // Swal.fire({
-            //     title:'Error',
-            //     text: 'La cantidad seleccionada es mayor al stock del producto',
-            //     icon: 'error'
+            
+            Swal.fire({
+                title:'Error',
+                text: 'La cantidad seleccionada es mayor al stock del producto',
+                icon: 'error'
   
-            // })
-            // $('#alertCantidad').show();
-        
+            })
+           
             $('#cantidad').val("");
+            
+        
+           
         }else{
 
         if (descuento == ""){
@@ -510,13 +512,26 @@ $(function() {
 
 
 <script>
+
+tipo = 0
+     document.getElementsByName("confirmar")[0].addEventListener("click", function(event) {
+    tipo = 1
+      
+});
+
+document.getElementsByName("confirmarynuevo")[0].addEventListener("click", function(event) {
+    tipo = 2
+      
+});
     /*
         On submiting the form, send the POST ajax
         request to server and after successfull submission
         display the object.
     */
     $("#form-venta").submit(function (e) {
-
+        filas = document.getElementById('tablaAltaVenta').rows.length
+      
+      if (filas > 1){
         // preventing from page reload and default actions
         e.preventDefault();
         var serializedData = $(this).serialize();
@@ -556,7 +571,11 @@ $(function() {
                    'cantidad': cantidadTabla
         },
             success: function (response) {
-                window.location = "{% url 'ventas' %}";
+                if (tipo == 1){
+                    window.location = "{% url 'ventas' %}";
+                }else{
+                    window.location = "{% url 'altaVenta' %}";
+                }
             },
             error: function (response) {
                 // alert the error if any error occured
@@ -576,6 +595,18 @@ $(function() {
             }
 
         })
+
+    }else{
+        e.preventDefault();
+        Swal.fire({
+                    "title":"Error",
+                    "text": "No se ha seleccionado ningun producto",
+                    "icon": "error"
+
+                })
+
+              
+    } 
         })
         
         

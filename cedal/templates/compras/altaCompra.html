@@ -163,10 +163,10 @@
                 <div class="d-flex justify-content-end">
                
                     
-                        <button class="btn btn-primary btn-sm mr-2" type="submit">Confirmar y Nuevo</button>
+                        <button class="btn btn-primary btn-sm mr-2" name="confirmarynuevo" type="submit">Confirmar y Nuevo</button>
                       
              
-                    <button class="btn btn-primary btn-sm" type="submit">Confirmar Compra</button>
+                    <button class="btn btn-primary btn-sm" name="confirmar" type="submit">Confirmar Compra</button>
                 
                </div> 
                 
@@ -278,36 +278,20 @@ $(function() {
              
                 $('#tablaAltaCompra').append(fila);
                 
-    //             objProducto = {
-    //                'id_producto': idProducto,
-    //                'cantidad': cantidad
-    //    }; 
-
-    //            arr.push(objProducto);
+   
                 suma(neto, iva, total);       
+                $('#stock').val("");
+            $('#cantidad').val("");
+            $('#nombreProducto').val("");
+            $('#precio').val("");
+            $('#codigo').val("");
 
         }
 
-//  var objProducto = {}
+
 
          function cargarDetalleCompra(){
-           
-//             let filaTablaAC = $('#tablaAltaCompra tr').length;
-               
-//                for (f = 1; f <= filaTablaAC; f++) {
 
-//                 var cantidadTabla = document.getElementById('tablaAltaCompra').rows[f].cells[2].innerText;            
-//                 var idp = $('#tablaAltaCompra tr:eq('+f+')').find("td:first-child").data('producto');   
-                
-                
-              
-//                 objProducto = {
-//                     'id_producto': idp,
-//                     'cantidad': cantidadTabla
-//                 };
-               
-            
-                //var obj = JSON.stringify(objProducto);
                
                 var tipoComprobante = $('#tipoComprobante option:selected').text();
                 var comprobante = $('#comprobante').val();
@@ -429,15 +413,26 @@ $(function() {
 </script>
 
 <script>
-    /*
-        On submiting the form, send the POST ajax
-        request to server and after successfull submission
-        display the object.
-    */
-    $("#form-compra").submit(function (e) {
+    tipo = 0
+     document.getElementsByName("confirmar")[0].addEventListener("click", function(event) {
+    tipo = 1
+      
+});
 
-        // preventing from page reload and default actions
+document.getElementsByName("confirmarynuevo")[0].addEventListener("click", function(event) {
+    tipo = 2
+      
+});
+
+       
+
+    $("#form-compra").submit(function (e) {
+        filas = document.getElementById('tablaAltaCompra').rows.length
+      
+        if (filas > 1){
+       
         e.preventDefault();
+        
         var serializedData = $(this).serialize();
         Swal.fire({
             "title": "Confirma la compra?",
@@ -450,8 +445,7 @@ $(function() {
         .then(function(result){
             if(result.isConfirmed){
                
-                // serialize the data for sending the form data.
-        
+                
         // carga la compra realizada
         $.ajax({
             type: 'POST',
@@ -465,7 +459,7 @@ $(function() {
 
                 var cantidadTabla = document.getElementById('tablaAltaCompra').rows[f].cells[2].innerText;            
                 var idp = $('#tablaAltaCompra tr:eq('+f+')').find("td:first-child").data('producto');   
-                //var total = document.getElementById('tablaAltaCompra').rows[f].cells[6].innerText; 
+                
                 
             // carga detalle de la compra
                 $.ajax({
@@ -475,10 +469,15 @@ $(function() {
                    'cantidad': cantidadTabla
         },
             success: function (response) {
-                window.location = "{% url 'compras' %}";
+                if (tipo == 1){
+                    window.location = "{% url 'compras' %}";
+                }else{
+                    window.location = "{% url 'altaCompra' %}";
+                }
+               
             },
             error: function (response) {
-                // alert the error if any error occured
+              
                 alert(response["responseJSON"]["error"]);
             }
         })
@@ -488,7 +487,7 @@ $(function() {
           
             },
             error: function (response) {
-                // alert(response["responseJSON"]["error"]);
+                
                                 
                 Swal.fire({
                     "title":"Error",
@@ -497,7 +496,7 @@ $(function() {
 
                 })
             
-                
+           
                  
              
             }
@@ -505,78 +504,25 @@ $(function() {
             }
 
         })
+    }else{
+        e.preventDefault();
+        Swal.fire({
+                    "title":"Error",
+                    "text": "No se ha seleccionado ningun producto",
+                    "icon": "error"
+
+                })
+
+                //window.location = "{% url 'altaCompra' %}";
+    } 
         })
         
-        
+    
     
 </script>
 
 <script>
-    var totalPago;
-    var totalParcial;
     
-    totalPago = $('#total').val();
-
-    //alert(totalPago);
-    $( '#btnEfectivo').on( 'click', function() {
-        totalPago =  $('#total').val();
-    document.getElementById('efectivo').value = totalPago; 
-    totalPago =  $('#total').val() - $('#efectivo').val();
-})
-
-$( '#btnCredito').on( 'click', function() {
-    document.getElementById('credito').value = totalPago; 
-
-    totalPago =  $('#total').val() - $('#credito').val();
-})
-    
-     $( '#chEfectivo').on( 'click', function() {
-         
-        //var mydiv = document.getElementById('divEfectivo');
-        if( $(this).is(':checked') ) {
-            //mydiv.className = 'row mt-3 d-block'
-            document.getElementById('efectivo').readOnly = false;
-            document.getElementById('efectivo').value = $('#total').val();
-           
-}else{
-    document.getElementById('efectivo').readOnly = true;
-}
-})
-
-
-   
-     $( '#chCredito').on( 'click', function() {
-        // var mydiv = document.getElementById('divCredito');
-        // var divCuotas = document.getElementById('divCuotas');
-        if( $(this).is(':checked') ) {
-            // mydiv.className = 'row mt-3 d-block'
-            // divCuotas.className = 'row mt-3 d-block'
-            document.getElementById('credito').readOnly = false;
-            document.getElementById('cuotas').readOnly = false;
-           // document.getElementById('tipoCredito').readOnly = false;
-}else{
-    // mydiv.className = 'row mt-3 d-none'
-    // divCuotas.className = 'row mt-3 d-none'
-    document.getElementById('credito').readOnly = true;
-            document.getElementById('cuotas').readOnly = true;
-           // document.getElementById('tipoCredito').readOnly = true;
-}
-     })
-
-    
-     $( '#chDebito').on( 'click', function() {
-       // var mydiv = document.getElementById('divDebito');
-        if( $(this).is(':checked') ) {
-            
-           // mydiv.className = 'row mt-3 d-block'
-           document.getElementById('debito').readOnly = false;
-           //document.getElementById('tipoDebito').readOnly = false;
-}else{
-    //mydiv.className = 'row mt-3 d-none'
-    document.getElementById('debito').readOnly = true;
-    //document.getElementById('tipoDebito').readOnly = true;
-}
-     }) 
 
 
 </script>

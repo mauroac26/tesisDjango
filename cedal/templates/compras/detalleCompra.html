@@ -91,11 +91,7 @@
 {% endblock %}
 
 {% block js %}
-<!-- Page level plugins
-<script src="{% static 'cedal/vendor/datatables/jquery.dataTables.min.js' %}"></script>
-<script src="{% static 'cedal/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
 
-<script src="{% static 'cedal/js/demo/datatables-demo.js' %}"></script> -->
 
 <script>
     $(document).ready(function() {
@@ -103,81 +99,6 @@
     });
 </script>
 
-<!-- <script>
-  var total = $('#lebTotal').html();
-   $( '#chEfectivo').on( 'click', function() {
-         var mydiv = document.getElementById('divEfectivo');
-         if( $(this).is(':checked') ) {
-             mydiv.className = 'row mt-3 d-block'
-            //  document.getElementById('efectivo').readOnly = false;
-            //document.getElementById('efectivo').value = {{total.total__sum}};
-            
- }else{
-       mydiv.className = 'row mt-3 d-none'
-    //  document.getElementById('efectivo').readOnly = true;
- }
- })
 
- $( '#chCredito').on( 'click', function() {
-         
-  var divCredito = document.getElementById('divCredito');
-  var divTipoCredito = document.getElementById('divTipoCredito');
-  var divCuotas = document.getElementById('divCuotas');
-         if( $(this).is(':checked') ) {
-             divCredito.className = 'col-4 d-block';
-             divTipoCredito.className = 'col-4 d-block';
-             divCuotas.className = 'col-4 d-block';
-            //  document.getElementById('credito').readOnly = false;
-            //  document.getElementById('cuotas').readOnly = false;
-            
-            
- }else{
-    //  document.getElementById('credito').readOnly = true;
-    //  document.getElementById('cuotas').readOnly = true;
-             divCredito.className = 'col-4 d-none';
-             divTipoCredito.className = 'col-4 d-none';
-             divCuotas.className = 'col-4 d-none';
- }
- })
-
- $( '#chDebito').on( 'click', function() {
-  var divDebito = document.getElementById('divDebito');
-  var divTipoDebito = document.getElementById('divTipoDebito');
-
-         if( $(this).is(':checked') ) {
-             divDebito.className = 'col-4 d-block';
-             divTipoDebito.className = 'col-4 d-block';
-             //document.getElementById('debito').readOnly = false;
-             //document.getElementById('efectivo').value = $('#total').val();
-            
- }else{
-     //document.getElementById('debito').readOnly = true;
-     divDebito.className = 'col-4 d-none'
-     divTipoDebito.className = 'col-4 d-none'
- }
- })
-</script> -->
-
-<!-- <script>
-  
-  $( '#btn-pago').on( 'click', function(e) {
-    e.preventDefault()
-        Swal.fire({
-            "title": "Estas seguro",
-            "text": "El total a pagar es:" + " $" + total,
-            "icon":"question",
-            "showCancelButton": true,
-            "cancelButtonText":"No, Cancelar",
-            "confirmButtonText":"Si, confirmar",
-        })
-        .then(function(result){
-            if(result.isConfirmed){
-          
-              $( "#form-pago" ).submit();
-              
-            }
-          });
-  });
-</script> -->
 {% endblock %}
 

@@ -4,7 +4,7 @@ from django.contrib import messages
 from produccion.forms import produccionForm
 from produccion.models import Produccion
 from producto.models import Producto
-from stock.views import cargarStock
+from stock.views import cargarStock, eliminarStock
 from datetime import datetime
 # Create your views here.
 def index(request):
@@ -36,43 +36,47 @@ def altaProduccion(request):
         cantidad_retiro = request.POST.get('cantidad_retiro')
         producto_pedido = request.POST.get('producto_pedido')
         cantidad_pedido = request.POST.get('cantidad_pedido')
-        detalle = ""
+        detalle = "Retiro para produccion"
         usuario = request.user.username
         
-        tipoMov = "Retiro para produccion"
+        tipoMov = "Produccion"
         
         prodStock = Producto.objects.get(id=producto_retiro)
         nombreProducto = prodStock.nombre
         stock = int(prodStock.stock)
         
-        if stock > 0 and int(cantidad_retiro) <= stock:
+        #if stock > 0 and int(cantidad_retiro) <= stock:
 
-            formulario = produccionForm(data=request.POST)
+        formulario = produccionForm(data=request.POST)
 
-            if formulario.is_valid():
-                prod = formulario.save(commit=False)
-                prod.usuario_id = request.user.id
-                prod.save()
+        if formulario.is_valid():
+            prod = formulario.save(commit=False)
+            prod.usuario_id = request.user.id
+            prod.save()
+            id_tipo = Produccion.objects.order_by('id', 'fecha').last()
+
+            stockProducto = stock - int(cantidad_retiro)
+            prodStock.stock = stockProducto
+            prodStock.save()
+            cargarStock(id_tipo.id, tipoMov, fecha, detalle, cantidad_retiro, nombreProducto, stockProducto, usuario)
+
+            prodStock = Producto.objects.get(id=producto_pedido)
+            nombreProducto = prodStock.nombre
+            stock = int(prodStock.stock)
+            stockProducto = stock + int(cantidad_pedido)
+            prodStock.stock = stockProducto
+            prodStock.save()
+            
+            detalle = "Producto Producido"
+
                 
-                stockProducto = stock - int(cantidad_retiro)
-                prodStock.stock = stockProducto
-                prodStock.save()
-                cargarStock(tipoMov, fecha, detalle, cantidad_retiro, nombreProducto, stockProducto, usuario)
-
-                prodStock = Producto.objects.get(id=producto_pedido)
-                nombreProducto = prodStock.nombre
-                stock = int(prodStock.stock)
-                stockProducto = stock + int(cantidad_pedido)
-                prodStock.stock = stockProducto
-                prodStock.save()
-                tipoMov = "Producto Producido"
-                cargarStock(tipoMov, fecha, detalle, cantidad_pedido, nombreProducto, stockProducto, usuario)
-                return redirect(to='produccion')
-            else:
-                data["form"] = formulario
-
+            cargarStock(id_tipo.id, tipoMov, fecha, detalle, cantidad_pedido, nombreProducto, stockProducto, usuario)
+            return redirect(to='produccion')
         else:
-            messages.add_message(request, messages.ERROR,  "no hay stock o no hay la cantidad deseada del producto seleccionado")
+            data["form"] = formulario
+
+        #else:
+            #messages.add_message(request, messages.ERROR,  "no hay stock o no hay la cantidad deseada del producto seleccionado")
             
 
     return render(request, 'produccion/altaProduccion.html', data)
@@ -91,6 +95,7 @@ def eliminarProduccion(request, id):
         producto.stock = stockProducto
         producto.save()
         produccion.delete()
+        eliminarStock(id, tipo="Produccion")
         messages.add_message(request, messages.SUCCESS, "La produccion se eliminó exitosamente")
         return redirect(to='produccion')
 

@@ -1,9 +1,4 @@
-
-
-
 from django.shortcuts import get_object_or_404, render, redirect
-
-from compras.utils import render_pdf
 from .forms import comprasForm, detalleComprasForm, formPagoCompra
 from producto.forms import compraProductoForm
 from .models import Compras, detalleCompra, formaPagoCompra
@@ -11,16 +6,16 @@ from producto.models import Producto
 from django.http import JsonResponse
 from proveedores.models import proveedores
 from django.http import HttpResponse
-from caja.forms import movCajaForm, movimientoCajaForm
+from caja.forms import movimientoCajaForm
 from caja.models import Caja, movCaja
 from datetime import datetime
 from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from stock.views import cargarStock
+from stock.views import cargarStock, eliminarStock
 
 # Create your views here.
-
+#Muesta las compras realizadas
 @login_required
 @permission_required('compras.view_compras', login_url='index')
 def index(request):
@@ -36,6 +31,8 @@ def index(request):
 
     return render(request, 'compras/compras.html', data)
 
+
+#Mustra la interfaz y los formularios para dar de alta una compra
 @login_required
 @permission_required('compras.add_compras', login_url='compras')
 def altaCompra(request):
@@ -53,6 +50,7 @@ def altaCompra(request):
     return render(request, 'compras/altaCompra.html', data)
 
 
+#Obtiene lista de productos
 def productoAutocomplete(request):
    
     if 'term' in request.GET:
@@ -86,7 +84,7 @@ def productoAutocomplete(request):
             return JsonResponse(nombre, safe=False)
 
     
-
+#Obtiene lista de proveedores
 def proveedorAutocomplete(request):
    
     if 'term' in request.GET:
@@ -116,7 +114,7 @@ def proveedorAutocomplete(request):
 
 
 
-   
+#Registra las compras
 def cargarCompra(request):
    
     
@@ -135,12 +133,14 @@ def cargarCompra(request):
            
             return JsonResponse({"error": list(data['error']['comprobante'][0])}, status = 400, safe = False)
 
-    # some error occured
+  
         
 
+#Carga el detalle de las compras realizadas
 @login_required
 def cargarDetalleCompra(request):
-
+    usuario = request.user.username
+ 
     if request.is_ajax():
         data = {}
 
@@ -169,8 +169,8 @@ def cargarDetalleCompra(request):
         detalle = ""
         nombreProducto = producto.nombre
         
-        usuario = request.user.username
         
+       
         formulario = detalleComprasForm(data)
         if formulario.is_valid():
             
@@ -181,7 +181,7 @@ def cargarDetalleCompra(request):
                 stockProducto = int(producto.stock) + int(cantidad)
                 producto.stock = stockProducto
                 producto.save()
-                cargarStock(tipoMov, fecha, detalle, cantidad, nombreProducto, stockProducto, usuario)
+                cargarStock(ultima_compra.id, tipoMov, fecha, detalle, cantidad, nombreProducto, stockProducto, usuario)
             messages.add_message(request, messages.SUCCESS, "La compra se confirmó exitosamente")
 
             return HttpResponse(True)
@@ -191,7 +191,7 @@ def cargarDetalleCompra(request):
     return JsonResponse({"error": "Error"}, status=400)
 
 
-
+#Mustra el detalle de una compra seleccionada
 @login_required
 @permission_required('compras.view_detallecompra', login_url='compras')
 def detallesCompra(request, id):
@@ -224,29 +224,29 @@ def detallesCompra(request, id):
 
 
 
-@login_required
-def imprimir(request):
-    return render(request, 'compras/imprimir.html')
+# @login_required
+# def imprimir(request):
+#     return render(request, 'compras/imprimir.html')
 
 
-def reporteCompras(request):
+# def reporteCompras(request):
 
     
-    compra = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha').annotate(Sum('total'))
+#     compra = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha').annotate(Sum('total'))
 
 
-    data = {
-        "compras": compra,
-        "fecha" : datetime.now()
-    }
+#     data = {
+#         "compras": compra,
+#         "fecha" : datetime.now()
+#     }
 
-    pdf = render_pdf('compras/pdfCompras.html', data)
+#     pdf = render_pdf('compras/pdfCompras.html', data)
 
-    return HttpResponse(pdf, content_type='application/pdf')
-
-
+#     return HttpResponse(pdf, content_type='application/pdf')
 
 
+
+#Muestra los pagos realizados y pendientes
 def pago(request):
     compra = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha', 'id_compra__estado').annotate(Sum('total'))
 
@@ -264,16 +264,16 @@ def pago(request):
             saldo = float(p.total__sum) + saldo
             
         total = float(d['total__sum']) - saldo
-        signer_json = {}
-        signer_json['id'] = d['id_compra__id']
-        signer_json['comprobante'] = d['id_compra__comprobante']
-        signer_json['fecha'] = d['id_compra__fecha']
-        signer_json['nombre'] = d['id_compra__cuit__nombre']
-        signer_json['total'] = d['total__sum']
-        signer_json['saldo'] = total
-        signer_json['estado'] = d['id_compra__estado']
+        dicPago = {}
+        dicPago['id'] = d['id_compra__id']
+        dicPago['comprobante'] = d['id_compra__comprobante']
+        dicPago['fecha'] = d['id_compra__fecha']
+        dicPago['nombre'] = d['id_compra__cuit__nombre']
+        dicPago['total'] = d['total__sum']
+        dicPago['saldo'] = total
+        dicPago['estado'] = d['id_compra__estado']
         
-        compratotal.append(signer_json)
+        compratotal.append(dicPago)
 
     data = {
         "compras": compratotal
@@ -286,7 +286,7 @@ def pago(request):
 
     return render(request, 'compras/pagos.html', data)
 
-
+#Registra un nuevo pago
 def registroPago(request):
     data= {
         "formPago": formPagoCompra()
@@ -421,9 +421,7 @@ def compraAdeudada(request):
 
 
 def detallePago(request):
-    # pago = formaPago.objects.filter(id_compra=id).values('id_compra__comprobante', 'total', 'cuotas', 'tipoCredito')
-
-    #data['pago'] = pago
+    
     return render(request, 'compras/detallePago.html')
 
 
@@ -431,6 +429,7 @@ def reporteCompra(request):
     return render(request, 'compras/reporteCompras.html')
 
 
+#Elmina la compra
 def eliminarCompra(request, id):
     compra = get_object_or_404(Compras, pk=id)
     
@@ -439,17 +438,19 @@ def eliminarCompra(request, id):
         detalle = detalleCompra.objects.filter(id_compra = id).values('id_producto', 'cantidad')
         for d in detalle:
             producto = Producto.objects.get(id=d['id_producto'])
-            print(producto.stock)
+            
             stockProducto = int(producto.stock) - int(d['cantidad'])
             producto.stock = stockProducto
             producto.save()
             
 
         compra.delete()
+        eliminarStock(id, tipo="Compra")
         messages.add_message(request, messages.SUCCESS, "La compra se eliminó exitosamente")
         return redirect(to='compras')
     
 
+#Elimina el pago
 def eliminarPago(request, id):
     pago = formaPagoCompra.objects.filter(id_compra=id)
     saldo = 0.0
@@ -484,13 +485,14 @@ def eliminarPago(request, id):
                     
     pago.delete()
 
-    obj = Compras.objects.get(id=id)
-    obj.estado = "Adeudado"
-    obj.save()
+    compra = Compras.objects.get(id=id)
+    compra.estado = "Adeudado"
+    compra.save()
 
     return redirect(to='pago')
 
 
+#Muestra el detalle del pago
 def detalleFormaPago(request):
     
     if request.is_ajax():

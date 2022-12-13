@@ -21,10 +21,38 @@ class produccionForm(forms.ModelForm):
           
         }
 
+    # producto = 0
+    # def clean_producto_retiro(self):
+    #     id = self.cleaned_data['producto_retiro']
+    #     producto = id.id
+    #     return id
+
+    def clean(self):
+        cleaned_data = super().clean()
+        cantidad = cleaned_data.get("cantidad_retiro")
+        product = cleaned_data.get("producto_retiro")
+        
+        if cantidad > product.stock:
+            raise forms.ValidationError("La cantidad seleccionada a retirar es mayor al stock del producto")
+        else:
+            return cleaned_data
+
     def __init__(self, *args, **kwargs):
         super(produccionForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control form-control-sm'
+
+    # def clean_producto_retiro(self):
+    #     id = self.cleaned_data['producto_retiro']
+    #     print(id.id)
+        # fecha = id.vencimiento_carnet
+        
+        # fechaVen = date(fecha.year, fecha.month, fecha.day)
+        # hoy = date(datetime.now().year, datetime.now().month, datetime.now().day)
+        
+        # if hoy > fechaVen:
+        #     raise forms.ValidationError("El carnet se encuentra vencido")
+        # return id
 
     # def __init__(self, *args, **kwargs):
         

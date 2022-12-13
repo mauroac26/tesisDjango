@@ -3,12 +3,6 @@ from datetime import date
 from .models import Compras, detalleCompra, formaPagoCompra
 
 
-# tipo_Comprobante = [
-#     [0, "Factura"],
-#     [1, "Recibo"],
-#     [2, "Nota Credito"]
-# ]
-
 class comprasForm(forms.ModelForm):
     
     
@@ -32,16 +26,6 @@ class comprasForm(forms.ModelForm):
             raise forms.ValidationError('Comprobante existente')
         return comprobante
         
-    # def clean_comprobante(self):
-    #     comprobante = self.cleaned_data["comprobante"]
-        
-    #     existe = Compras.objects.filter(comprobante__iexact=comprobante).exists()
-        
-    #     if existe:
-            
-    #         raise forms.ValidationError("El numero de comprobante ya existe")
-        
-    #     return comprobante
 
     def __init__(self, *args, **kwargs):
         super(comprasForm, self).__init__(*args, **kwargs)
@@ -60,13 +44,6 @@ class detalleComprasForm(forms.ModelForm):
 
 class formPagoCompra(forms.ModelForm):
     
-    # efectivo = forms.DecimalField(min_value=0, initial=0.00)
-    # credito = forms.DecimalField(min_value=0, initial=0.00)
-    # debito = forms.DecimalField(min_value=0, initial=0.00)
-    # cuotas = forms.IntegerField(min_value=0, initial=0)
-
-    # def clean_efectivo(self):
-    #     efectivo = self.cleaned_data["efectivo"]
     class Meta:
         model = formaPagoCompra
         fields = ['id_compra', 'total', 'tipoPago', 'fecha']

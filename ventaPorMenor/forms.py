@@ -24,6 +24,15 @@ class detalleVentaPorMenorForm(forms.ModelForm):
             'cantidad' : forms.TextInput(attrs={'id': 'cantidad'}),
         }
 
+    def clean(self):
+        cleaned_data = super().clean()
+        cantidad = cleaned_data.get("cantidad")
+        product = cleaned_data.get("producto")
+        
+        if cantidad > product.stock:
+            raise forms.ValidationError("La cantidad seleccionada a retirar es mayor al stock del producto")
+        else:
+            return cleaned_data
 
     def __init__(self, *args, **kwargs):
             super(detalleVentaPorMenorForm, self).__init__(*args, **kwargs)

@@ -10,7 +10,7 @@ from caja.models import Caja, movCaja
 from clientes.models import Clientes
 from producto.forms import ventaProductoForm
 from producto.models import Producto, ProductoPromocion
-from stock.views import cargarStock
+from stock.views import cargarStock, eliminarStock
 from ventas.forms import detalleVentaForm, formPagoVenta, ventasForm
 from compras.utils import render_pdf
 from django.views.generic import View
@@ -170,6 +170,7 @@ def cargarDetalleVenta(request):
         data['subTotal'] = "{0:.2f}".format(neto)
         data['total'] = total
         
+       
         tipoMov = "Venta"
         fecha = ultima_venta.fecha
         detalle = ""
@@ -187,7 +188,7 @@ def cargarDetalleVenta(request):
                 stockProducto = int(producto.stock) - int(cantidad)
                 producto.stock = stockProducto
                 producto.save()
-                cargarStock(tipoMov, fecha, detalle, cantidad, nombreProducto, stockProducto, usuario)
+                cargarStock(ultima_venta.id, tipoMov, fecha, detalle, cantidad, nombreProducto, stockProducto, usuario)
             messages.add_message(request, messages.SUCCESS, "La venta se confirmó exitosamente")
 
             return HttpResponse(True)
@@ -623,5 +624,6 @@ def eliminarVenta(request, id):
             
 
         venta.delete()
+        eliminarStock(id, tipo="Venta")
         messages.add_message(request, messages.SUCCESS, "La venta se eliminó exitosamente")
         return redirect(to='ventas')
