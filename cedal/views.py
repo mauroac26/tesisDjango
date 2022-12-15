@@ -1,7 +1,7 @@
 import datetime
 from datetime import datetime, date
 from django.contrib import messages
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.db.models.functions import Coalesce
 from django.db.models import Sum, Count
 from cedal.form import formBackup, formCredito, reporteForm
@@ -20,22 +20,33 @@ from django.contrib.auth.decorators import login_required, permission_required
 @login_required
 def index(request):
     
-    # if request.is_ajax() and request.method == "POST":
-    #     compra = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__fecha').annotate(Sum('total'))
-    #     return HttpResponse(True)
     return render(request, 'cedal/index.html')
+
 
 def graficoVentas(request):
    
     if request.is_ajax() and request.method == "GET":
         
         compra = detalleCompra.objects.all().values('id_compra__fecha__month').annotate(Sum('total')).order_by('id_compra__fecha__month')
-        venta = detalleVenta.objects.all().values('id_venta__fecha__month').annotate(Sum('total')).order_by('id_venta__fecha__month')
+        venta = detalleVenta.objects.all().filter(id_venta__fecha__year = 2022).values('id_venta__fecha__month').annotate(Sum('total')).order_by('id_venta__fecha__month')
        
        
         return JsonResponse({"data": list(venta), 'compra': list(compra)})
         
-   
+
+def graficoVentasYear(request):
+  
+    if request.is_ajax() and request.method == "GET":
+
+        year1 = request.GET['year1']
+        year2 = request.GET['year2']
+        venta1 = detalleVenta.objects.all().filter(id_venta__fecha__year = year1).values('id_venta__fecha__month').annotate(Sum('total')).order_by('id_venta__fecha__month')
+        venta2 =  detalleVenta.objects.all().filter(id_venta__fecha__year = year2).values('id_venta__fecha__month').annotate(Sum('total')).order_by('id_venta__fecha__month')
+       
+       
+        return JsonResponse({"venta1": list(venta1), 'venta2': list(venta2)})
+    
+
 
 
 def graficoProductos(request):
@@ -58,26 +69,12 @@ def graficoClientes(request):
 
         return JsonResponse({"clientes": list(clientes)})
 
-# @permission_required('app.add_user')
-# def registro(request):
-#     data = {
-#         'form': UserRegisterForm()
-#     }
 
-#     if request.method == 'POST':
-#         formulario = UserRegisterForm(data=request.POST)
-#         if formulario.is_valid():
-#             formulario.save()
-#             # user = authenticate(username=formulario.cleaned_data["username"], password=formulario.cleaned_data["password1"])
-#             # login(request, user)
-#             messages.add_message(request, messages.SUCCESS, "Usuario creado correctamente")
-#             return redirect(to="index")
-#         data["form"] = formulario
-#     return render(request, 'registration/registro.html', data)
 
 @login_required
 def configuracion(request):
     return render(request, 'cedal/configuracion.html')
+
 
 @login_required
 def credito(request):
@@ -89,6 +86,7 @@ def credito(request):
         "credito": credito,
     }
     return render(request, 'cedal/credito.html', data)
+
 
 
 def altaTarjeta(request):
@@ -106,13 +104,45 @@ def altaTarjeta(request):
 
         if formulario.is_valid():
             formulario.save()
-            messages.add_message(request, messages.SUCCESS, "La tarjeta de credito se guardó exitosamente")
+            messages.add_message(request, messages.SUCCESS, "La tarjeta se guardó correctamente")
             return redirect(to='credito')
         else:
             data["form"] = formulario
 
     return render(request, 'cedal/altaTarjetas.html', data)
     
+
+@login_required
+# @permission_required('clientes.change_clientes', login_url='clientes')
+def editarTarjeta(request, id):
+    tarjetas = get_object_or_404(tarjetaCredito, pk=id)
+    
+    data = {
+        'form': formCredito(instance=tarjetas)
+    }
+
+    if request.method == "POST":
+        formulario = formCredito(data=request.POST, instance=tarjetas)
+        if formulario.is_valid():
+            formulario.save()
+            messages.add_message(request, messages.SUCCESS, "Tarjeta moidificada correctamente")
+            return redirect(to='credito')
+        data["form"] = formCredito()
+            
+    return render(request, 'cedal/editarTarjeta.html', data)
+
+
+@login_required
+# @permission_required('clientes.delete_clientes', login_url='clientes')
+def eliminarTarjeta(request, id):
+    tarjeta = get_object_or_404(tarjetaCredito, pk=id)
+    
+    if tarjeta:
+        tarjeta.delete()
+        messages.add_message(request, messages.SUCCESS, "Tarjeta eliminada correctamente")
+        return redirect(to='credito')
+
+
 
 def cantidadPedidos(request):
     pedidos = 0
@@ -162,6 +192,11 @@ def consultaPromo():
         fechaFin = date(fecha.year, fecha.month, fecha.day)
         if hoy > fechaFin:
             p.delete()
+
+
+def reportesVentaYear(request):
+
+    return render(request, 'reportes/reporteVentaxAño.html')
 
 
 def reportesCompras(request):

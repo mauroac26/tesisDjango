@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import get_object_or_404, render, redirect
 from .forms import clienteForm, editarCliForm
 from .models import Clientes
+from django.contrib import messages
 # Create your views here.
 
 @login_required
@@ -27,7 +28,7 @@ def altaClientes(request):
         formulario = clienteForm(data=request.POST)
         if formulario.is_valid():
             formulario.save()
-            data["mensaje"] = "Cliente guardado"
+            messages.add_message(request, messages.SUCCESS, "El cliente se guardó correctamente")
             return redirect(to='clientes')
         else:
             data["form"] = formulario
@@ -48,7 +49,7 @@ def editarCliente(request, id):
         formulario = editarCliForm(data=request.POST, instance=cliente)
         if formulario.is_valid():
             formulario.save()
-            data["mensaje"] = "Proveedor Modificado"
+            messages.add_message(request, messages.SUCCESS, "El cliente se modificó correctamente")
             return redirect(to='clientes')
         data["form"] = editarCliForm()
             
@@ -62,4 +63,5 @@ def eliminarCliente(request, id):
     
     if cliente:
         cliente.delete()
+        messages.add_message(request, messages.SUCCESS, "El cliente se eliminó correctamente")
         return redirect(to='clientes')

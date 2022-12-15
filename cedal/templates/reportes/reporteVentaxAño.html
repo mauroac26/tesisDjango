@@ -1,0 +1,100 @@
+{% extends 'Header/header.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Reporte ventas por año{% endblock %}
+
+{% block content %}
+
+
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Reporte ventas por año</h1>
+    
+
+    <!-- DataTales Example -->
+    
+    <div class="card shadow mb-4 ">
+        <div class="card-header py-3 justify-content-center">
+            <h6 class="mb-2 text-gray-800">Seleccionar los años a comparar:</h6>
+        <div class="row">
+            <div class="col-md-2">
+                <select class="form-control form-control-sm" name="ano" id="ano"></select>
+            </div>
+
+            <div class="col-md-2">
+                <select class="form-control form-control-sm" name="ano1" id="ano1"></select>
+            </div>
+
+            <div class="col-md-2 ">
+                <button type="button" class="btn btn-sm btn-primary" onclick="compararYear()"> Seleccionar</button>
+            </div>
+        </div>
+    </div>
+        
+        <div class="card-body ">
+            
+           <!-- Area Chart -->
+           <div class="col-md-10 offset-md-1">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div
+                    class="card-header py-3 d-flex flex-row align-items-center justify-content-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Comparativa de Ventas por año</h6>
+                    
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="myAreaChartVentas"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+{% block js %}    
+            <script>
+                var d = new Date();
+    var n = d.getFullYear();
+    var select = document.getElementById("ano");
+    for(var i = n; i >= 2006; i--) {
+        var opc = document.createElement("option");
+        opc.text = i;
+        opc.value = i;
+        select.add(opc)
+    }
+
+    var select1 = document.getElementById("ano1");
+    for(var i = n; i >= 2006; i--) {
+        var opc = document.createElement("option");
+        opc.text = i;
+        opc.value = i;
+        select1.add(opc)
+    }
+            </script>
+
+
+
+            <!-- Page level custom scripts -->
+            <script src="{% static 'cedal/vendor/chart.js/Chart.min.js' %}"></script>
+            <script src="{% static 'cedal/js/demo/char-area.js' %}"></script>
+            <script>
+                function compararYear(){
+                    var year = document.getElementById("ano");
+                var yearOpt = year.options[year.selectedIndex].value
+                
+                var year1 = document.getElementById("ano1");
+                var yearOpt1 = year1.options[year1.selectedIndex].value
+                comparativa(yearOpt, yearOpt1);
+                }
+                
+            </script>  
+            {% endblock %} 

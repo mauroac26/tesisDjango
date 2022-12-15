@@ -28,6 +28,8 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 }
 
 
+
+
 var paramFecha = ['0','0','0','0','0','0','0','0','0','0','0','0'];
 var paramPrecio = ['0','0','0','0','0','0','0','0','0','0','0','0'];
 
@@ -282,3 +284,4 @@ var myLineChart = new Chart(ctx, {
 // });
 }
 });
+

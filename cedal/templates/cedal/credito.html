@@ -1,7 +1,7 @@
 {% extends 'Header/header.html' %}
 {% load static %}
 
-{% block title %}Tarjetas{% endblock %}
+{% block title %}Tarjetas de credito y debito{% endblock %}
 
 {% block content %}
 
@@ -10,7 +10,7 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Tarjetas</h1>
+    <h1 class="h3 mb-2 text-gray-800">Tarjetas de credito y debito</h1>
     
 
     <!-- DataTales Example -->
@@ -29,7 +29,7 @@
         
         <div class="card-body">
             
-            <h5 class="h3 mb-2 text-gray-800">Tarjetas de credito</h5>
+            <!-- <h5 class="h3 mb-2 text-gray-800">Tarjetas de credito</h5> -->
 
             <div class="table-responsive">
                 <table class="table table-bordered table-striped table-hover" id="tablaCredito" width="100%" cellspacing="0">
@@ -48,8 +48,8 @@
                         
                         <td>
                             <div class="row justify-content-center">
-                            <a class="btn-sm btn-success" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
-                            <a class="btn-sm btn-danger ml-3" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                            <a class="btn-sm btn-success" href="{% url 'editarTarjeta' c.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
+                            <a class="btn-sm btn-danger ml-3" href="{% url 'eliminarTarjeta' c.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
                         </div>
                         </td>
                     </tr>

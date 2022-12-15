@@ -161,6 +161,7 @@ $('#tipoPago').change(function(e) {
             divCuotas.className = 'col-md-2 d-block';
         } else{
             divCredito.className = 'col-md-2 d-block';
+            divCuotas.className = 'col-md-2 d-none';
         }
     });
 
@@ -190,6 +191,9 @@ $('#tipoPago').change(function(e) {
   </script>
 
 
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
+
+  <script src="{% static 'cedal/vendor/jquery/jquery-1.12.4.js' %}"></script>
+  <script src="{% static 'cedal/vendor/jquery/jquery-ui.js' %}"></script>
 {% endblock %}

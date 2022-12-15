@@ -64,7 +64,7 @@ def editarUsuario(request, id):
             group = Group.objects.get(name=nivel)
             group.user_set.add(usuarios)
            
-            messages.add_message(request, messages.SUCCESS, "Puesto de usuario modificado correctamente")
+            messages.add_message(request, messages.SUCCESS, "Grupo de usuario se modificó correctamente")
             return redirect(to='usuarios')
         data["form"] = editarUserForm()
             
@@ -78,7 +78,9 @@ def eliminarUsuario(request, id):
     
     if usuario:
         usuario.delete()
+        messages.add_message(request, messages.SUCCESS, "Usuario se eliminó correctamente")
         return redirect(to='usuarios')
+
 
 @login_required
 def editarPerfilUsuario(request):
@@ -93,7 +95,7 @@ def editarPerfilUsuario(request):
             formulario = editarPerfilForm(data=request.POST, instance=request.user, files=request.FILES)
             if formulario.is_valid():
                 formulario.save()
-                data["mensaje"] = "Usuario Modificado"
+                messages.add_message(request, messages.SUCCESS, "El perfil de usuario se modificó correctamente")
                 return redirect(to='usuarios')
             data["form"] = editarPerfilForm()
             

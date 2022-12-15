@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse
 from .forms import editarProvForm, proveedorForm
 from .models import proveedores
+from django.contrib import messages
 
 # Create your views here.
 @login_required
@@ -14,6 +15,7 @@ def index(request):
         "proveedores": proveedor
     }
     return render(request, 'proveedores/proveedores.html', data)
+
 
 @login_required
 @permission_required('proveedores.add_proveedores', login_url='proveedores')
@@ -27,7 +29,7 @@ def altaProveedor(request):
         formulario = proveedorForm(data=request.POST)
         if formulario.is_valid():
             formulario.save()
-            data["mensaje"] = "Proveedor guardado"
+            messages.add_message(request, messages.SUCCESS, "El proveedor se guardó correctamente")
             return redirect(to='proveedores')
         else:
             data["form"] = formulario
@@ -47,11 +49,12 @@ def editarProveedor(request, id):
         formulario = editarProvForm(data=request.POST, instance=proveedor)
         if formulario.is_valid():
             formulario.save()
-            data["mensaje"] = "Proveedor Modificado"
+            messages.add_message(request, messages.SUCCESS, "El proveedor se modificó correctamente")
             return redirect(to='proveedores')
         data["form"] = editarProvForm()
             
     return render(request, 'proveedores/editarProveedor.html', data)
+
 
 @login_required
 @permission_required('proveedores.delete_proveedores', login_url='proveedores')
@@ -60,6 +63,7 @@ def eliminarProveedor(request, id):
     
     if proveedor:
         proveedor.delete()
+        messages.add_message(request, messages.SUCCESS, "El proveedor se eliminó correctamente")
         return redirect(to='proveedores')
 
 

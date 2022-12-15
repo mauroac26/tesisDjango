@@ -17,33 +17,42 @@
 
     <!-- Custom fonts for this template-->
 
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> -->
+    <link href="{% static 'cedal/css/jquery-ui.css' %}" rel="stylesheet">
 
     
     <!-- Rango de fechas css-->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-   
+    <!-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" /> -->
+    <link href="{% static 'cedal/css/daterangepicker.css' %}" rel="stylesheet">
+
+
     <link href="{% static 'cedal/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-    <link
+    <!-- <link
         href="{% static 'https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i' %}"
-        rel="stylesheet">
+        rel="stylesheet"> -->
 
     <!-- Custom styles for this template-->
     <link href="{% static 'cedal/css/sb-admin-2.css' %}" rel="stylesheet">
 
     <!-- Custom styles for this page -->
     
-    <link href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet">
-    
-<link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.8/semantic.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.semanticui.min.css">
+    <!-- <link href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet"> -->
+    <link href="{% static 'cedal/css/dataTables.min.css' %}" rel="stylesheet">
 
 
+<!-- <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+<link href="{% static 'cedal/css/bootstrap-4.3.1.min.css' %}" rel="stylesheet">
 
-<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css">
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.8/semantic.min.css"> -->
+<link href="{% static 'cedal/css/semantic.min.css' %}" rel="stylesheet">
 
+<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.semanticui.min.css"> -->
+<link href="{% static 'cedal/css/dataTables.semanticui.min.css' %}" rel="stylesheet">
+
+
+
+<!-- <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css"> -->
+<link href="{% static 'cedal/css/responsive.dataTables.min.css' %}" rel="stylesheet">
 
 </head>
 
@@ -298,7 +307,9 @@
                         <a class="collapse-item" href="{% url 'reportesCuentasPagar' %}">Cuentas por pagar</a>
                         
                         
-                        <a class="collapse-item" href="{% url 'reportesCuentasCobrar' %}" >Cuentas por cobrar</a>  
+                        <a class="collapse-item" href="{% url 'reportesCuentasCobrar' %}" >Cuentas por cobrar</a>
+                        
+                        <a class="collapse-item" href="{% url 'reportesVentaYear' %}" >Ventas Por Año</a>
                         
                         
                     </div>
@@ -523,8 +534,10 @@
     
     
     <!-- Bootstrap core JavaScript-->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-    
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script> -->
+    <script src="{% static 'cedal/js/bootstrap-4.3.1.min.js' %}"></script>
+
+
     <script src="{% static 'cedal/vendor/jquery/jquery.min.js' %}"></script>
    
 
@@ -538,37 +551,52 @@
 
     <!-- Page level plugins -->
     
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <!-- <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script> -->
+    <script src="{% static 'cedal/js/sweetalert.js' %}"></script>
 
 
-<script src="//code.jquery.com/jquery-3.5.1.js"></script>
+<!-- <script src="//code.jquery.com/jquery-3.5.1.js"></script> -->
+<script src="{% static 'cedal/js/jquery-3.5.1.js' %}"></script>
+
+
 <!-- <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script> -->
 
 
-<script src="https://cdn.datatables.net/1.12.1/js/dataTables.semanticui.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.8/semantic.min.js"></script>
+<!-- <script src="https://cdn.datatables.net/1.12.1/js/dataTables.semanticui.min.js"></script> -->
+<script src="{% static 'cedal/js/dataTables.semanticui.min.js' %}"></script>
+
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.8.8/semantic.min.js"></script> -->
+<script src="{% static 'cedal/js/semantic.min.js' %}"></script>
 
 
 
 
 
 <!-- DataTables JS library -->
-<script type="text/javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<!-- <script type="text/javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script> -->
+<script src="{% static 'cedal/js/jquery.dataTables.min.js' %}"></script>
 <!-- DataTables JBootstrap -->
 
-<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+<!-- <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script> -->
+<script src="{% static 'cedal/js/dataTables.responsive.min.js' %}"></script>
+
+    <!-- Botones dataTable -->
     <script src="{% static 'cedal/datatables/Buttons-2.2.2/js/dataTables.buttons.min.js' %}"></script>
     <script src="{% static 'cedal/datatables/JSZip-2.5.0/jszip.min.js' %}"></script>
     <script src="{% static 'cedal/datatables/pdfmake-0.1.36/pdfmake.min.js' %}"></script>
     <script src="{% static 'cedal/datatables/pdfmake-0.1.36/vfs_fonts.js' %}"></script>
     <script src="{% static 'cedal/datatables/Buttons-2.2.2/js/buttons.html5.min.js' %}"></script>
     <script src="{% static 'cedal/datatables/Buttons-2.2.2/js/buttons.print.min.js' %}"></script>
+
+
     <script src="{% static 'cedal/js/main.js' %}"></script>
 
     <!--Rango de fechas js-->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script> -->
+    <script src="{% static 'cedal/js/moment.min.js' %}"></script>
 
+    <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script> -->
+    <script src="{% static 'cedal/js/daterangepicker.min.js' %}"></script>
     {% if user.groups.all.0.name == 'Productor' %}
     <script>
     

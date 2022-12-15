@@ -19,6 +19,7 @@ def index(request):
     }
     return render(request, 'producto/producto.html', data)
 
+
 @login_required
 @permission_required('producto.add_producto', login_url='productos')
 def altaProducto(request):
