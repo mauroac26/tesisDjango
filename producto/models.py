@@ -23,7 +23,7 @@ class Marca(models.Model):
 
 
 class Producto(BaseModel):
-    codigo = models.CharField(max_length=10)
+    codigo = models.CharField(max_length=10, unique=True)
     nombre = models.CharField(max_length=50)
     precio_compra = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     precio_venta = models.DecimalField(max_digits=8, decimal_places=2, null=True)

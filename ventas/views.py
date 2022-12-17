@@ -26,6 +26,8 @@ from django.conf import settings
 # Create your views here.
 # @login_required
 # @permission_required('ventas.view_ventas', login_url='index')
+@login_required
+@permission_required('ventas.view_ventas', login_url='index')
 def index(request):
 
     consultaPromo()
@@ -198,6 +200,8 @@ def cargarDetalleVenta(request):
     return JsonResponse({"error": "Error"}, status=400)
 
 
+@login_required
+@permission_required('ventas.view_ventas', login_url='index')
 def detallesVenta(request, id):
     
     ventas = Ventas.objects.filter(id=id).select_related('cuit')
@@ -386,6 +390,8 @@ def detallesVenta(request, id):
 #         return response
 
 
+@login_required
+@permission_required('ventas.view_ventas', login_url='index')
 def pagoVenta(request):
     venta = detalleVenta.objects.values('id_venta__id', 'id_venta__comprobante', 'id_venta__cuit__nombre', 'id_venta__fecha', 'id_venta__estado').annotate(Sum('total'))
 
@@ -458,6 +464,8 @@ def ventaAdeudada(request):
             return JsonResponse(nombre, safe=False)
 
 
+@login_required
+@permission_required('ventas.add_ventas', login_url='index')
 def registroPagoVenta(request):
     data= {
         "formPago": formPagoVenta()
@@ -532,6 +540,7 @@ def registroPagoVenta(request):
     return render(request, 'ventas/registroPagoVenta.html', data)
 
 
+
 def cargarPagoVenta(id_venta, total, tipoPago, deuda, tarjeta, cuotas):
     #Registra el pago en formaPagoCompra
      
@@ -560,6 +569,8 @@ def cargarPagoVenta(id_venta, total, tipoPago, deuda, tarjeta, cuotas):
             venta.save()
 
 
+@login_required
+@permission_required('ventas.view_ventas', login_url='index')
 def detalleFormaPagoVenta(request):
     
     if request.is_ajax():
@@ -569,6 +580,8 @@ def detalleFormaPagoVenta(request):
         return JsonResponse({"data": list(pago)})
 
 
+@login_required
+@permission_required('ventas.delete_ventas', login_url='index')
 def eliminarPagoVenta(request, id):
     pago = formaPagoVenta.objects.filter(id_venta=id)
     saldo = 0.0
@@ -610,7 +623,8 @@ def eliminarPagoVenta(request, id):
     return redirect(to='pagoVenta')
 
 
-
+@login_required
+@permission_required('ventas.delte_ventas', login_url='index')
 def eliminarVenta(request, id):
     venta = get_object_or_404(Ventas, pk=id)
     

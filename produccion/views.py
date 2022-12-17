@@ -6,7 +6,11 @@ from produccion.models import Produccion
 from producto.models import Producto
 from stock.views import cargarStock, eliminarStock
 from datetime import datetime
+from django.contrib.auth.decorators import login_required, permission_required
+
 # Create your views here.
+@login_required
+@permission_required('produccion.view_produccion', login_url='index')
 def index(request):
 
     produccion = Produccion.objects.all()
@@ -18,6 +22,8 @@ def index(request):
     return render(request, 'produccion/produccion.html', data) 
 
 
+@login_required
+@permission_required('produccion.add_produccion', login_url='index')
 def altaProduccion(request):
 
     # id = request.user.id
@@ -82,6 +88,8 @@ def altaProduccion(request):
     return render(request, 'produccion/altaProduccion.html', data)
 
 
+@login_required
+@permission_required('produccion.delete_produccion', login_url='index')
 def eliminarProduccion(request, id):
     produccion = get_object_or_404( Produccion, pk=id)
 
@@ -100,6 +108,8 @@ def eliminarProduccion(request, id):
         return redirect(to='produccion')
 
 
+@login_required
+@permission_required('produccion.view_produccion', login_url='index')
 def pedido(request):
 
     pedido = Produccion.objects.filter(fecha=datetime.now())

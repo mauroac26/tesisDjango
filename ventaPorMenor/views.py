@@ -6,8 +6,11 @@ from .models import DetalleventaPorMenor, ventaPorMenor
 from datetime import datetime
 from django.contrib import messages
 from stock.views import cargarStock, eliminarStock
+from django.contrib.auth.decorators import login_required, permission_required
 
 # Create your views here.
+@login_required
+@permission_required('ventaPorMenor.view_ventapormenor', login_url='index')
 def index(request):
 
     pedidoVenta = DetalleventaPorMenor.objects.all().values('producto__nombre', 'cantidad', 'id_ventaPorMenor__fecha', 'id_ventaPorMenor__usuario__username')
@@ -19,6 +22,8 @@ def index(request):
     return render(request, 'ventaPorMenor/ventaPorMenor.html', data) 
 
 
+@login_required
+@permission_required('ventaPorMenor.add_ventapormenor', login_url='index')
 def altaRetiroPorMenor(request):
 
 
@@ -104,6 +109,8 @@ def cargarDetalleRetiroVenta(request):
     return JsonResponse({"error": "Error"}, status=400)
 
 
+@login_required
+@permission_required('ventaPorMenor.view_ventapormenor', login_url='index')
 def detalleRetiroVenta(request):
     
     if request.is_ajax():
@@ -113,6 +120,8 @@ def detalleRetiroVenta(request):
         return JsonResponse({"data": list(pago)})
 
 
+@login_required
+@permission_required('ventaPorMenor.delete_ventapormenor', login_url='index')
 def eliminarVentaMenor(request, id):
     venta = get_object_or_404(ventaPorMenor, pk=id)
     

@@ -40,7 +40,8 @@
                         <td>
                     <div class="row justify-content-center">
                         <button class="btn btn-sm btn-primary" onclick="prueba({{p.id}});" aria-hidden="true"  data-toggle="modal" data-target="#modalRetiro" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalle"><i class="far fa-file-alt"></i></button>
-                        <a class="btn-sm btn-danger ml-3" href="{% url 'eliminarVentaMenor' p.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                        
+                        <a class="btn-sm btn-danger ml-3" onclick='eliminarVentaMenor({{p.id}})' href="#" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
                     </div>
                     </td>
                     </tr>
@@ -141,5 +142,25 @@
     table("tablaRetiroPorMenor");
     //table("tablaDetalleRetiro");
     });
+</script>
+
+<script>
+    function eliminarVentaMenor(id){
+ 
+    Swal.fire({
+            "title": "Estas seguro?",
+            "text": "Esta acción no se puede deshacer ",
+            "icon":"question",
+            "showCancelButton": true,
+            "cancelButtonText":"No, Cancelar",
+            "confirmButtonText":"Si, confirmar",
+            "confirmButtonColor":"#80070F",
+        })
+        .then(function(result){
+            if(result.isConfirmed){
+                window.location.href = "eliminarVentaMenor/"+id+""
+            }
+        });
+    }
 </script>
 {% endblock %}

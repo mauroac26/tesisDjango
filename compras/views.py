@@ -51,6 +51,7 @@ def altaCompra(request):
 
 
 #Obtiene lista de productos
+
 def productoAutocomplete(request):
    
     if 'term' in request.GET:
@@ -115,6 +116,8 @@ def proveedorAutocomplete(request):
 
 
 #Registra las compras
+@login_required
+@permission_required('compras.add_compras', login_url='compras')
 def cargarCompra(request):
    
     
@@ -138,6 +141,7 @@ def cargarCompra(request):
 
 #Carga el detalle de las compras realizadas
 @login_required
+@permission_required('compras.add_compras', login_url='compras')
 def cargarDetalleCompra(request):
     usuario = request.user.username
  
@@ -247,6 +251,8 @@ def detallesCompra(request, id):
 
 
 #Muestra los pagos realizados y pendientes
+@login_required
+@permission_required('compras.view_compras', login_url='compras')
 def pago(request):
     compra = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha', 'id_compra__estado').annotate(Sum('total'))
 
@@ -287,6 +293,8 @@ def pago(request):
     return render(request, 'compras/pagos.html', data)
 
 #Registra un nuevo pago
+@login_required
+@permission_required('compras.add_compras', login_url='compras')
 def registroPago(request):
     data= {
         "formPago": formPagoCompra()
@@ -361,6 +369,8 @@ def registroPago(request):
     return render(request, 'compras/registroPago.html', data)
 
 
+@login_required
+@permission_required('compras.add_compras', login_url='compras')
 def cargarPago(id_compra, total, tipoPago, deuda):
     #Registra el pago en formaPagoCompra 
     data = {}
@@ -420,19 +430,25 @@ def compraAdeudada(request):
             return JsonResponse(nombre, safe=False)
 
 
+@login_required
+@permission_required('compras.add_compras', login_url='compras')
 def detallePago(request):
     
     return render(request, 'compras/detallePago.html')
 
 
+@login_required
+@permission_required('compras.add_compras', login_url='compras')
 def reporteCompra(request):
     return render(request, 'compras/reporteCompras.html')
 
 
 #Elmina la compra
+@login_required
+@permission_required('compras.delete_compras', login_url='compras')
 def eliminarCompra(request, id):
     compra = get_object_or_404(Compras, pk=id)
-    
+    print(id)
     if compra:
         
         detalle = detalleCompra.objects.filter(id_compra = id).values('id_producto', 'cantidad')
@@ -451,6 +467,8 @@ def eliminarCompra(request, id):
     
 
 #Elimina el pago
+@login_required
+@permission_required('compras.delete_compras', login_url='compras')
 def eliminarPago(request, id):
     pago = formaPagoCompra.objects.filter(id_compra=id)
     saldo = 0.0
@@ -493,6 +511,8 @@ def eliminarPago(request, id):
 
 
 #Muestra el detalle del pago
+@login_required
+@permission_required('compras.view_compras', login_url='compras')
 def detalleFormaPago(request):
     
     if request.is_ajax():

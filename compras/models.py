@@ -16,7 +16,7 @@ estado = [
 ]
 class Compras(BaseModel):
     comprobante = models.CharField(max_length=8, unique=True)
-    cuit = models.ForeignKey(proveedores, on_delete=models.CASCADE)
+    cuit = models.ForeignKey(proveedores, on_delete=models.SET_NULL, null=True)
     fecha = models.DateField()
     tipoComprobante =  models.CharField(max_length = 150, choices=tipo_Comprobante, verbose_name="Tipo Comprobante")
     estado = models.CharField(max_length=150, choices=estado, default='Adeudado')
@@ -34,7 +34,7 @@ def __str__(self):
 
 class detalleCompra(models.Model):
     id_compra = models.ForeignKey(Compras, on_delete=models.CASCADE)
-    id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    id_producto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True)
     cantidad = models.IntegerField()
     iva = models.DecimalField(max_digits=8, decimal_places=2)
     subTotal = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="Sub-Total")

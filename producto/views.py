@@ -9,7 +9,9 @@ from .models import Marca, Categoria, Producto, ProductoPromocion
 
 from django.contrib.auth.decorators import login_required, permission_required
 # Create your views here.
+
 @login_required
+@permission_required('producto.add_producto', login_url='index')
 def index(request):
     
     producto = Producto.objects.all()
@@ -21,7 +23,7 @@ def index(request):
 
 
 @login_required
-@permission_required('producto.add_producto', login_url='productos')
+@permission_required('producto.add_producto', login_url='index')
 def altaProducto(request):
 
     data = {
@@ -40,6 +42,8 @@ def altaProducto(request):
     return render(request, 'producto/altaProducto.html', data)
 
 
+@login_required
+@permission_required('producto.view_marca', login_url='index')
 def marcas(request):
     
     marca = Marca.objects.all()
@@ -50,6 +54,8 @@ def marcas(request):
     return render(request, 'producto/marcas.html', data)
 
 
+@login_required
+@permission_required('producto.view_categoria', login_url='index')
 def categorias(request):
     
     categoria = Categoria.objects.all()
@@ -249,7 +255,8 @@ def eliminarCategoria(request, id):
             
 #     return render(request, 'producto/promocion.html', data)
 
-    
+
+
 class prodPromocion(ListView):
 
     consultaPromo()
@@ -264,7 +271,8 @@ class prodPromocion(ListView):
     
                 
             
-
+@login_required
+@permission_required('producto.view_producto', login_url='productos')
 def altaProductoPromo(request):
 
     data = {
@@ -283,6 +291,8 @@ def altaProductoPromo(request):
     return render(request, 'producto/altaPromocion.html', data)
 
 
+@login_required
+@permission_required('producto.change_producto', login_url='productos')
 def editarPromocion(request, id):
     promocion = get_object_or_404(ProductoPromocion, pk=id)
     
@@ -302,6 +312,8 @@ def editarPromocion(request, id):
     return render(request, 'producto/editarPromo.html', data)
 
 
+@login_required
+@permission_required('producto.delete_producto', login_url='productos')
 def eliminarPromocion(request, id):
     promocion = get_object_or_404( ProductoPromocion, pk=id)
     

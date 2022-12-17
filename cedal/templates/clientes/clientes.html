@@ -53,7 +53,7 @@
                         <td>
                             <div class="row justify-content-center">
                             <a class="btn-sm btn-success" href="{% url 'editarCliente' c.cuit %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a>
-                            <a class="btn-sm btn-danger ml-3" href="{% url 'eliminarCliente' c.cuit %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                            <a class="btn-sm btn-danger ml-3" onclick='eliminarCliente("{{c.cuit}}")' href="#" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
                         </div>
                         </td>
                     </tr>
@@ -82,6 +82,27 @@
     $(document).ready(function() {
     table("tablaClientes");
     });
+</script>
+
+
+<script>
+    function eliminarCliente(id){
+        
+    Swal.fire({
+            "title": "Estas seguro?",
+            "text": "Esta acción no se puede deshacer ",
+            "icon":"question",
+            "showCancelButton": true,
+            "cancelButtonText":"No, Cancelar",
+            "confirmButtonText":"Si, confirmar",
+            "confirmButtonColor":"#80070F",
+        })
+        .then(function(result){
+            if(result.isConfirmed){
+                window.location.href = "/clientes/eliminarCliente/"+id+""
+            }
+        });
+    }
 </script>
 {% endblock %}
 

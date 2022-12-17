@@ -7,6 +7,7 @@ from django.contrib import messages
 
 # Create your views here.
 @login_required
+@permission_required('proveedores.view_proveedores', login_url='index')
 def index(request):
 
     proveedor = proveedores.objects.all()

@@ -31,8 +31,8 @@ motivo = [
 
 class ajusteStock(BaseModel):
     fecha = models.DateTimeField()
-    usuario  = models.ForeignKey(Users, on_delete=models.CASCADE, verbose_name="Usuarios")
-    id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    usuario  = models.ForeignKey(Users, on_delete=models.SET_NULL, null=True, verbose_name="Usuarios")
+    id_producto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True)
     cantidad  = models.IntegerField(default=1)
     motivo = models.CharField(choices=motivo, max_length=150)
     detalle = models.CharField(max_length = 150, verbose_name="Observaciones", null=True)

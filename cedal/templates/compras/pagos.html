@@ -61,8 +61,8 @@
                         {% endif %}
                         <td class="text-center"><button class="btn btn-primary btn-sm " onclick="prueba({{c.id}});" aria-hidden="true"  data-toggle="modal" data-target="#modalDetallePago" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalle"><i class="far fa-file-alt"></i></button>
                            
-        
-                        <a class="btn btn-sm btn-danger ml-3" href="{% url 'eliminarPago' c.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                            <button class="btn btn-sm btn-danger ml-2" onclick="eliminarPago({{c.id}})"  data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></button>
+
                         </td>
                     </tr>
                        {% endfor %}
@@ -197,6 +197,26 @@
       
     });
 
+</script>
+
+<script>
+    function eliminarPago(id){
+        
+    Swal.fire({
+            "title": "Estas seguro?",
+            "text": "Esta acción no se puede deshacer ",
+            "icon":"question",
+            "showCancelButton": true,
+            "cancelButtonText":"No, Cancelar",
+            "confirmButtonText":"Si, confirmar",
+            "confirmButtonColor":"#80070F",
+        })
+        .then(function(result){
+            if(result.isConfirmed){
+                window.location.href = "/compras/eliminarPago/"+id+""
+            }
+        });
+    }
 </script>
 
 {% endblock %}

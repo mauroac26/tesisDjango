@@ -58,6 +58,8 @@ def index(request):
     return render(request, 'caja/caja.html', data)
 
 
+@login_required
+@permission_required('caja.add_caja', login_url='index')
 def aperturaCaja(request):
 
     caja = Caja.objects.all()
@@ -97,6 +99,8 @@ def aperturaCaja(request):
     # return render(request, 'caja/caja.html', data)
 
 
+@login_required
+@permission_required('caja.add_caja', login_url='index')
 def cierreCaja(request):
     id = Caja.objects.order_by('id', 'total', 'estado').last()
     if id:
@@ -113,6 +117,8 @@ def cierreCaja(request):
 
 
 
+@login_required
+@permission_required('caja.view_caja', login_url='index')
 def consultaCaja(request):
     
     data = {

@@ -9,7 +9,7 @@ opciones_condicion =[
 
 class Clientes(models.Model):
     cuit = models.CharField(max_length=14, primary_key=True)
-    nombre = models.CharField(max_length=50)
+    nombre = models.CharField(max_length=50, verbose_name="Razon Social")
     direccion = models.CharField(max_length=50)
     telefono = models.CharField(max_length=50)
     mail = models.EmailField()

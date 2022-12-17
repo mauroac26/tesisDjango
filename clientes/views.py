@@ -5,7 +5,9 @@ from .models import Clientes
 from django.contrib import messages
 # Create your views here.
 
+
 @login_required
+@permission_required('clientes.add_clientes', login_url='index')
 def index(request):
 
     cliente = Clientes.objects.all()

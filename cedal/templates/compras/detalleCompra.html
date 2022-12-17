@@ -75,7 +75,7 @@
             
              <div class="d-flex justify-content-end mt-2">
                
-                <a class="btn-sm btn-danger ml-2" href="{% url 'eliminarCompra' id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">Eliminar Compra</a>
+                <button class="btn btn-sm btn-danger ml-2" onclick="eliminarCompra({{id}})"  data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">Eliminar Compra</button>
                 <button class="btn btn-primary btn-sm ml-2 " aria-hidden="true" type="button" onclick="history.back()">Salir</button>
              </div>
         </div>
@@ -99,6 +99,26 @@
     });
 </script>
 
+
+<script>
+    function eliminarCompra(id){
+        
+    Swal.fire({
+            "title": "Estas seguro?",
+            "text": "Esta acción no se puede deshacer ",
+            "icon":"question",
+            "showCancelButton": true,
+            "cancelButtonText":"No, Cancelar",
+            "confirmButtonText":"Si, confirmar",
+            "confirmButtonColor":"#80070F",
+        })
+        .then(function(result){
+            if(result.isConfirmed){
+                window.location.href = "/compras/eliminarCompra/"+id+""
+            }
+        });
+    }
+</script>
 
 {% endblock %}
 

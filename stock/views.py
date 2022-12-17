@@ -5,10 +5,13 @@ from stock.forms import ajusteForm, stockForm
 from django.http import HttpResponse
 from datetime import datetime
 from stock.models import ajusteStock, stock
-
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
+
 # Create your views here.
 
+@login_required
+@permission_required('stock.view_stock', login_url='index')
 def movimientoStock(request):
 
     stocks = stock.objects.all()
@@ -20,6 +23,8 @@ def movimientoStock(request):
     return render(request, 'stock/stock.html', data)
 
 
+@login_required
+@permission_required('stock.add_stock', login_url='index')
 def altaAjuste(request):
 
     data = {

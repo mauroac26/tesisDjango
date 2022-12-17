@@ -23,6 +23,7 @@ def index(request):
     return render(request, 'cedal/index.html')
 
 
+
 def graficoVentas(request):
    
     if request.is_ajax() and request.method == "GET":
@@ -77,6 +78,7 @@ def configuracion(request):
 
 
 @login_required
+@permission_required('cedal.view_tarjetacredito', login_url='configuracion')
 def credito(request):
     
     credito = tarjetaCredito.objects.all()
@@ -88,7 +90,8 @@ def credito(request):
     return render(request, 'cedal/credito.html', data)
 
 
-
+@login_required
+@permission_required('cedal.add_tarjetacredito', login_url='configuracion')
 def altaTarjeta(request):
     
     data = {
@@ -113,7 +116,7 @@ def altaTarjeta(request):
     
 
 @login_required
-# @permission_required('clientes.change_clientes', login_url='clientes')
+@permission_required('cedal.change_tarjetacredito', login_url='configuracion')
 def editarTarjeta(request, id):
     tarjetas = get_object_or_404(tarjetaCredito, pk=id)
     
@@ -133,7 +136,7 @@ def editarTarjeta(request, id):
 
 
 @login_required
-# @permission_required('clientes.delete_clientes', login_url='clientes')
+@permission_required('cedal.delete_tarjetacredito', login_url='configuracion')
 def eliminarTarjeta(request, id):
     tarjeta = get_object_or_404(tarjetaCredito, pk=id)
     
@@ -194,11 +197,15 @@ def consultaPromo():
             p.delete()
 
 
+@login_required
+@permission_required('ventas.view_ventas', login_url='index')
 def reportesVentaYear(request):
 
     return render(request, 'reportes/reporteVentaxAño.html')
 
 
+@login_required
+@permission_required('compras.view_compras', login_url='index')
 def reportesCompras(request):
 
 
@@ -209,6 +216,7 @@ def reportesCompras(request):
 
 
     return render(request, 'reportes/reporteCompras.html', data)
+
 
 
 def comprasRango(request):
@@ -247,7 +255,8 @@ def comprasRango(request):
     return JsonResponse(data, safe=False)
 
 
-
+@login_required
+@permission_required('ventas.view_ventas', login_url='index')
 def reportesVentas(request):
 
 
@@ -295,7 +304,8 @@ def ventasRango(request):
     return JsonResponse(data, safe=False)
 
 
-
+@login_required
+@permission_required('compras.view_compras', login_url='index')
 def reportesCuentasPagar(request):
 
 
@@ -306,6 +316,7 @@ def reportesCuentasPagar(request):
 
 
     return render(request, 'reportes/reporteCuentasPagar.html', data)
+
 
 
 def cuentasPagarRango(request):
@@ -351,6 +362,8 @@ def cuentasPagarRango(request):
     return JsonResponse(data, safe=False)
 
 
+@login_required
+@permission_required('ventas.view_ventas', login_url='index')
 def reportesCuentasCobrar(request):
 
 
@@ -416,7 +429,8 @@ from zipfile import ZipFile
 
 
 
-
+@login_required
+@permission_required('backup.add_backup', login_url='configuracion')
 def backupBD(request):
     respaldo = backup.objects.all()
 

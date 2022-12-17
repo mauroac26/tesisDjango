@@ -9,7 +9,7 @@ from user.models import Users
 
 # Create your views here.
 @login_required
-@permission_required('user.add_user', login_url='configuracion')
+@permission_required('user.view_users', login_url='configuracion')
 def registro(request):
     data = {
         'form': UserRegisterForm()
@@ -35,7 +35,7 @@ def registro(request):
 
 
 @login_required
-@permission_required('user.view_user', login_url='configuracion')
+@permission_required('user.add_users', login_url='configuracion')
 def usuarios(request):
 
     usuarios = Users.objects.filter(is_superuser=0).values('id', 'username', 'first_name', 'last_name', 'email', 'groups__name')
@@ -45,8 +45,9 @@ def usuarios(request):
     }
     return render(request, 'registration/usuarios.html', data)
 
+
 @login_required
-@permission_required('user.change_user', login_url='configuracion')
+@permission_required('user.change_users', login_url='configuracion')
 def editarUsuario(request, id):
     usuarios = get_object_or_404(Users, pk=id)
     
@@ -72,7 +73,7 @@ def editarUsuario(request, id):
 
 
 @login_required
-@permission_required('user.delete_user', login_url='configuracion')
+@permission_required('user.delete_users', login_url='configuracion')
 def eliminarUsuario(request, id):
     usuario = get_object_or_404(Users, pk=id)
     
@@ -119,6 +120,8 @@ def cambiarPassword(request):
 
 
 @login_required
+@login_required
+@permission_required('user.change_users', login_url='index')
 def resetPassword(request, id):
     usuarios = get_object_or_404(Users, pk=id)
     

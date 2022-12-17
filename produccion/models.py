@@ -11,12 +11,12 @@ estado = [
 
 class Produccion(BaseModel):
     fecha = models.DateField()
-    producto_retiro = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True, blank=True, related_name='producto_retiro')
+    producto_retiro = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True, blank=True, related_name='producto_retiro')
     cantidad_retiro = models.IntegerField(null=False, verbose_name="Cantidad  Retiro", default=1)
-    producto_pedido = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True, blank=True, related_name='producto_pedido')
+    producto_pedido = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True, blank=True, related_name='producto_pedido')
     cantidad_pedido = models.IntegerField(null=False, verbose_name="Cantidad Pedido", default=1)
     estado = models.CharField(choices=estado, verbose_name="Estado", max_length = 50, default="Pendiente")
-    usuario = models.ForeignKey(Users, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(Users, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         

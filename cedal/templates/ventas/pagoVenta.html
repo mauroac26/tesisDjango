@@ -56,8 +56,9 @@
                         <td><span class="badge badge-success">{{c.estado}}</span></td>
                         {% endif %}
                         <td class="text-center"><button class="btn btn-primary btn-sm " onclick="prueba({{c.id}});" aria-hidden="true"  data-toggle="modal" data-target="#modalDetallePago" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalle"><i class="far fa-file-alt"></i></button>
-        
-                        <a class="btn btn-sm btn-danger ml-3" href="{% url 'eliminarPagoVenta' c.id %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                        
+                            <button class="btn btn-sm btn-danger ml-2" onclick="eliminarPagoVenta({{c.id}})"  data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></button>
+
                         </td>
                     </tr>
                        {% endfor %}
@@ -174,35 +175,24 @@
     });
 </script>
 
-<!-- <script>
-    $('#tablaDetallePagoVenta').DataTable({
-        "searching": false,
-        "bPaginate": false,
-        "bFilter": false,
-        "bInfo": false,
-      
-      "language": {
-       
-        "emptyTable": "No hay información",
-        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
-        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
-        "lengthMenu": "Mostrar _MENU_ Entradas",
-        "loadingRecords": "Cargando...",
-        "processing": "Procesando...",
-        "search": "Buscar:",
-        "zeroRecords": "Sin resultados encontrados",
-        "paginate": {
-            "first": "Primero",
-            "last": "Ultimo",
-            "next": "Siguiente",
-            "previous": "Anterior"
-        }
-      },
-      responsive: "true",
-      
-    });
-
-</script> -->
+<script>
+    function eliminarPagoVenta(id){
+        
+    Swal.fire({
+            "title": "Estas seguro?",
+            "text": "Esta acción no se puede deshacer ",
+            "icon":"question",
+            "showCancelButton": true,
+            "cancelButtonText":"No, Cancelar",
+            "confirmButtonText":"Si, confirmar",
+            "confirmButtonColor":"#80070F",
+        })
+        .then(function(result){
+            if(result.isConfirmed){
+                window.location.href = "/ventas/eliminarPagoVenta/"+id+""
+            }
+        });
+    }
+</script>
 
 {% endblock %}

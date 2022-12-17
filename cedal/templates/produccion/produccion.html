@@ -45,7 +45,8 @@
                         <td>{{p.usuario}}</td>
                         <td>
                             <!-- <a class="btn-sm btn-success" href="" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><i class="far fa-edit"></i></a> -->
-                        <a class="btn-sm btn-danger ml-3" href="{% url 'eliminarProduccion' p.id  %}" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                        
+                        <a class="btn-sm btn-danger ml-3" onclick='eliminarProduccion({{p.id}})' href="#" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
                     </td>
                     </tr>
                        {% endfor %}
@@ -57,13 +58,7 @@
 
 </div>
 
-<!-- /.container-fluid -->
 
-
-<!-- Scroll to Top Button-->
-<!-- <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a> -->
 
 {% endblock %}
 
@@ -77,6 +72,26 @@
     $(document).ready(function() {
     table("tablaProduccion");
     });
+</script>
+
+<script>
+    function eliminarProduccion(id){
+ 
+    Swal.fire({
+            "title": "Estas seguro?",
+            "text": "Esta acción no se puede deshacer ",
+            "icon":"question",
+            "showCancelButton": true,
+            "cancelButtonText":"No, Cancelar",
+            "confirmButtonText":"Si, confirmar",
+            "confirmButtonColor":"#80070F",
+        })
+        .then(function(result){
+            if(result.isConfirmed){
+                window.location.href = "eliminarProduccion/"+id+""
+            }
+        });
+    }
 </script>
 {% endblock %}
 
