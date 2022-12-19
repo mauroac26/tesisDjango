@@ -41,7 +41,7 @@
                        
                         {% for s in stock %}
                         <tr>
-                         <td>{{s.fecha}}</td>
+                         <td>{{s.fecha|date:"l d M Y"}}</td>
                          <td>{{s.tipoMovimiento}}</td>
                          <td>{{s.producto}}</td>
                          <td>{{s.cantidad}}</td>

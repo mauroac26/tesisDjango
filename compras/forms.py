@@ -19,12 +19,24 @@ class comprasForm(forms.ModelForm):
 
         }
 
-    def clean_comprobante(self):
-        comprobante = self.cleaned_data['comprobante']
-        comprobante_taken = Compras.objects.filter(comprobante=comprobante).exists()
-        if comprobante_taken :
+    # def clean_comprobante(self):
+    #     comprobante = self.cleaned_data['comprobante']
+    #     comprobante_taken = Compras.objects.filter(comprobante=comprobante).exists()
+    #     if comprobante_taken :
+    #         raise forms.ValidationError('Comprobante existente')
+    #     return comprobante
+
+    
+    def clean(self):
+        cleaned = super().clean()
+        comprobante = cleaned['comprobante']
+        cuit = cleaned['cuit']
+        comprobante_taken = Compras.objects.filter(comprobante=comprobante, cuit=cuit).exists()
+        if comprobante_taken:
             raise forms.ValidationError('Comprobante existente')
-        return comprobante
+        
+        
+        
         
 
     def __init__(self, *args, **kwargs):

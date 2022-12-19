@@ -54,8 +54,8 @@ def graficoProductos(request):
     
     if request.is_ajax() and request.method == "GET":
         
-        productos = detalleVenta.objects.all().select_related('id_producto').values('id_producto__nombre').annotate(Sum('cantidad'))      
-
+        productos = detalleVenta.objects.all().filter(id_venta__fecha__year = 2022).values('id_producto__nombre').annotate(Sum('cantidad')).order_by('-cantidad__sum')[:5]
+        print(productos)
         return JsonResponse({"producto": list(productos)})
         
 
@@ -66,7 +66,7 @@ def graficoClientes(request):
     
     if request.is_ajax() and request.method == "GET":
         
-        clientes = Ventas.objects.all().values('cuit__nombre').annotate(cantidad=Count('cuit')).order_by('-cantidad')
+        clientes = Ventas.objects.all().filter(fecha__year = 2022).values('cuit__nombre').annotate(cantidad=Count('cuit')).order_by('-cantidad')[:5]
 
         return JsonResponse({"clientes": list(clientes)})
 
@@ -242,9 +242,10 @@ def comprasRango(request):
 
             data.append([
                 f['id_compra__comprobante'],
+                f['id_compra__fecha'],
                 f['id_compra__cuit__nombre'],
                 f['id_compra__cuit'],
-                f['id_compra__fecha'],
+                
                 tipo,
                 f['total__sum']
             ])
@@ -278,7 +279,7 @@ def ventasRango(request):
         fecha_fin = request.POST['fecha_fin']
 
     
-        venta = detalleVenta.objects.values('id_venta__comprobante', 'id_venta__cuit__nombre', 'id_venta__cuit', 'id_venta__fecha').annotate(Sum('total')).annotate(Sum('iva')).annotate(Sum('subTotal'))
+        venta = detalleVenta.objects.values('id_venta__comprobante', 'id_venta__fecha', 'id_venta__cuit__nombre', 'id_venta__cuit', ).annotate(Sum('total')).annotate(Sum('iva')).annotate(Sum('subTotal'))
       
         
 
@@ -290,9 +291,9 @@ def ventasRango(request):
 
             data.append([
                 f['id_venta__comprobante'],
+                f['id_venta__fecha'],
                 f['id_venta__cuit__nombre'],
                 f['id_venta__cuit'],
-                f['id_venta__fecha'],
                 f'${f["iva__sum"]}',
                 f'${f["subTotal__sum"]}',
                 f'${f["total__sum"]}'

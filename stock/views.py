@@ -14,7 +14,7 @@ from django.contrib import messages
 @permission_required('stock.view_stock', login_url='index')
 def movimientoStock(request):
 
-    stocks = stock.objects.all()
+    stocks = stock.objects.all().order_by('-fecha')
 
     data = {
         "stock": stocks

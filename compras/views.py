@@ -133,8 +133,8 @@ def cargarCompra(request):
             data = {
                 'error': form.errors.as_data()
             } 
-           
-            return JsonResponse({"error": list(data['error']['comprobante'][0])}, status = 400, safe = False)
+            print(data)
+            return JsonResponse({"error": list(data['error']['__all__'][0])}, status = 400, safe = False)
 
   
         
@@ -254,7 +254,7 @@ def detallesCompra(request, id):
 @login_required
 @permission_required('compras.view_compras', login_url='compras')
 def pago(request):
-    compra = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha', 'id_compra__estado').annotate(Sum('total'))
+    compra = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha', 'id_compra__estado').annotate(Sum('total')).order_by('-id_compra__fecha')
 
     compratotal = list()
 
@@ -294,7 +294,7 @@ def pago(request):
 
 #Registra un nuevo pago
 @login_required
-@permission_required('compras.add_compras', login_url='compras')
+@permission_required('compras.add_compras', login_url='index')
 def registroPago(request):
     data= {
         "formPago": formPagoCompra()
@@ -317,6 +317,8 @@ def registroPago(request):
                 saldo = float(deuda) - float(p.total__sum) 
         else:
             saldo = float(deuda)
+        
+        "{0:.2f}".format(total)
         
         if total <= float(saldo):
             
@@ -369,8 +371,6 @@ def registroPago(request):
     return render(request, 'compras/registroPago.html', data)
 
 
-@login_required
-@permission_required('compras.add_compras', login_url='compras')
 def cargarPago(id_compra, total, tipoPago, deuda):
     #Registra el pago en formaPagoCompra 
     data = {}
@@ -400,7 +400,7 @@ def compraAdeudada(request):
     if 'term' in request.GET:
         
         
-        compras = detalleCompra.objects.values('id_compra', 'id_compra__cuit__nombre', 'id_compra__fecha', 'id_compra__cuit', 'id_compra__estado').annotate(Sum('total')).filter(id_compra__cuit__nombre__icontains=request.GET.get("term"), id_compra__estado="Adeudado")
+        compras = detalleCompra.objects.values('id_compra', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha', 'id_compra__cuit', 'id_compra__estado').annotate(Sum('total')).filter(id_compra__cuit__nombre__icontains=request.GET.get("term"), id_compra__estado="Adeudado")
         nombre = list()
         if compras:
             for n in compras:
@@ -416,8 +416,8 @@ def compraAdeudada(request):
                 # fecha1 = datetime.datetime.strptime(fecha, '%Y-%m-%dT%H:%MZ').strftime("%d-%m-%Y")
                 dicCompras = {}
                 dicCompras['id'] = n['id_compra']
-                dicCompras['label'] = '<li style="font-size: 11px;" class="list-group-item d-flex justify-content-between align-items-center"><div class="col-sm-5">'+str(n['id_compra__cuit__nombre'])+'</div><span>'+str(n['id_compra__fecha'])+'</span><span>$'+str(n['total__sum'])+'</span></li>'
-                dicCompras['value'] = f'{n["id_compra__cuit__nombre"]} / {n["id_compra__fecha"]} / {n["total__sum"]}'
+                dicCompras['label'] = '<li style="font-size: 11px;" class="list-group-item d-flex justify-content-between align-items-center"><div class="col-sm-5">'+str(n['id_compra__cuit__nombre'])+'</div><span>'+str(n['id_compra__comprobante'])+'</span><span>'+str(n['id_compra__fecha'])+'</span><span>$'+str(n['total__sum'])+'</span></li>'
+                dicCompras['value'] = f'{n["id_compra__cuit__nombre"]} {" "} / {" "} {n["id_compra__fecha"]} {" "} / {" "} {n["total__sum"]} {" "} / {" "} {n["id_compra__comprobante"]}'
                 dicCompras['total'] = float(total)
                 
                 nombre.append(dicCompras)
@@ -448,22 +448,27 @@ def reporteCompra(request):
 @permission_required('compras.delete_compras', login_url='compras')
 def eliminarCompra(request, id):
     compra = get_object_or_404(Compras, pk=id)
-    print(id)
-    if compra:
-        
-        detalle = detalleCompra.objects.filter(id_compra = id).values('id_producto', 'cantidad')
-        for d in detalle:
-            producto = Producto.objects.get(id=d['id_producto'])
-            
-            stockProducto = int(producto.stock) - int(d['cantidad'])
-            producto.stock = stockProducto
-            producto.save()
-            
-
-        compra.delete()
-        eliminarStock(id, tipo="Compra")
-        messages.add_message(request, messages.SUCCESS, "La compra se eliminó exitosamente")
+    pago = formaPagoCompra.objects.filter(id_compra = id)
+    
+    if pago:
+        messages.add_message(request, messages.ERROR, "La compra tiene pagos realizados, comprobar antes de eliminar")
         return redirect(to='compras')
+    else:
+        if compra:
+            
+            detalle = detalleCompra.objects.filter(id_compra = id).values('id_producto', 'cantidad')
+            for d in detalle:
+                producto = Producto.objects.get(id=d['id_producto'])
+                
+                stockProducto = int(producto.stock) - int(d['cantidad'])
+                producto.stock = stockProducto
+                producto.save()
+                
+
+            compra.delete()
+            eliminarStock(id, tipo="Compra")
+            messages.add_message(request, messages.SUCCESS, "La compra se eliminó exitosamente")
+            return redirect(to='compras')
     
 
 #Elimina el pago
@@ -482,7 +487,7 @@ def eliminarPago(request, id):
                 caja_actual = Caja.objects.order_by('id', 'total', 'estado').last()
                 fecha = datetime.now()
                 caja = {}
-                caja['descripcion'] = "Eliminacion pago "
+                caja['descripcion'] = "Eliminación pago Compra"
                 caja['operacion'] = 0
                 caja['monto'] = saldo
                 caja['id_caja'] = caja_actual.id

@@ -32,7 +32,7 @@ def index(request):
 
     consultaPromo()
 
-    venta = detalleVenta.objects.values('id_venta__id', 'id_venta__comprobante', 'id_venta__cuit__nombre', 'id_venta__fecha').annotate(Sum('total'))
+    venta = detalleVenta.objects.filter(id_venta__fecha__year = 2022).values('id_venta__id', 'id_venta__comprobante', 'id_venta__cuit__nombre', 'id_venta__fecha').annotate(Sum('total'))
     
     #venta = Ventas.objects.all()
     data = {
@@ -204,7 +204,7 @@ def cargarDetalleVenta(request):
 @permission_required('ventas.view_ventas', login_url='index')
 def detallesVenta(request, id):
     
-    ventas = Ventas.objects.filter(id=id).select_related('cuit')
+    ventas = Ventas.objects.filter(id=id, fecha__year = 2022).select_related('cuit')
    
     data = {
         "datos": ventas
@@ -214,11 +214,11 @@ def detallesVenta(request, id):
 
     # data["formPago"] = formPago()
 
-    detalle = detalleVenta.objects.filter(id_venta=id).select_related('id_producto')
+    detalle = detalleVenta.objects.filter(id_venta=id, id_venta__fecha__year = 2022).select_related('id_producto')
     
-    iva = detalleVenta.objects.filter(id_venta=id).aggregate(Sum('iva'))
-    subTotal = detalleVenta.objects.filter(id_venta=id).aggregate(Sum('subTotal'))
-    total = detalleVenta.objects.filter(id_venta=id).aggregate(Sum('total'))
+    iva = detalleVenta.objects.filter(id_venta=id, id_venta__fecha__year = 2022).aggregate(Sum('iva'))
+    subTotal = detalleVenta.objects.filter(id_venta=id, id_venta__fecha__year = 2022).aggregate(Sum('subTotal'))
+    total = detalleVenta.objects.filter(id_venta=id, id_venta__fecha__year = 2022).aggregate(Sum('total'))
     
     data['id_venta'] = id
     
@@ -231,60 +231,60 @@ def detallesVenta(request, id):
         
         data["detalles"] = detalle
 
-    if request.method == "POST":
+    # if request.method == "POST":
         
-        efectivo = float(request.POST.get('efectivo'))
-        credito = float(request.POST.get('credito'))
-        debito = float(request.POST.get('debito'))
-        cuotas = request.POST.get('cuotas')
-        tipoCredito = request.POST.get('tipoCredito')
-        tipoDebito = request.POST.get('tipoDebito')
+    #     efectivo = float(request.POST.get('efectivo'))
+    #     credito = float(request.POST.get('credito'))
+    #     debito = float(request.POST.get('debito'))
+    #     cuotas = request.POST.get('cuotas')
+    #     tipoCredito = request.POST.get('tipoCredito')
+    #     tipoDebito = request.POST.get('tipoDebito')
 
-        sumaTotal = efectivo + credito + debito
+    #     sumaTotal = efectivo + credito + debito
 
-        if sumaTotal == float(data['total']["total__sum"]):
+    #     if sumaTotal == float(data['total']["total__sum"]):
             
-            data['id_venta'] = id
-            data['efectivo'] = efectivo
-            data['credito'] = credito
-            data['debito'] = debito
-            data['cuotas'] = cuotas
-            data['tipoCredito'] = tipoCredito
-            data['tipoDebito'] = tipoDebito
+    #         data['id_venta'] = id
+    #         data['efectivo'] = efectivo
+    #         data['credito'] = credito
+    #         data['debito'] = debito
+    #         data['cuotas'] = cuotas
+    #         data['tipoCredito'] = tipoCredito
+    #         data['tipoDebito'] = tipoDebito
 
             
 
-            # pago = formPago(data)
+    #         # pago = formPago(data)
         
-            # if pago.is_valid(): 
-            #     pago.save()
+    #         # if pago.is_valid(): 
+    #         #     pago.save()
                 
-            #     messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
+    #         #     messages.add_message(request, messages.SUCCESS, "La forma de pago se realizo exitosamente")
             
-            if efectivo > 0:
+    #         if efectivo > 0:
                 
-                caja = {}
-                caja['descripcion'] = "Venta comprobante N° " + comprobante
-                caja['operacion'] = 0
-                caja['monto'] = efectivo 
+    #             caja = {}
+    #             caja['descripcion'] = "Venta comprobante N° " + comprobante
+    #             caja['operacion'] = 0
+    #             caja['monto'] = efectivo 
 
-                formulario = movCajaForm(caja)
+    #             formulario = movCajaForm(caja)
 
-                if formulario.is_valid():
-                    post = formulario.save(commit=False)
+    #             if formulario.is_valid():
+    #                 post = formulario.save(commit=False)
             
-                    ultimo_saldo = movCaja.objects.latest('fecha').saldo
+    #                 ultimo_saldo = movCaja.objects.latest('fecha').saldo
                     
-                    post.saldo = float(ultimo_saldo) + float(efectivo)
+    #                 post.saldo = float(ultimo_saldo) + float(efectivo)
             
-                    fecha = datetime.now()
-                    post.fecha = fecha
-                    post.save()
-            else:
-                data["formPago"] = formPagoVenta() 
-        else:
-            messages.add_message(request, messages.ERROR, "El monto seleccionado es diferente al monto total de la compra")
-            return render(request, 'ventas/detalleVenta.html', data)
+    #                 fecha = datetime.now()
+    #                 post.fecha = fecha
+    #                 post.save()
+    #         else:
+    #             data["formPago"] = formPagoVenta() 
+    #     else:
+    #         messages.add_message(request, messages.ERROR, "El monto seleccionado es diferente al monto total de la compra")
+    #         return render(request, 'ventas/detalleVenta.html', data)
         
 
     return render(request, 'ventas/detalleVenta.html', data)
@@ -393,7 +393,7 @@ def detallesVenta(request, id):
 @login_required
 @permission_required('ventas.view_ventas', login_url='index')
 def pagoVenta(request):
-    venta = detalleVenta.objects.values('id_venta__id', 'id_venta__comprobante', 'id_venta__cuit__nombre', 'id_venta__fecha', 'id_venta__estado').annotate(Sum('total'))
+    venta = detalleVenta.objects.filter(id_venta__fecha__year = 2022).values('id_venta__id', 'id_venta__comprobante', 'id_venta__cuit__nombre', 'id_venta__fecha', 'id_venta__estado').annotate(Sum('total')).order_by('-id_venta__fecha')
 
     ventaTotal = list()
 
@@ -434,7 +434,7 @@ def pagoVenta(request):
 def ventaAdeudada(request):
     if 'term' in request.GET:
         
-        ventas = detalleVenta.objects.values('id_venta__cuit__nombre', 'id_venta__fecha','id_venta').annotate(Sum('total')).filter(id_venta__cuit__nombre__icontains=request.GET.get("term"), id_venta__estado = 'Adeudado')
+        ventas = detalleVenta.objects.values('id_venta__cuit__nombre', 'id_venta__comprobante', 'id_venta__fecha','id_venta').annotate(Sum('total')).filter(id_venta__cuit__nombre__icontains=request.GET.get("term"), id_venta__estado = 'Adeudado')
         
         nombre = list()
         if ventas:
@@ -450,8 +450,8 @@ def ventaAdeudada(request):
                 # fecha1 = datetime.datetime.strptime(fecha, '%Y-%m-%dT%H:%MZ').strftime("%d-%m-%Y")
                 dicventas = {}
                 dicventas['id'] = n['id_venta']
-                dicventas['label'] = '<li style="font-size: 11px;" class="list-group-item d-flex justify-content-between align-items-center"><div class="col-sm-5">'+str(n['id_venta__cuit__nombre'])+'</div><span>'+str(n['id_venta__fecha'])+'</span><span>$'+str(n['total__sum'])+'</span></li>'
-                dicventas['value'] = f'{n["id_venta__cuit__nombre"]} / {n["id_venta__fecha"]} / {n["total__sum"]}'
+                dicventas['label'] = '<li style="font-size: 11px;" class="list-group-item d-flex justify-content-between align-items-center"><div class="col-sm-5">'+str(n['id_venta__cuit__nombre'])+'</div><span>'+str(n['id_venta__comprobante'])+'</span><span>'+str(n['id_venta__fecha'])+'</span><span>$'+str(n['total__sum'])+'</span></li>'
+                dicventas['value'] = f'{n["id_venta__cuit__nombre"]} {""} / {""} {n["id_venta__fecha"]} {""} / {""} {n["total__sum"]} {""} / {""} {n["id_venta__comprobante"]}'
                 dicventas['total'] = float(total)
                 
                 nombre.append(dicventas)
@@ -491,6 +491,7 @@ def registroPagoVenta(request):
         else:
             saldo = float(deuda)
         
+        "{0:.2f}".format(total)
         
         if total <= float(saldo):
             
@@ -562,7 +563,7 @@ def cargarPagoVenta(id_venta, total, tipoPago, deuda, tarjeta, cuotas):
         for p in pago:
             tot = float(p.total__sum) + float(tot)
 
-        print(tot)     
+    
         #si es igual el total y la deuda el estado de la venta pasa a pagado sino sigue estando en adeudado
         if float(tot) == float(deuda):
             venta.estado = 'Pagado'
@@ -585,6 +586,7 @@ def detalleFormaPagoVenta(request):
 def eliminarPagoVenta(request, id):
     pago = formaPagoVenta.objects.filter(id_venta=id)
     saldo = 0.0
+    
     for p in pago:
         saldo = float(p.total)
         tipo = p.tipoPago
@@ -595,7 +597,7 @@ def eliminarPagoVenta(request, id):
                 caja_actual = Caja.objects.order_by('id', 'total', 'estado').last()
                 fecha = datetime.now()
                 caja = {}
-                caja['descripcion'] = "Eliminacion pago "
+                caja['descripcion'] = "Eliminación pago Venta "
                 caja['operacion'] = 1
                 caja['monto'] = saldo
                 caja['id_caja'] = caja_actual.id
@@ -627,17 +629,22 @@ def eliminarPagoVenta(request, id):
 @permission_required('ventas.delte_ventas', login_url='index')
 def eliminarVenta(request, id):
     venta = get_object_or_404(Ventas, pk=id)
+    pago = formaPagoVenta.objects.filter(id_venta = id)
     
-    if venta:
-        detalle = detalleVenta.objects.filter(id_venta = id).values('id_producto', 'cantidad')
-        for d in detalle:
-            producto = Producto.objects.get(id=d['id_producto'])
-            stockProducto = int(producto.stock) + int(d['cantidad'])
-            producto.stock = stockProducto
-            producto.save()
-            
-
-        venta.delete()
-        eliminarStock(id, tipo="Venta")
-        messages.add_message(request, messages.SUCCESS, "La venta se eliminó exitosamente")
+    if pago:
+        messages.add_message(request, messages.ERROR, "La venta tiene pagos realizados, comprobar antes de eliminar")
         return redirect(to='ventas')
+    else:
+        if venta:
+            detalle = detalleVenta.objects.filter(id_venta = id).values('id_producto', 'cantidad')
+            for d in detalle:
+                producto = Producto.objects.get(id=d['id_producto'])
+                stockProducto = int(producto.stock) + int(d['cantidad'])
+                producto.stock = stockProducto
+                producto.save()
+                
+
+            venta.delete()
+            eliminarStock(id, tipo="Venta")
+            messages.add_message(request, messages.SUCCESS, "La venta se eliminó exitosamente")
+            return redirect(to='ventas')

@@ -331,7 +331,8 @@ $(function() {
            
         }else{
 
-        if (descuento == ""){
+        if (descuento == 0){
+            
             total = cantidad * precio;
         neto = total / 1.21;
         iva = neto.toFixed(2) * 0.21;
