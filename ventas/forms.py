@@ -12,15 +12,6 @@ tipo_Comprobante = [
 
 class ventasForm(forms.ModelForm):
     
-    # def clean_comprobante(self):
-    #     comprobante = self.cleaned_data["comprobante"]
-        
-    #     existe = Compras.objects.filter(comprobante__iexact=comprobante).exists()
-        
-    #     if existe:
-    #         raise ValidationError("El numero de comprobante ya existe")
-        
-    #     return comprobante
 
     class Meta:
         model = Ventas
@@ -32,6 +23,13 @@ class ventasForm(forms.ModelForm):
             'cuit' : forms.TextInput(attrs={'id': 'cuit', 'readonly': True}),
             'tipoComprobante': forms.Select(attrs={'id': 'tipoComprobante'} )
         }
+
+    def clean_comprobante(self):
+        comprobante = self.cleaned_data['comprobante']
+        comprobante_taken = Ventas.objects.filter(comprobante=comprobante).exists()
+        if comprobante_taken :
+            raise forms.ValidationError('Comprobante existente')
+        
 
     def __init__(self, *args, **kwargs):
         super(ventasForm, self).__init__(*args, **kwargs)

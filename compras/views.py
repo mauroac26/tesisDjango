@@ -21,7 +21,7 @@ from stock.views import cargarStock, eliminarStock
 def index(request):
 
  
-    compra = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha').annotate(Sum('total'))
+    compra = detalleCompra.objects.values('id_compra__id', 'id_compra__comprobante', 'id_compra__cuit__nombre', 'id_compra__fecha').annotate(Sum('total')).order_by('-id_compra__fecha')
 
 
     data = {
@@ -133,7 +133,7 @@ def cargarCompra(request):
             data = {
                 'error': form.errors.as_data()
             } 
-            print(data)
+            
             return JsonResponse({"error": list(data['error']['__all__'][0])}, status = 400, safe = False)
 
   
@@ -319,7 +319,7 @@ def registroPago(request):
             saldo = float(deuda)
         
         "{0:.2f}".format(total)
-        
+
         if total <= float(saldo):
             
                 

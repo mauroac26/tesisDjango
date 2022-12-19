@@ -589,8 +589,14 @@ document.getElementsByName("confirmarynuevo")[0].addEventListener("click", funct
           
             },
             error: function (response) {
-                // alert the error if any error occured
-                alert(response["responseJSON"]["error"]);
+                
+                                
+                Swal.fire({
+                    "title":"Error",
+                    "text": response["responseJSON"]["error"],
+                    "icon": "error"
+
+                })
             }
         })
             }

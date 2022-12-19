@@ -87,7 +87,7 @@ def cargarDetalleRetiroVenta(request):
         stock = int(producto.stock)
         
         if stock > 0 and int(cantidad) <= stock:
-            print(stock)
+            
             formulario = detalleVentaPorMenorForm(data)
             if formulario.is_valid():
                 
@@ -105,8 +105,8 @@ def cargarDetalleRetiroVenta(request):
             messages.add_message(request, messages.ERROR, "Error en el registro de detalle")    
             return JsonResponse({"error": "Error"}, status=400)
         else:
-            messages.add_message(request, messages.ERROR,  "no hay stock o no hay la cantidad deseada del producto seleccionado")
-    return JsonResponse({"error": "Error"}, status=400)
+            messages.add_message(request, messages.ERROR,  "No hay stock o no hay la cantidad deseada del producto seleccionado")
+    #return JsonResponse({"error": "Error"}, status=400)
 
 
 @login_required

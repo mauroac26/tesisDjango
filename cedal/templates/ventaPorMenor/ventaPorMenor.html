@@ -39,7 +39,7 @@
                         <td>{{p.usuario}}</td>
                         <td>
                     <div class="row justify-content-center">
-                        <button class="btn btn-sm btn-primary" onclick="prueba({{p.id}});" aria-hidden="true"  data-toggle="modal" data-target="#modalRetiro" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalle"><i class="far fa-file-alt"></i></button>
+                        <button class="btn btn-sm btn-primary" onclick="detalles({{p.id}});" aria-hidden="true"  data-toggle="modal" data-target="#modalRetiro" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Detalle"><i class="far fa-file-alt"></i></button>
                         
                         <a class="btn-sm btn-danger ml-3" onclick='eliminarVentaMenor({{p.id}})' href="#" role="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><i class="far fa-trash-alt"></i></a>
                     </div>
@@ -95,7 +95,7 @@
 
 <script>
 
-    function prueba(id){
+    function detalles(id){
     
             $.ajax({
                   type: "post",

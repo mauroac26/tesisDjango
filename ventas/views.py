@@ -32,7 +32,7 @@ def index(request):
 
     consultaPromo()
 
-    venta = detalleVenta.objects.filter(id_venta__fecha__year = 2022).values('id_venta__id', 'id_venta__comprobante', 'id_venta__cuit__nombre', 'id_venta__fecha').annotate(Sum('total'))
+    venta = detalleVenta.objects.filter(id_venta__fecha__year = 2022).values('id_venta__id', 'id_venta__comprobante', 'id_venta__cuit__nombre', 'id_venta__fecha').annotate(Sum('total')).order_by('-id_venta__fecha')
     
     #venta = Ventas.objects.all()
     data = {
@@ -109,22 +109,22 @@ def productoVentaAutocomplete(request):
                         descuento = p.descuento
                 
 
-                signer_json = {}
-                signer_json['id'] = n.id
-                signer_json['label'] = '<li class="list-group-item d-flex justify-content-between align-items-center"><div class="col-sm-4">'+str(n.nombre)+'</div><span class="badge '+str(color)+' badge-pill text-white">'+str(n.stock)+'</span><span class="float-right">$'+str(n.precio_venta)+'</span></li>'
-                signer_json['value'] = n.nombre
-                signer_json['stock'] = n.stock
-                signer_json['codigo'] = n.codigo
-                signer_json['precio'] = n.precio_venta
-                signer_json['descuento'] = descuento
-                # signer_json['vencimiento'] = resultado.days
-                nombre.append(signer_json)
+                productoVenta = {}
+                productoVenta['id'] = n.id
+                productoVenta['label'] = '<li class="list-group-item d-flex justify-content-between align-items-center"><div class="col-sm-4">'+str(n.nombre)+'</div><span class="badge '+str(color)+' badge-pill text-white">'+str(n.stock)+'</span><span class="float-right">$'+str(n.precio_venta)+'</span></li>'
+                productoVenta['value'] = n.nombre
+                productoVenta['stock'] = n.stock
+                productoVenta['codigo'] = n.codigo
+                productoVenta['precio'] = n.precio_venta
+                productoVenta['descuento'] = descuento
+               
+                nombre.append(productoVenta)
             return JsonResponse(nombre, safe=False)
         else:
-            signer_json = {}
-            signer_json['n'] = 1
-            signer_json['label'] = '<li class="list-group-item align-items-center"><div class="col-sm-4"><span class="badge badge-pill badge-danger">Dar alta producto</span></div></li>'
-            nombre.append(signer_json)
+            productoVenta = {}
+            productoVenta['n'] = 1
+            productoVenta['label'] = '<li class="list-group-item align-items-center"><div class="col-sm-4"><span class="badge badge-pill badge-danger">Dar alta producto</span></div></li>'
+            nombre.append(productoVenta)
             return JsonResponse(nombre, safe=False)
 
 
@@ -141,10 +141,12 @@ def cargarVenta(request):
             form.save()
             #ultima_compra = Compras.objects.order_by('id', 'fecha').last()
             return HttpResponse(True)
+        else:
+            data = {
+                'error': form.errors.as_data()
+            } 
             
-
-    # some error occured
-    return JsonResponse({"error": "ingresar comprobante valido"}, status=400)
+            return JsonResponse({"error": list(data['error']['comprobante'][0])}, status = 400, safe = False)
 
 
 def cargarDetalleVenta(request):
