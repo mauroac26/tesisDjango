@@ -41,8 +41,8 @@ class detalleCompra(models.Model):
     total = models.DecimalField(max_digits=8, decimal_places=2)
 
 
-def __str__(self):
-    return self.id_compra
+    def __str__(self):
+        return str(self.id_compra)
 
 
 # class ExcelFileUpload(models.Model):
@@ -61,7 +61,7 @@ class formaPagoCompra(models.Model):
     id_compra =  models.ForeignKey(Compras, on_delete=models.CASCADE)
     
 
-def __str__(self):
-    return self.id
+    def __str__(self):
+        return str(self.id)
 
 

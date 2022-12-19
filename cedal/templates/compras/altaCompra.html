@@ -466,7 +466,8 @@ document.getElementsByName("confirmarynuevo")[0].addEventListener("click", funct
             type: 'get',
             url: "{% url 'cargarDetalleCompra' %}",
             data: {'id_producto': idp,
-                   'cantidad': cantidadTabla
+                   'cantidad': cantidadTabla,
+                   
         },
             success: function (response) {
                 if (tipo == 1){

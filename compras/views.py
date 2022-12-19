@@ -151,6 +151,8 @@ def cargarDetalleCompra(request):
         ultima_compra = Compras.objects.order_by('id', 'fecha').last()
         id_producto = request.GET['id_producto']
         cantidad = request.GET['cantidad']
+        #precio1 = request.GET['precio']
+        
         precio = Producto.objects.get(id=id_producto)
         
         
@@ -184,6 +186,7 @@ def cargarDetalleCompra(request):
                 
                 stockProducto = int(producto.stock) + int(cantidad)
                 producto.stock = stockProducto
+                #producto.precio_compra = precio1
                 producto.save()
                 cargarStock(ultima_compra.id, tipoMov, fecha, detalle, cantidad, nombreProducto, stockProducto, usuario)
             messages.add_message(request, messages.SUCCESS, "La compra se confirmó exitosamente")

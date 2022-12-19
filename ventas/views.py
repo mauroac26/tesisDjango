@@ -104,6 +104,7 @@ def productoVentaAutocomplete(request):
                     color = "badge-danger"
                 
                 promocion = ProductoPromocion.objects.filter(id_producto=n.id)
+                
                 if promocion:
                     for p in promocion:
                         descuento = p.descuento
@@ -159,6 +160,7 @@ def cargarDetalleVenta(request):
         cantidad = request.GET['cantidad']
         precio = Producto.objects.get(id=id_producto)
         
+    
         
         total = int(cantidad) * float(precio.precio_venta)
         
@@ -183,6 +185,7 @@ def cargarDetalleVenta(request):
         usuario = request.user.username
         
         formulario = detalleVentaForm(data)
+        
         if formulario.is_valid():
             
             formulario.save()

@@ -21,7 +21,7 @@ class Caja(BaseModel):
         verbose_name = 'Caja'
         verbose_name_plural = 'Cajas'
 
-    def __int__(self):
+    def __str__(self):
         return str(self.id)
 
 

@@ -58,7 +58,7 @@ class ProductoPromocion(BaseModel):
         verbose_name_plural = 'Productos Promociones'
 
     def __str__(self):
-        return int(self.id)
+        return str(self.id)
 
     
     

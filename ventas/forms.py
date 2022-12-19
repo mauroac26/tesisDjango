@@ -24,11 +24,11 @@ class ventasForm(forms.ModelForm):
             'tipoComprobante': forms.Select(attrs={'id': 'tipoComprobante'} )
         }
 
-    def clean_comprobante(self):
-        comprobante = self.cleaned_data['comprobante']
-        comprobante_taken = Ventas.objects.filter(comprobante=comprobante).exists()
-        if comprobante_taken :
-            raise forms.ValidationError('Comprobante existente')
+    # def clean_comprobante(self):
+    #     comprobante = self.cleaned_data['comprobante']
+    #     comprobante_taken = Ventas.objects.filter(comprobante=comprobante).exists()
+    #     if comprobante_taken :
+    #         raise forms.ValidationError('Comprobante existente')
         
 
     def __init__(self, *args, **kwargs):
